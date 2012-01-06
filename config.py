@@ -7,6 +7,8 @@ SECRET_KEY = 'sheep!@$user!#$%^'
 APP_KEY = '619662253'
 APP_SECRET = 'b1d02f2ff16aec904d835d34bc926ae7'
 
+DATABASE_URI = 'mysql://root:""@localhost:3306/dbname,encoding="utf8"'
+
 try:
     from local_config import *
 except:
