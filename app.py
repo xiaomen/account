@@ -9,6 +9,7 @@ from sheep.api.statics import static_files
 app = Flask(__name__)
 app.debug = True
 app.jinja_env.filters['s_files'] = static_files
+app.secret_key = 'sheep!@$user!#$%^'
 
 @app.route('/')
 def index():
