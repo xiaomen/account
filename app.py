@@ -40,6 +40,7 @@ def oauth_authorized(resp):
     user = dbobj()
     user.oauth_token = resp['oauth_token']
     user.oauth_secret = resp['oauth_token_secret']
+    user.user_id = resp['user_id']
     session['user_id'] = user
     return redirect(next_url)
 
