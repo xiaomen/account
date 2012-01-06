@@ -1,0 +1,5 @@
+syntax: glob
+
+venv
+permdir
+*.py[co]
