@@ -3,7 +3,7 @@
 
 from lib.weibo import weibo
 from flask import Flask, session, g, \
-    request, redirect
+    request, redirect, url_for
 
 @weibo.tokengetter
 def get_weibo_token():
