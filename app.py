@@ -17,7 +17,7 @@ def index():
     if g.uid is None:
         return render_template('index.html')
     else:
-        print weibo.get("/users/show/" + g.uid)
+        print weibo.get("/users/show/" + g.uid.user_id)
         return '<a href="/Logout">Logout</a>'
 
 @app.route('/Logout')
