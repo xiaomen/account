@@ -2,7 +2,6 @@
 # encoding: UTF-8
 
 from lib.weibo import weibo
-from flaskext.oauth import OAuth
 from flask import Flask, session, g, \
     request, redirect
 

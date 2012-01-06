@@ -4,6 +4,7 @@
 __all__ = ['weibo']
 
 import config
+from flaskext.oauth import OAuth
 
 weibo = OAuth().remote_app('weibo',
     base_url='http://api.t.sina.com.cn',
