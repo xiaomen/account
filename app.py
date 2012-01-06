@@ -16,7 +16,7 @@ def index():
     if session.get('isLogin') is None:
         return render_template('index.html')
     else:
-        code = request.form.get('code')
+        code = request.args.get('code')
         client = APIClient(app_key=APP_KEY, app_secret=APP_SECRET, redirect_uri=CALLBACK_URL)
         r = client.request_access_token(code)
         access_token = r.access_token
