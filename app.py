@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # encoding: UTF-8
 
-import views
 import config
 from models import *
 from lib.weibo import weibo
@@ -35,5 +34,6 @@ def before_request():
     if 'user_id' in session:
         g.uid = session['user_id']
 
-app.add_url_rule('/Login/Weibo', view_func=views.weibo.weibo_login)
-app.add_url_rule('/Authorized/Weibo', view_func=views.weibo.weibo_authorized)
+from views.weibo import *
+app.add_url_rule('/Login/Weibo', view_func=weibo_login)
+app.add_url_rule('/Authorized/Weibo', view_func=weibo_authorized)
