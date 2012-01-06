@@ -41,7 +41,7 @@ def weibo_login():
         next=request.args.get('next') or request.referrer or None))
 
 @app.route('/oauth-authorized')
-@twitter.authorized_handler
+@weibo.authorized_handler
 def oauth_authorized(resp):
     next_url = request.args.get('next') or url_for('index')
     if resp is None:
@@ -55,7 +55,7 @@ def oauth_authorized(resp):
     print 'You were signed in'
     return redirect(next_url)
 
-@twitter.tokengetter
+@weibo.tokengetter
 def get_weibo_token():
     if not session.get('isLogin', None):
         return session['oauth_token'], session['user.oauth_secret']
