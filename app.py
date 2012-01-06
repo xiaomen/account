@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # encoding: UTF-8
 
+import views
 import config
-from views import *
 from models import *
 from lib.weibo import weibo
 from sheep.api.statics import static_files
