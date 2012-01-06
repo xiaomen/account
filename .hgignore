@@ -3,3 +3,4 @@ syntax: glob
 venv
 permdir
 *.py[co]
+local_config.py
