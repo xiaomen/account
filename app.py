@@ -21,7 +21,8 @@ def index():
         return render_template('index.html')
     else:
         print weibo.get("/users/show/" + g.uid.user_id + ".json").data
-        return '<a href="/Logout">Logout</a>'
+        logout = '<a href="/Logout">Logout</a>'
+        return render_template('index.html', logout=logout)
 
 @app.route('/Logout')
 def logout():
