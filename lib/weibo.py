@@ -3,6 +3,7 @@
 
 __all__ = ['weibo']
 
+import os
 import config
 from flaskext.oauth import OAuth
 
@@ -14,3 +15,7 @@ weibo = OAuth().remote_app('weibo',
     consumer_key=config.APP_KEY,
     consumer_secret=config.APP_SECRET
 )
+
+def GET(path, param):
+    url = os.path.join(path, param + '.json')
+    return weibo.get(url)

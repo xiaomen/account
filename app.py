@@ -2,8 +2,9 @@
 # encoding: UTF-8
 
 import config
+import logging
 from models import *
-from lib.weibo import weibo
+from lib.weibo import weibo, GET
 from sheep.api.statics import static_files
 from flask import Flask, render_template, redirect, \
     request, session, url_for, g
@@ -15,13 +16,16 @@ app.jinja_env.filters['s_files'] = static_files
 
 init_db()
 
+logger = logging.getLogger(__name__)
+
 @app.route('/')
 def index():
-    if g.uid is None:
+    if g.user is None:
         return render_template('index.html')
     else:
-#        print weibo.get("/users/show/" + g.uid.user_id + ".json").data
         logout = '<a href="/Logout">Logout</a>'
+        user_info = GET("/users/show/", g.user.uid)
+        logger.info(user_info.data)
         return render_template('index.html', logout=logout)
 
 @app.route('/Logout')
@@ -31,9 +35,14 @@ def logout():
 
 @app.before_request
 def before_request():
-    g.uid = None
+    g.user = None
     if 'user_id' in session:
-        g.uid = session['user_id']
+        g.user = User.query.filter_by(uid=session['user_id']).first()
+
+@app.after_request
+def after_request(response):
+    db_session.remove()
+    return response
 
 from views.weibo import *
 app.add_url_rule('/Login/Weibo', view_func=weibo_login)

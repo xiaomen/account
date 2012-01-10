@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # encoding: UTF-8
 
+__all__ = ['db_session', 'User', 'init_db']
+
 import config
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -28,9 +30,7 @@ class User(Base):
     oauth_token = Column(String(200))
     oauth_secret = Column(String(200))
 
-    def __init__(self, uid, token, secret, *args, **kwargs):
+    def __init__(self, uid, *args, **kwargs):
         self.uid = uid
-        self.oauth_token = token
-        oauth_secret = secret
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
