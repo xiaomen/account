@@ -20,7 +20,7 @@ def index():
     if g.uid is None:
         return render_template('index.html')
     else:
-        print weibo.get("/users/show/" + g.uid.user_id + ".json").data
+#        print weibo.get("/users/show/" + g.uid.user_id + ".json").data
         logout = '<a href="/Logout">Logout</a>'
         return render_template('index.html', logout=logout)
 
