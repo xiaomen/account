@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # encoding: UTF-8
 
-__all__ = ['db_session', 'User', 'init_db']
+__all__ = ['db_session', 'OAuth', 'User', 'init_db']
 
 import config
 from sqlalchemy import create_engine, Column, Integer, String
@@ -26,11 +26,20 @@ class User(Base):
     passwd = Column(String(200))
     email = Column(String(30))
     avatar = Column(String(255))
-    uid = Column(String(200))
+
+class OAuth(Base):
+    __tablename__ = 'oauth'
+    id = Column('id', Integer, primary_key=True, autoincrement=True)
+    uid = Column('uid', Integer)
+    oauth_type = Column(String(20))
+    oauth_uid = Column(String(200))
     oauth_token = Column(String(200))
     oauth_secret = Column(String(200))
 
-    def __init__(self, uid, *args, **kwargs):
+    def __init__(self, uid, ouid, otype, *args, **kwargs):
         self.uid = uid
+        self.oauth_uid = ouid
+        self.oauth_type = otype
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
+

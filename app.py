@@ -24,20 +24,20 @@ def index():
         return render_template('index.html')
     else:
         logout = '<a href="/Logout">Logout</a>'
-        user_info = GET("/users/show/", g.user.uid)
+        user_info = GET("/users/show/", g.user.oauth_uid)
         logger.info(user_info.data)
         return render_template('index.html', logout=logout)
 
 @app.route('/Logout')
 def logout():
-    session.pop('user_id', None)
+    session.pop('oauth_id', None)
     return redirect(request.referrer or url_for('index'))
 
 @app.before_request
 def before_request():
     g.user = None
-    if 'user_id' in session:
-        g.user = User.query.filter_by(uid=session['user_id']).first()
+    if 'oauth_id' in session:
+        g.user = OAuth.query.get(session['oauth_id'])
 
 @app.after_request
 def after_request(response):

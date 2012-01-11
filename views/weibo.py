@@ -16,7 +16,7 @@ def get_weibo_token():
         return user.oauth_token, user.oauth_secret
 
 def weibo_login():
-    session.pop('user_id', None)
+    session.pop('oauth_id', None)
     return weibo.authorize(callback=url_for('weibo_authorized',
         next=request.args.get('next') or request.referrer or None))
 
@@ -26,14 +26,14 @@ def weibo_authorized(resp):
     if resp is None:
         return redirect(next_url)
 
-    user = User.query.filter_by(uid=resp['user_id']).first()
-    if user is None:
-        user = User(resp['user_id'])
-        db_session.add(user)
+    oauth = OAuth.query.filter_by(oauth_uid=resp['user_id']).first()
+    if oauth is None:
+        oauth = OAuth(None, resp['user_id'], 'weibo')
+        db_session.add(oauth)
 
-    user.oauth_token = resp['oauth_token']
-    user.oauth_secret = resp['oauth_token_secret']
+    oauth.oauth_token = resp['oauth_token']
+    oauth.oauth_secret = resp['oauth_token_secret']
     db_session.commit()
-    session['user_id'] = user.uid
+    session['oauth_id'] = oauth.id
     return redirect(next_url)
 
