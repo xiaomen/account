@@ -17,7 +17,7 @@ def get_weibo_token():
         return oauth_info.oauth_token, oauth_info.oauth_secret
 
 def weibo_login():
-    session.pop('user_id', None)
+#    session.pop('user_id', None)
     return weibo.authorize(callback=url_for('weibo_authorized',
         next=request.args.get('next') or request.referrer or None))
 
