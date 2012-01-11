@@ -24,20 +24,25 @@ def index():
         return render_template('index.html')
     else:
         logout = '<a href="/Logout">Logout</a>'
-        user_info = GET("/users/show/", g.user.oauth_uid)
-        logger.info(user_info.data)
+        oauth_info = g.oauth('weibo')
+        if oauth_info:
+            user_info = GET("/users/show/", oauth_info.oauth_uid)
+            logger.info(user_info.data)
         return render_template('index.html', logout=logout)
 
 @app.route('/Logout')
 def logout():
-    session.pop('oauth_id', None)
+    session.pop('user_id', None)
     return redirect(request.referrer or url_for('index'))
 
 @app.before_request
 def before_request():
     g.user = None
-    if 'oauth_id' in session:
-        g.user = OAuth.query.get(session['oauth_id'])
+    #if 'oauth_id' in session:
+    #    g.user = OAuth.query.get(session['oauth_id'])
+    if 'user_id' in session:
+        g.user = User.query.get(session['user_id'])
+        g.oauth = lambda otype: OAuth.query.filter_by(oauth_type=otype, uid=g.user.id).first()
 
 @app.after_request
 def after_request(response):

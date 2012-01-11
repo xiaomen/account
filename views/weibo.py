@@ -13,10 +13,11 @@ logger = logging.getLogger(__name__)
 def get_weibo_token():
     user = g.user
     if user is not None:
-        return user.oauth_token, user.oauth_secret
+        oauth_info = g.oauth('weibo')
+        return oauth_info.oauth_token, oauth_info.oauth_secret
 
 def weibo_login():
-    session.pop('oauth_id', None)
+    session.pop('user_id', None)
     return weibo.authorize(callback=url_for('weibo_authorized',
         next=request.args.get('next') or request.referrer or None))
 
@@ -34,6 +35,6 @@ def weibo_authorized(resp):
     oauth.oauth_token = resp['oauth_token']
     oauth.oauth_secret = resp['oauth_token_secret']
     db_session.commit()
-    session['oauth_id'] = oauth.id
+    #session['oauth_id'] = oauth.id
     return redirect(next_url)
 
