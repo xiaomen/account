@@ -27,6 +27,13 @@ class User(Base):
     email = Column(String(30))
     avatar = Column(String(255))
 
+    def __init__(self, username, password, email, *args, **kwargs):
+        self.name = username
+        self.passwd = password
+        self.email = email
+        for k, v in kwargs.iteritems():
+            setattr(self, k, v)
+
 class OAuth(Base):
     __tablename__ = 'oauth'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
