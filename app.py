@@ -5,6 +5,7 @@ import config
 import logging
 from models import *
 from lib.weibo import weibo, GET
+from views.weibo import weibo_oauth
 from sheep.api.statics import static_files
 from flask import Flask, render_template, redirect, \
     request, session, url_for, g
@@ -13,10 +14,11 @@ app = Flask(__name__)
 app.debug = config.DEBUG
 app.secret_key = config.SECRET_KEY
 app.jinja_env.filters['s_files'] = static_files
-
-init_db()
+app.register_blueprint(weibo_oauth, url_prefix='/Weibo')
 
 logger = logging.getLogger(__name__)
+
+init_db()
 
 @app.route('/')
 def index():
@@ -38,8 +40,6 @@ def logout():
 @app.before_request
 def before_request():
     g.user = None
-    #if 'oauth_id' in session:
-    #    g.user = OAuth.query.get(session['oauth_id'])
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         g.oauth = lambda otype: OAuth.query.filter_by(oauth_type=otype, uid=g.user.id).first()
@@ -49,6 +49,3 @@ def after_request(response):
     db_session.remove()
     return response
 
-from views.weibo import *
-app.add_url_rule('/Login/Weibo', view_func=weibo_login)
-app.add_url_rule('/Authorized/Weibo', view_func=weibo_authorized)
