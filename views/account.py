@@ -17,23 +17,23 @@ def index():
         return render_template('account.html')
     return render_template('logout.html')
 
-@account.route('/Bind', methods=['POST'])
+@account.route('/Bind', methods=['GET', 'POST'])
 def bind():
+    if request.method == 'GET':
+        return render_template('bind.html')
     oauth = session.pop('from_oauth', None)
     allow = 'allow' in request.form
     if g.user and oauth and allow:
         bind(oauth, g.user.id)
-    return redirect(request.referrer or url_for('index'))
+    return redirect(url_for('index'))
 
 @account.route('/Register', methods=['POST','GET'])
 def register():
-    oauth = session.get('from_oauth', None)
     if g.user is not None:
-        if oauth:
-            return render_template('bind.html')
         return redirect(url_for('index'))
     if request.method == 'GET':
         return render_template('register.html')
+    oauth = session.pop('from_oauth', None)
     username = request.form.get('name', None)
     password = request.form.get('password', None)
     email = request.form.get('email', None)

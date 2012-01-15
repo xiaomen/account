@@ -21,10 +21,14 @@ def get_weibo_token():
 
 @weibo_oauth.route('/Login')
 def login():
-    if g.user and g.oauth('weibo'):
-        return redirect(request.referrer or url_for('index'))
+    next_url = url_for('account.register')
+    if g.user:
+        if g.oauth('weibo'):
+            return redirect(request.referrer or url_for('index'))
+        next_url = url_for('account.bind')
+
     return weibo.authorize(callback=url_for('weibo_oauth.authorized',
-        next=url_for('account.register')))
+        next=next_url))
 
 @weibo_oauth.route('/Authorized')
 @weibo.authorized_handler
