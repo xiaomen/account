@@ -13,8 +13,7 @@ weibo_oauth = Blueprint('weibo_oauth', __name__)
 
 @weibo.tokengetter
 def get_weibo_token():
-    user = g.user
-    if user is not None:
+    if g.user:
         oauth_info = g.oauth('weibo')
         if not oauth_info:
             return

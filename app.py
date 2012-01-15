@@ -30,14 +30,18 @@ def index():
         oauth_info = g.oauth('weibo')
         if oauth_info:
             user_info = GET("/users/show/", oauth_info.oauth_uid)
-            logger.info(user_info.data)
-        return render_template('index.html', logout=logout)
+            values = {}
+            if user_info.status == 200:
+                values = user_info.data
+        return render_template('index.html', logout=logout, values=values)
 
 @app.before_request
 def before_request():
     g.user = None
     if 'user_id' in session and session['user_id']:
-        g.user = User.query.get(session['user_id'])
+        if not session.get('user', None):
+            session['user'] = User.query.get(session['user_id'])
+        g.user = session['user']
         g.oauth = lambda otype: OAuth.query.filter_by(oauth_type=otype, uid=g.user.id).first()
 
 @app.after_request

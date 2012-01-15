@@ -58,7 +58,7 @@ def login():
     password = make_passwd(email, password)
     user = User.query.filter_by(email=email,passwd=password).first()
     if not user:
-        logger.info('invaild')
+        logger.info('invaild login')
         return render_template('Login.html', info='invaild')
     session['user_id'] = user.id
     return redirect(url_for('index'))
@@ -66,6 +66,7 @@ def login():
 @account.route('/Logout')
 def logout():
     session.pop('user_id', None)
+    session.pop('user', None)
     return redirect(request.referrer or url_for('index'))
 
 def make_passwd(username, password):

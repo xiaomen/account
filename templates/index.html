@@ -1,3 +1,4 @@
+{% if not logout %}
 <form action="/Account/Login" method="post">
 <input type="text" size="20" tabindex='1' value="" name="email">
 <input type="password" size="20" tabindex='2'  value=""  name="password">
@@ -5,4 +6,14 @@
 <br />
 <a href="/Weibo/Login"><img src="{{'/static/img/sina.png'|s_files }}" /></a>
 <br />
+{% endif %}
 {{ logout | safe }}
+<br />
+<table>
+{% for key in values %}
+<tr>
+    <td>{{ key }}</td>
+    <td>{{ values[key] }}</td>
+</tr>
+{% endfor %}
+</table>
