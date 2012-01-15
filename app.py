@@ -28,9 +28,9 @@ def index():
     else:
         logout = '<a href="/Account/Logout">Logout</a>'
         oauth_info = g.oauth('weibo')
+        values = {}
         if oauth_info:
             user_info = GET("/users/show/", oauth_info.oauth_uid)
-            values = {}
             if user_info.status == 200:
                 values = user_info.data
         return render_template('index.html', logout=logout, values=values)

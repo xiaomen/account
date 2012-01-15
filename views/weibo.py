@@ -40,10 +40,7 @@ def authorized(resp):
 
     oauth.oauth_token = resp['oauth_token']
     oauth.oauth_secret = resp['oauth_token_secret']
-    if g.user:
-        oauth.uid = g.user.id
-    db_session.commit()
-    if oauth.uid:
+    if not g.user and oauth.uid:
         session['user_id'] = oauth.uid
         return redirect(url_for('index'))
     session['from_oauth'] = oauth

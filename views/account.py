@@ -17,31 +17,36 @@ def index():
         return render_template('account.html')
     return render_template('logout.html')
 
+@account.route('/Bind', methods=['POST'])
+def bind():
+    oauth = session.pop('from_oauth', None)
+    allow = 'allow' in request.form
+    if g.user and oauth and allow:
+        bind(oauth, g.user.id)
+    return redirect(request.referrer or url_for('index'))
+
 @account.route('/Register', methods=['POST','GET'])
 def register():
+    oauth = session.get('from_oauth', None)
     if g.user is not None:
-        #TODO 已注册用户如果没oauth直接到account首页
-        # 有oauth type信息则提示添加账号
+        if oauth:
+            return render_template('bind.html')
         return redirect(url_for('index'))
     if request.method == 'GET':
         return render_template('register.html')
-    oauth = session.pop('from_oauth', None)
     username = request.form.get('name', None)
     password = request.form.get('password', None)
     email = request.form.get('email', None)
     #TODO escape 参数
     if not (username and password and email):
         return render_template('register.html')
-
     password = make_passwd(email, password)
     user = User(username, password, email)
     db_session.add(user)
     db_session.commit()
-    if oauth:
-        oauth.uid = user.id
-        db_session.add(oauth)
-        db_session.commit()
     session['user_id'] = user.id
+    if oauth:
+        bind(oauth, user.id)
     return redirect(url_for('index'))
 
 @account.route('/Login', methods=['POST', 'GET'])
@@ -79,3 +84,7 @@ def make_passwd(username, password):
     m.update(password)
     return m.hexdigest()
 
+def bind(oauth, uid):
+    oauth.uid = uid
+    db_session.add(oauth)
+    db_session.commit()
