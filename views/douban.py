@@ -3,35 +3,35 @@
 
 import logging
 from models import *
-from lib.weibo import weibo
+from lib.douban import douban
 from flask import Blueprint, g, session, \
         request, redirect, url_for
 
 logger = logging.getLogger(__name__)
 
-weibo_oauth = Blueprint('weibo_oauth', __name__)
+douban_oauth = Blueprint('douban_oauth', __name__)
 
-@weibo.tokengetter
-def get_weibo_token():
+@douban.tokengetter
+def get_douban_token():
     if g.user:
-        oauth_info = g.oauth('weibo')
+        oauth_info = g.oauth('douban')
         if not oauth_info:
             return
         return oauth_info.oauth_token, oauth_info.oauth_secret
 
-@weibo_oauth.route('/Login')
+@douban_oauth.route('/Login')
 def login():
     next_url = url_for('account.register')
     if g.user:
-        if g.oauth('weibo'):
+        if g.oauth('douban'):
             return redirect(request.referrer or url_for('index'))
         next_url = url_for('account.bind')
 
-    return weibo.authorize(callback=url_for('weibo_oauth.authorized',
+    return douban.authorize(callback=url_for('douban_oauth.authorized',
         next=next_url))
 
-@weibo_oauth.route('/Authorized')
-@weibo.authorized_handler
+@douban_oauth.route('/Authorized')
+@douban.authorized_handler
 def authorized(resp):
     next_url = request.args.get('next') or url_for('index')
     if resp is None:
@@ -39,7 +39,7 @@ def authorized(resp):
 
     oauth = OAuth.query.filter_by(oauth_uid=resp['user_id']).first()
     if oauth is None:
-        oauth = OAuth(None, resp['user_id'], 'weibo')
+        oauth = OAuth(None, resp['user_id'], 'douban')
 
     oauth.oauth_token = resp['oauth_token']
     oauth.oauth_secret = resp['oauth_token_secret']

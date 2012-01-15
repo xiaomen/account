@@ -12,8 +12,8 @@ weibo = OAuth().remote_app('weibo',
     request_token_url='http://api.t.sina.com.cn/oauth/request_token',
     access_token_url='http://api.t.sina.com.cn/oauth/access_token',
     authorize_url='http://api.t.sina.com.cn/oauth/authorize',
-    consumer_key=config.APP_KEY,
-    consumer_secret=config.APP_SECRET
+    consumer_key=config.WEIBO_APP_KEY,
+    consumer_secret=config.WEIBO_APP_SECRET
 )
 
 def GET(path, param):
