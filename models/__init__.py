@@ -9,7 +9,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 # setup sqlalchemy
-engine = create_engine(config.DATABASE_URI)
+engine = create_engine(config.DATABASE_URI, pool_recycle=True)
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))
