@@ -64,7 +64,7 @@ def login():
     user = User.query.filter_by(email=email,passwd=password).first()
     if not user:
         logger.info('invaild login')
-        return render_template('Login.html', info='invaild')
+        return render_template('login.html', info='invaild')
     session['user_id'] = user.id
     return redirect(url_for('index'))
 
