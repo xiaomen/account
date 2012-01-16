@@ -17,7 +17,7 @@ class RenrenOAuth(OAuthRemoteApp):
         params['client_id'] = self.consumer_key
         params['state'] = next_url
         params['response_type'] = 'code'
-        session[self.name + '_oauthredir'] = callback
+        session[self.name + '_oauthredir'] = 'http://'+request.environ['HTTP_HOST'] + callback
         url = add_query(self.expand_url(self.authorize_url), params)
         return redirect(url)
 
@@ -31,8 +31,6 @@ class RenrenOAuth(OAuthRemoteApp):
         }
         url = add_query(self.expand_url(self.access_token_url), remote_args)
         resp, content = self._client.request(url, self.access_token_method)
-        print resp
-        print content
         data = json.loads(content)
         if resp['status'] != '200':
             raise OAuthException('Invalid response from ' + self.name, data)
