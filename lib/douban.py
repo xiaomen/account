@@ -54,6 +54,7 @@ class DoubanOAuth(OAuthRemoteApp):
         resp, content = client.request(url, method=method,
                                              body=data or '',
                                              headers=headers)
+        #TODO access_token 过期，redirect到auth路径重新OOXX
         return OAuthResponse(resp, r'''%s''' % content)
 
 douban = DoubanOAuth(None, 'douban',
