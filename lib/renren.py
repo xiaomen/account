@@ -9,7 +9,7 @@ import config
 from flask import session, redirect, request
 from flaskext.oauth import *
 
-class DoubanOAuth(OAuthRemoteApp):
+class RenrenOAuth(OAuthRemoteApp):
     def authorize(self, callback=None, next_url=None):
         assert callback is not None, 'Callback is required OAuth2'
         params = dict(self.request_token_params)
@@ -56,14 +56,14 @@ class DoubanOAuth(OAuthRemoteApp):
                                              headers=headers)
         return OAuthResponse(resp, r'''%s''' % content)
 
-renren = DoubanOAuth(None, 'renren',
+renren = RenrenOAuth(None, 'renren',
     base_url='http://api.renren.com/restserver.do',
     request_token_url=None,
     access_token_url='https://graph.renren.com/oauth/token',
     authorize_url='https://graph.renren.com/oauth/authorize',
     access_token_method='POST',
-    consumer_key=config.DOUBAN_APP_KEY,
-    consumer_secret=config.DOUBAN_APP_SECRET
+    consumer_key=config.RENREN_APP_KEY,
+    consumer_secret=config.RENREN_APP_SECRET
 )
 
 def GET(path, param):
