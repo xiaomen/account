@@ -26,13 +26,18 @@ def login():
         if g.oauth('renren'):
             return redirect(request.referrer or url_for('index'))
         next_url = url_for('account.bind')
-
-    return renren.authorize(callback=url_for('renren_oauth.authorized'), next_url=next_url)
+    callback = 'http://%s%s' % (request.environ['HTTP_HOST'], url_for('renren_oauth.authorized'))
+    return renren.authorize(callback, url_for)
 
 @renren_oauth.route('/Authorized')
 @renren.authorized_handler
 def authorized(resp):
-    next_url = request.args.get('state') or url_for('index')
+    csrf = session.pop('renren_oauthcsrf', None)
+    if request.args.get('state') !=  csrf:
+        #TODO 跨站死
+        return redirect(url_for('index'))
+    next_url = session.pop('renren_oauthnext') or url_for('index')
+
     if resp is None:
         return redirect(next_url)
 

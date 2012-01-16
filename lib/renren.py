@@ -6,18 +6,22 @@ __all__ = ['renren']
 import os
 import json
 import config
+import base64
 from flask import session, redirect, request
 from flaskext.oauth import *
 
 class RenrenOAuth(OAuthRemoteApp):
     def authorize(self, callback=None, next_url=None):
         assert callback is not None, 'Callback is required OAuth2'
+        csrf = base64.encodestring(os.urandom(10)).strip()
         params = dict(self.request_token_params)
-        params['redirect_uri'] = 'http://'+request.environ['HTTP_HOST'] + callback
+        params['redirect_uri'] = callback
         params['client_id'] = self.consumer_key
-        params['state'] = next_url
+        params['state'] = csrf
         params['response_type'] = 'code'
-        session[self.name + '_oauthredir'] = 'http://'+request.environ['HTTP_HOST'] + callback
+        session[self.name + '_oauthredir'] = callback
+        session[self.name + '_oauthnext'] = next_url
+        session[self.name + '_oauthcsrf'] = csrf
         url = add_query(self.expand_url(self.authorize_url), params)
         return redirect(url)
 

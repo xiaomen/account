@@ -26,13 +26,17 @@ def login():
         if g.oauth('douban'):
             return redirect(request.referrer or url_for('index'))
         next_url = url_for('account.bind')
-
-    return douban.authorize(callback=url_for('douban_oauth.authorized'), next_url=next_url)
+    callback = 'http://%s%s' % (request.environ['HTTP_HOST'], url_for('douban_oauth.authorized'))
+    return douban.authorize(callback, next_url)
 
 @douban_oauth.route('/Authorized')
 @douban.authorized_handler
 def authorized(resp):
-    next_url = request.args.get('state') or url_for('index')
+    csrf = session.pop('douban_oauthcsrf', None)
+    if request.args.get('state') !=  csrf:
+        #TODO 跨站死
+        return redirect(url_for('index'))
+    next_url = session.pop('douban_oauthnext') or url_for('index')
     if resp is None:
         return redirect(next_url)
 
