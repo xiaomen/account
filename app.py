@@ -4,7 +4,6 @@
 import config
 import logging
 from models import *
-from lib.weibo import weibo, GET
 from views.weibo import weibo_oauth
 from views.douban import douban_oauth
 from views.account import account
@@ -29,10 +28,11 @@ def index():
         return render_template('index.html')
     else:
         logout = '<a href="/Account/Logout">Logout</a>'
-        oauth_info = g.oauth('weibo')
+        oauth_info = g.oauth('douban')
         values = {}
         if oauth_info:
-            user_info = GET("/users/show/", oauth_info.oauth_uid)
+            from lib import douban
+            user_info = douban.GET("/people", "@me")
             if user_info.status == 200:
                 values = user_info.data
         return render_template('index.html', logout=logout, values=values)

@@ -7,8 +7,7 @@ import os
 import json
 import config
 from flask import session, redirect, request
-from flaskext.oauth import OAuthRemoteApp, add_query, \
-        parse_response, OAuthException
+from flaskext.oauth import *
 
 class DoubanOAuth(OAuthRemoteApp):
     def authorize(self, callback=None, next_url=None):
@@ -37,8 +36,28 @@ class DoubanOAuth(OAuthRemoteApp):
             raise OAuthException('Invalid response from ' + self.name, data)
         return data
 
+    def request(self, url, data=None, headers=None, format='urlencoded',
+                method='GET', content_type=None):
+        headers = dict(headers or {})
+        client = self.make_client()
+        url = self.expand_url(url)
+        if method == 'GET':
+            assert format == 'urlencoded'
+            if data is not None:
+                url = add_query(url, data)
+                data = None
+        else:
+            if content_type is None:
+                data, content_type = encode_request_data(data, format)
+            if content_type is not None:
+                headers['Content-Type'] = content_type
+        resp, content = client.request(url, method=method,
+                                             body=data or '',
+                                             headers=headers)
+        return OAuthResponse(resp, r'''%s''' % content)
+
 douban = DoubanOAuth(None, 'douban',
-    base_url='http://api.douban.com',
+    base_url='https://api.douban.com',
     request_token_url=None,
     access_token_url='https://www.douban.com/service/auth2/token',
     authorize_url='https://www.douban.com/service/auth2/auth',
@@ -48,5 +67,9 @@ douban = DoubanOAuth(None, 'douban',
 )
 
 def GET(path, param):
-    url = os.path.join(path, param)
-    return douban.get(url)
+    url = os.path.join(path, param+'?alt=json')
+    access_token = douban.tokengetter_func()
+    if not access_token:
+        return None
+    return douban.get(url, headers={'Authorization': 'Bearer %s' % access_token[0]})
+
