@@ -27,22 +27,21 @@ def login():
             return redirect(request.referrer or url_for('index'))
         next_url = url_for('account.bind')
 
-    return douban.authorize(callback=url_for('douban_oauth.authorized',
-        next=next_url))
+    return douban.authorize(callback=url_for('douban_oauth.authorized'), next_url=next_url)
 
 @douban_oauth.route('/Authorized')
 @douban.authorized_handler
 def authorized(resp):
-    next_url = request.args.get('next') or url_for('index')
+    next_url = request.args.get('state') or url_for('index')
     if resp is None:
         return redirect(next_url)
 
-    oauth = OAuth.query.filter_by(oauth_uid=resp['user_id']).first()
+    oauth = OAuth.query.filter_by(oauth_uid=resp['douban_user_id']).first()
     if oauth is None:
-        oauth = OAuth(None, resp['user_id'], 'douban')
+        oauth = OAuth(None, resp['douban_user_id'], 'douban')
 
-    oauth.oauth_token = resp['oauth_token']
-    oauth.oauth_secret = resp['oauth_token_secret']
+    oauth.oauth_token = resp['access_token']
+    oauth.oauth_secret = resp['access_token']
     if not g.user and oauth.uid:
         session['user_id'] = oauth.uid
         return redirect(url_for('index'))
