@@ -35,7 +35,7 @@ def authorized(resp):
     next_url = request.args.get('state') or url_for('index')
     if resp is None:
         return redirect(next_url)
-
+    print resp
     oauth = OAuth.query.filter_by(oauth_uid=resp['renren_user_id']).first()
     if oauth is None:
         oauth = OAuth(None, resp['renren_user_id'], 'renren')
