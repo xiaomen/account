@@ -6,6 +6,7 @@ import logging
 from models import *
 from views.weibo import weibo_oauth
 from views.douban import douban_oauth
+from views.renren import renren_oauth
 from views.account import account
 from sheep.api.statics import static_files
 from flask import Flask, render_template, session, g
@@ -16,6 +17,7 @@ app.secret_key = config.SECRET_KEY
 app.jinja_env.filters['s_files'] = static_files
 app.register_blueprint(weibo_oauth, url_prefix='/Weibo')
 app.register_blueprint(douban_oauth, url_prefix='/Douban')
+app.register_blueprint(renren_oauth, url_prefix='/Renren')
 app.register_blueprint(account, url_prefix='/Account')
 
 logger = logging.getLogger(__name__)
