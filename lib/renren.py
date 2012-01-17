@@ -59,6 +59,7 @@ class RenrenOAuth(OAuthRemoteApp):
                                              body=data or '',
                                              headers=headers)
         #TODO access_token 过期，redirect到auth路径重新OOXX
+        #刷新token然后更新数据库，再进行请求
         return OAuthResponse(resp, r'''%s''' % content)
 
 renren = RenrenOAuth(None, 'renren',

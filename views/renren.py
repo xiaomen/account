@@ -34,7 +34,6 @@ def login():
 def authorized(resp):
     csrf = session.pop('renren_oauthcsrf', None)
     if request.args.get('state') !=  csrf:
-        #TODO 跨站死
         return redirect(url_for('index'))
     next_url = session.pop('renren_oauthnext') or url_for('index')
 

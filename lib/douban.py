@@ -59,6 +59,7 @@ class DoubanOAuth(OAuthRemoteApp):
                                              body=data or '',
                                              headers=headers)
         #TODO access_token 过期，redirect到auth路径重新OOXX
+        #对于豆瓣的oauth可以直接把路径计算为next_url
         return OAuthResponse(resp, r'''%s''' % content)
 
 douban = DoubanOAuth(None, 'douban',
