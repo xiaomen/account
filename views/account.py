@@ -63,7 +63,7 @@ def login():
     if not user:
         logger.info('no such user')
         return render_template('login.html', info='no such user')
-    if user.check_password(password):
+    if not user.check_password(password):
         logger.info('invaild passwd')
         return render_template('login.html', info='invaild passwd')
 
