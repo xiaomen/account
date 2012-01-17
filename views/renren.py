@@ -27,7 +27,7 @@ def login():
             return redirect(request.referrer or url_for('index'))
         next_url = url_for('account.bind')
     callback = 'http://%s%s' % (request.environ['HTTP_HOST'], url_for('renren_oauth.authorized'))
-    return renren.authorize(callback, url_for)
+    return renren.authorize(callback, next_url)
 
 @renren_oauth.route('/Authorized')
 @renren.authorized_handler
