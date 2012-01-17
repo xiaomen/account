@@ -55,8 +55,3 @@ def before_request():
         g.user = session['user']
         g.oauth = lambda otype: OAuth.query.filter_by(oauth_type=otype, uid=g.user.id).first()
 
-@app.after_request
-def after_request(response):
-    db.session.remove()
-    return response
-
