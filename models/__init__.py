@@ -1,47 +1,53 @@
 #!/usr/bin/python
 # encoding: UTF-8
 
-__all__ = ['db_session', 'OAuth', 'User', 'init_db']
+__all__ = ['db', 'OAuth', 'User', 'init_db']
 
-import config
-from sqlalchemy import create_engine, Column, Integer, String
-from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+import hashlib
+from flaskext.sqlalchemy import SQLAlchemy
 
-# setup sqlalchemy
-engine = create_engine(config.DATABASE_URI, pool_recycle=True)
-db_session = scoped_session(sessionmaker(autocommit=False,
-                                         autoflush=False,
-                                         bind=engine))
-Base = declarative_base()
-Base.query = db_session.query_property()
+db = SQLAlchemy()
 
-def init_db():
-    Base.metadata.create_all(bind=engine)
+def init_db(app):
+    db.init_app(app)
 
-class User(Base):
+class User(db.Model):
     __tablename__ = 'users'
-    id = Column('id', Integer, primary_key=True, autoincrement=True)
-    name = Column(String(16))
-    passwd = Column(String(200))
-    email = Column(String(30))
-    avatar = Column(String(255))
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(16))
+    passwd = db.Column(db.String(200))
+    email = db.Column(db.String(30))
+    avatar = db.Column(db.String(255))
 
     def __init__(self, username, password, email, *args, **kwargs):
         self.name = username
-        self.passwd = password
+        self.passwd = User.create_password(username, password)
         self.email = email
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
 
-class OAuth(Base):
+    @staticmethod
+    def create_password(username, password):
+        m = hashlib.sha1()
+        m.update(username)
+        p1 = m.hexdigest()
+        p1 = p1[10:20] + p1[:10]
+        m = hashlib.md5()
+        m.update(p1)
+        m.update(password)
+        return m.hexdigest()
+
+    def check_password(self, passwd):
+        return self.passwd == User.create_password(self.name, passwd)
+
+class OAuth(db.Model):
     __tablename__ = 'oauth'
-    id = Column('id', Integer, primary_key=True, autoincrement=True)
-    uid = Column('uid', Integer)
-    oauth_type = Column(String(20))
-    oauth_uid = Column(String(200))
-    oauth_token = Column(String(200))
-    oauth_secret = Column(String(200))
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    uid = db.Column('uid', db.Integer)
+    oauth_type = db.Column(db.String(20))
+    oauth_uid = db.Column(db.String(200))
+    oauth_token = db.Column(db.String(200))
+    oauth_secret = db.Column(db.String(200))
 
     def __init__(self, uid, ouid, otype, *args, **kwargs):
         self.uid = uid
@@ -49,4 +55,7 @@ class OAuth(Base):
         self.oauth_type = otype
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
+
+    def bind(self, uid):
+        self.uid = uid
 

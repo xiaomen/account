@@ -15,6 +15,13 @@ app = Flask(__name__)
 app.debug = config.DEBUG
 app.secret_key = config.SECRET_KEY
 app.jinja_env.filters['s_files'] = static_files
+
+app.config.update(
+    SQLALCHEMY_DATABASE_URI = config.DATABASE_URI,
+    SQLALCHEMY_POOL_SIZE = 1000,
+    SQLALCHEMY_POOL_RECYCLE = True
+)
+
 app.register_blueprint(weibo_oauth, url_prefix='/Weibo')
 app.register_blueprint(douban_oauth, url_prefix='/Douban')
 app.register_blueprint(renren_oauth, url_prefix='/Renren')
@@ -22,7 +29,7 @@ app.register_blueprint(account, url_prefix='/Account')
 
 logger = logging.getLogger(__name__)
 
-init_db()
+init_db(app)
 
 @app.route('/')
 def index():
@@ -50,6 +57,6 @@ def before_request():
 
 @app.after_request
 def after_request(response):
-    db_session.remove()
+    db.session.remove()
     return response
 

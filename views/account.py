@@ -40,10 +40,9 @@ def register():
     #TODO escape 参数
     if not (username and password and email):
         return render_template('register.html')
-    password = make_passwd(email, password)
     user = User(username, password, email)
-    db_session.add(user)
-    db_session.commit()
+    db.session.add(user)
+    db.session.commit()
     session['user_id'] = user.id
     if oauth:
         bind(oauth, user.id)
@@ -60,11 +59,14 @@ def login():
     if not (password and email):
         return render_template('login.html', info='less info')
 
-    password = make_passwd(email, password)
-    user = User.query.filter_by(email=email,passwd=password).first()
+    user = User.query.filter_by(email=email).first()
     if not user:
-        logger.info('invaild login')
-        return render_template('login.html', info='invaild')
+        logger.info('no such user')
+        return render_template('login.html', info='no such user')
+    if user.check_password(password):
+        logger.info('invaild passwd')
+        return render_template('login.html', info='invaild passwd')
+
     session['user_id'] = user.id
     return redirect(url_for('index'))
 
@@ -74,17 +76,7 @@ def logout():
     session.pop('user', None)
     return redirect(request.referrer or url_for('index'))
 
-def make_passwd(username, password):
-    m = hashlib.sha1()
-    m.update(username)
-    p1 = m.hexdigest()
-    p1 = p1[10:20] + p1[:10]
-    m = hashlib.md5()
-    m.update(p1)
-    m.update(password)
-    return m.hexdigest()
-
 def bind(oauth, uid):
-    oauth.uid = uid
-    db_session.add(oauth)
-    db_session.commit()
+    oauth.bind(uid)
+    db.session.add(oauth)
+    db.session.commit()
