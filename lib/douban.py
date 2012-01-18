@@ -71,11 +71,3 @@ douban = DoubanOAuth(None, 'douban',
     consumer_key=config.DOUBAN_APP_KEY,
     consumer_secret=config.DOUBAN_APP_SECRET
 )
-
-def GET(path, param):
-    url = os.path.join(path, param+'?alt=json')
-    access_token = douban.tokengetter_func()
-    if not access_token:
-        return None
-    return douban.get(url, headers={'Authorization': 'Bearer %s' % access_token[0]})
-

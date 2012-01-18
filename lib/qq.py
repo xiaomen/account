@@ -84,11 +84,3 @@ qq = QQOAuth(None, 'qq',
     consumer_key=config.QQ_APP_KEY,
     consumer_secret=config.QQ_APP_SECRET
 )
-
-def GET(path, param):
-    url = os.path.join(path, param)
-    access_token = qq.tokengetter_func()
-    if not access_token:
-        return None
-    return qq.get(url, headers={'Authorization': 'Bearer %s' % access_token[0]})
-

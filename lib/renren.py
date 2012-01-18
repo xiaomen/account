@@ -71,11 +71,3 @@ renren = RenrenOAuth(None, 'renren',
     consumer_key=config.RENREN_APP_KEY,
     consumer_secret=config.RENREN_APP_SECRET
 )
-
-def GET(path, param):
-    url = os.path.join(path, param+'?alt=json')
-    access_token = renren.tokengetter_func()
-    if not access_token:
-        return None
-    return renren.get(url, headers={'Authorization': 'Bearer %s' % access_token[0]})
-
