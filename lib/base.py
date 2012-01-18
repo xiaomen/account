@@ -8,7 +8,7 @@ from flaskext.oauth import *
 from flask import session, redirect, request
 
 class BasicOAuth(OAuthRemoteApp):
-	def __init__(self, name, base_url,
+    def __init__(self, name, base_url,
                  request_token_url,
                  access_token_url, authorize_url,
                  consumer_key, consumer_secret,
@@ -21,7 +21,7 @@ class BasicOAuth(OAuthRemoteApp):
                  request_token_params,
                  access_token_method)
 
-	def authorize(self, callback=None, next_url=None):
+    def authorize(self, callback=None, next_url=None):
         assert callback is not None, 'Callback is required OAuth2'
         csrf = base64.encodestring(os.urandom(10)).strip()
         params = dict(self.request_token_params)
@@ -48,7 +48,7 @@ class BasicOAuth(OAuthRemoteApp):
         return check_oauth_response(resp, content)
 
     def check_oauth_response(self, resp, content):
-		try:
+        try:
             data = json.loads(content)
             if resp['status'] != '200':
                 raise OAuthException('Invalid response from ' + self.name, data)
