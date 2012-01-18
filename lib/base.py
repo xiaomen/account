@@ -4,8 +4,11 @@
 import os
 import json
 import base64
+import logging
 from flaskext.oauth import *
 from flask import session, redirect, request
+
+logger = logging.getLogger(__name__)
 
 class BasicOAuth(OAuthRemoteApp):
     def __init__(self, name, base_url,
