@@ -64,7 +64,7 @@ def test():
             {'uid' :oauth_info.oauth_uid}, {'Authorization' : 'OAuth2 %s' % weibo.tokengetter_func()})
 
         oauth_info = g.oauth('douban')
-        output_userinfo(douban, oauth_info, '/users/show/%s?alt=json' % oauth_info.oauth_uid,
+        output_userinfo(douban, oauth_info, '/people/@me?alt=json',
             headers = {'Authorization' : 'Bearer %s' % douban.tokengetter_func()})
 
         return 'Hello World'

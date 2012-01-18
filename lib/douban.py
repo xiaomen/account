@@ -27,9 +27,8 @@ class DoubanOAuth(BasicOAuth):
         resp, content = client.request(url, method=method,
                                              body=data or '',
                                              headers=headers)
-        print resp
-        print content
-        return OAuthResponse(resp, r'''%s''' % content)
+        content = content.replace('\'', '\"')
+        return OAuthResponse(resp, content)
 
 douban = DoubanOAuth('douban',
     base_url='https://api.douban.com',
