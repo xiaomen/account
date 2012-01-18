@@ -50,3 +50,21 @@ def before_request():
         g.user = session['user']
         g.oauth = lambda otype: OAuth.query.filter_by(oauth_type=otype, uid=g.user.id).first()
 
+@app.route('/test')
+def test():
+    if g.user is None:
+        return render_template('index.html')
+    else:
+        from lib.weibo import weibo
+        from lib.douban import douban
+        from lib.qq import qq
+        from lib.renren import renren
+        output_userinfo(weibo, g.oauth('weibo'), '/users/show.json', \
+            'uid=%s' % oauth_info.oauth_uid, {'Authorization' : 'OAuth2 %s' % weibo.tokengetter_func()[0]}
+        return 'Hello World'
+
+def output_userinfo(o, oauth_info, url, data, headers=None):
+    if not oauth_info:
+        return None
+    user_info = o.request(url, data, headers)
+    print user_info.data

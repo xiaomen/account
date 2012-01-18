@@ -17,7 +17,7 @@ def get_weibo_token():
         oauth_info = g.oauth('weibo')
         if not oauth_info:
             return
-        return oauth_info.oauth_token, oauth_info.oauth_secret
+        return oauth_info.oauth_token
 
 @weibo_oauth.route('/Login')
 def login():

@@ -60,6 +60,17 @@ class BasicOAuth(OAuthRemoteApp):
             logger.exception('oauth2_response_error')
             return None
 
+    def get_request_token(self):
+        assert self.tokengetter_func is not None, 'missing tokengetter function'
+        rv = self.tokengetter_func()
+        if rv is None:
+            rv = session.get(self.name + '_oauthtok')
+            if rv is None:
+                raise OAuthException('No token available')
+        if not isinstance(rv, tuple):
+            rv = (rv, )
+        return oauth2.Token(*rv)
+
     def request(self, url, data=None, headers=None, format='urlencoded',
                 method='GET', content_type=None):
         headers = dict(headers or {})
