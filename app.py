@@ -61,7 +61,7 @@ def test():
         from lib.renren import renren
         oauth_info = g.oauth('weibo')
         output_userinfo(weibo, oauth_info, '/users/show.json', \
-            'uid=%s' % oauth_info.oauth_uid, {'Authorization' : 'OAuth2 %s' % weibo.tokengetter_func()[0]})
+            {'uid' :oauth_info.oauth_uid}, {'Authorization' : 'OAuth2 %s' % weibo.tokengetter_func()[0]})
         return 'Hello World'
 
 def output_userinfo(o, oauth_info, url, data, headers=None):
