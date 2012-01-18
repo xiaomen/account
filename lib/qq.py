@@ -72,7 +72,7 @@ qq = QQOAuth(None, 'qq',
     request_token_url=None,
     access_token_url='https://graph.qq.com/oauth2.0/token',
     authorize_url='https://graph.qq.com/oauth2.0/authorize',
-    access_token_method='POST',
+    access_token_method='GET',
     consumer_key=config.QQ_APP_KEY,
     consumer_secret=config.QQ_APP_SECRET
 )
