@@ -17,7 +17,7 @@ def get_douban_token():
         oauth_info = g.oauth('douban')
         if not oauth_info:
             return
-        return oauth_info.oauth_token, oauth_info.oauth_secret
+        return oauth_info.oauth_token
 
 @douban_oauth.route('/Login')
 def login():
