@@ -7,8 +7,11 @@ import os
 import json
 import config
 import base64
+import logging
 from flask import session, redirect, request
 from flaskext.oauth import *
+
+logger = logging.getLogger(__name__)
 
 class QQOAuth(OAuthRemoteApp):
     def authorize(self, callback=None, next_url=None):
@@ -35,10 +38,9 @@ class QQOAuth(OAuthRemoteApp):
         }
         url = add_query(self.expand_url(self.access_token_url), remote_args)
         resp, content = self._client.request(url, self.access_token_method)
-        print resp
-        print content
-        data = json.loads(content)
-        if resp['status'] != '200':
+        data = json.loads(content[content.find('(')+1 : content.find(')')].strip())
+        if data.get('error', None):
+            logger.exception(data)
             raise OAuthException('Invalid response from ' + self.name, data)
         return data
 
