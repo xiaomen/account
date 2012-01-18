@@ -45,7 +45,7 @@ class BasicOAuth(OAuthRemoteApp):
         }
         url = add_query(self.expand_url(self.access_token_url), remote_args)
         resp, content = self._client.request(url, self.access_token_method)
-        return check_oauth_response(resp, content)
+        return self.check_oauth_response(resp, content)
 
     def check_oauth_response(self, resp, content):
         try:
