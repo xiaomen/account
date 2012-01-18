@@ -40,9 +40,9 @@ def authorized(resp):
     if resp is None:
         return redirect(next_url)
 
-    oauth = OAuth.query.filter_by(oauth_uid=resp['user']['id']).first()
+    oauth = OAuth.query.filter_by(oauth_uid=resp['openid']).first()
     if oauth is None:
-        oauth = OAuth(None, resp['user']['id'], 'qq')
+        oauth = OAuth(None, resp['openid'], 'qq')
 
     oauth.oauth_token = resp['access_token']
     oauth.oauth_secret = resp['access_token']

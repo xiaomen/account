@@ -49,10 +49,8 @@ class QQOAuth(OAuthRemoteApp):
         #TODO ugly need refactor
         openid_url = self.base_url + 'oauth2.0/me?access_token=' + data['access_token']
         content = urllib2.urlopen(openid_url).read().strip()
-        print content
         content = json.loads(content[content.find('(')+1:content.find(')')].strip())
         data.update(content)
-        print data
         return data
 
     def request(self, url, data=None, headers=None, format='urlencoded',
