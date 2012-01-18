@@ -39,9 +39,9 @@ def authorized(resp):
     if resp is None:
         return redirect(next_url)
 
-    oauth = OAuth.query.filter_by(oauth_uid=resp['user_id']).first()
+    oauth = OAuth.query.filter_by(oauth_uid=resp['uid']).first()
     if oauth is None:
-        oauth = OAuth(None, resp['user_id'], 'weibo')
+        oauth = OAuth(None, resp['uid'], 'weibo')
 
     oauth.oauth_token = resp['access_token']
     oauth.oauth_secret = resp['access_token']
@@ -50,4 +50,3 @@ def authorized(resp):
         return redirect(url_for('index'))
     session['from_oauth'] = oauth
     return redirect(next_url)
-
