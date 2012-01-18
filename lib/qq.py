@@ -8,11 +8,8 @@ import json
 import config
 import base64
 import urllib2
-import logging
 from flask import session, redirect, request
 from flaskext.oauth import *
-
-logger = logging.getLogger(__name__)
 
 class QQOAuth(OAuthRemoteApp):
     def authorize(self, callback=None, next_url=None):

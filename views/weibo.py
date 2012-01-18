@@ -37,6 +37,7 @@ def authorized(resp):
         return redirect(url_for('index'))
     next_url = session.pop('weibo_oauthnext') or url_for('index')
     if resp is None:
+        #TODO logger exception
         return redirect(next_url)
 
     oauth = OAuth.query.filter_by(oauth_uid=resp['uid']).first()
