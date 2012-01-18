@@ -8,7 +8,26 @@ import config
 from base import BasicOAuth
 
 class DoubanOAuth(BasicOAuth):
-    pass
+    def request(self, url, data=None, headers=None, format='urlencoded',
+                method='GET', content_type=None):
+        headers = dict(headers or {})
+        client = self.make_client()
+        url = self.expand_url(url)
+        if method == 'GET':
+            assert format == 'urlencoded'
+            if data is not None:
+                url = add_query(url, data)
+                data = None
+        else:
+            if content_type is None:
+                data, content_type = encode_request_data(data, format)
+            if content_type is not None:
+                headers['Content-Type'] = content_type
+
+        resp, content = client.request(url, method=method,
+                                             body=data or '',
+                                             headers=headers)
+        return OAuthResponse(resp, r'''%s''' % content)
 
 douban = DoubanOAuth('douban',
     base_url='https://api.douban.com',
