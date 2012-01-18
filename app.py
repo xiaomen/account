@@ -69,7 +69,7 @@ def test():
 
         return 'Hello World'
 
-def output_userinfo(o, oauth_info, url, data, headers=None):
+def output_userinfo(o, oauth_info, url, data=None, headers=None):
     if not oauth_info:
         return None
     user_info = o.request(url, data, headers)
