@@ -10,7 +10,7 @@ from base import BasicOAuth
 class RenrenOAuth(BasicOAuth):
     pass
 
-renren = RenrenOAuth(None, 'renren',
+renren = RenrenOAuth('renren',
     base_url='http://api.renren.com/restserver.do',
     request_token_url=None,
     access_token_url='https://graph.renren.com/oauth/token',

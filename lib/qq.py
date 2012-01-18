@@ -30,7 +30,7 @@ class QQOAuth(BasicOAuth):
             logger.exception('oauth2_response_error')
             return None
 
-qq = QQOAuth(None, 'qq',
+qq = QQOAuth('qq',
     base_url='https://graph.qq.com/',
     request_token_url=None,
     access_token_url='https://graph.qq.com/oauth2.0/token',

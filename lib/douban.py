@@ -10,7 +10,7 @@ from base import BasicOAuth
 class DoubanOAuth(BasicOAuth):
     pass
 
-douban = DoubanOAuth(None, 'douban',
+douban = DoubanOAuth('douban',
     base_url='https://api.douban.com',
     request_token_url=None,
     access_token_url='https://www.douban.com/service/auth2/token',
