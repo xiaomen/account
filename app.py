@@ -59,7 +59,8 @@ def test():
         from lib.douban import douban
         from lib.qq import qq
         from lib.renren import renren
-        output_userinfo(weibo, g.oauth('weibo'), '/users/show.json', \
+        oauth_info = g.oauth('weibo')
+        output_userinfo(weibo, oauth_info, '/users/show.json', \
             'uid=%s' % oauth_info.oauth_uid, {'Authorization' : 'OAuth2 %s' % weibo.tokengetter_func()[0]})
         return 'Hello World'
 
