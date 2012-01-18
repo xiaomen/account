@@ -37,14 +37,24 @@ class QQOAuth(OAuthRemoteApp):
             'grant_type':       'authorization_code',
         }
         url = add_query(self.expand_url(self.access_token_url), remote_args)
-        print url
         resp, content = self._client.request(url, self.access_token_method)
-        print resp
-        print content
-        data = json.loads(content[content.find('(')+1 : content.find(')')].strip())
-        print data
-        if data.get('error', None):
+        data = {}
+        for c in content.split('&'):
+            k, v = c.split('=')
+            data[k] = v
+        if resp['status'] != '200':
             raise OAuthException('Invalid response from ' + self.name, data)
+
+        #TODO ugly need refactor
+        openid_url = self.base_url + 'oauth2.0/me?access_token=' + data['access_token']
+        client = self.make_client()
+        resp, content = client.request(openid_url, method=GET, body='', headers=None)
+        if resp['status'] != '200':
+            raise OAuthException('Invalid response from ' + self.name, data)
+        print content
+        content = json.loads(content[content.find('(')+1:content.find(')')].strip())
+        data.update(content)
+        print data
         return data
 
     def request(self, url, data=None, headers=None, format='urlencoded',
