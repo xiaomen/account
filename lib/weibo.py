@@ -7,11 +7,11 @@ import os
 import config
 from base import BasicOAuth
 
-class WeiboOAuth(BasicOAuth:):
+class WeiboOAuth(BasicOAuth):
     pass
 
 weibo = WeiboOAuth('weibo',
-    base_url=' https://api.weibo.com/2/',
+    base_url='https://api.weibo.com/2/',
     request_token_url=None,
     access_token_url='https://api.weibo.com/oauth2/access_token',
     authorize_url='https://api.weibo.com/oauth2/authorize',
