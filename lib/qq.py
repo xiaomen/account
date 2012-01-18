@@ -7,6 +7,7 @@ import os
 import json
 import config
 import base64
+import urllib2
 import logging
 from flask import session, redirect, request
 from flaskext.oauth import *
@@ -47,10 +48,7 @@ class QQOAuth(OAuthRemoteApp):
 
         #TODO ugly need refactor
         openid_url = self.base_url + 'oauth2.0/me?access_token=' + data['access_token']
-        client = self.make_client()
-        resp, content = client.request(openid_url, method=GET, body='', headers=None)
-        if resp['status'] != '200':
-            raise OAuthException('Invalid response from ' + self.name, data)
+        content = urllib2.urlopen(openid_url).read().strip()
         print content
         content = json.loads(content[content.find('(')+1:content.find(')')].strip())
         data.update(content)
