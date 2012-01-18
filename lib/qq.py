@@ -40,7 +40,7 @@ class QQOAuth(OAuthRemoteApp):
         resp, content = self._client.request(url, self.access_token_method)
         data = json.loads(content[content.find('(')+1 : content.find(')')].strip())
         if data.get('error', None):
-            logger.exception(data)
+            logger.info(data)
             raise OAuthException('Invalid response from ' + self.name, data)
         return data
 
