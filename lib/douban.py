@@ -5,7 +5,7 @@ __all__ = ['douban']
 
 import os
 import config
-from base import BasicOAuth
+from base import BasicOAuth, OAuthResponse
 
 class DoubanOAuth(BasicOAuth):
     def request(self, url, data=None, headers=None, format='urlencoded',
@@ -27,6 +27,8 @@ class DoubanOAuth(BasicOAuth):
         resp, content = client.request(url, method=method,
                                              body=data or '',
                                              headers=headers)
+        print resp
+        print content
         return OAuthResponse(resp, r'''%s''' % content)
 
 douban = DoubanOAuth('douban',
