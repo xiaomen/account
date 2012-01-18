@@ -39,14 +39,7 @@ def index():
         return render_template('index.html')
     else:
         logout = '<a href="/Account/Logout">Logout</a>'
-        oauth_info = g.oauth('douban')
-        values = {}
-        if oauth_info:
-            from lib import douban
-            user_info = douban.GET("/people", "@me")
-            if user_info.status == 200:
-                values = user_info.data
-        return render_template('index.html', logout=logout, values=values)
+        return render_template('index.html', logout=logout)
 
 @app.before_request
 def before_request():
