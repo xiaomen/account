@@ -39,6 +39,8 @@ class QQOAuth(OAuthRemoteApp):
         url = add_query(self.expand_url(self.access_token_url), remote_args)
         print url
         resp, content = self._client.request(url, self.access_token_method)
+        print resp
+        print content
         data = json.loads(content[content.find('(')+1 : content.find(')')].strip())
         print data
         if data.get('error', None):
