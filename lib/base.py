@@ -68,7 +68,8 @@ class BasicOAuth(OAuthRemoteApp):
             if rv is None:
                 raise OAuthException('No token available')
         if not isinstance(rv, tuple):
-            rv = (rv, )
+            #ugly design
+            rv = (rv, '')
         return oauth2.Token(*rv)
 
     def request(self, url, data=None, headers=None, format='urlencoded',
