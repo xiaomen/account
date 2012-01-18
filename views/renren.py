@@ -17,7 +17,7 @@ def get_renren_token():
         oauth_info = g.oauth('renren')
         if not oauth_info:
             return
-        return oauth_info.oauth_token, oauth_info.oauth_secret
+        return oauth_info.oauth_token
 
 @renren_oauth.route('/Login')
 def login():
@@ -51,4 +51,3 @@ def authorized(resp):
         return redirect(url_for('index'))
     session['from_oauth'] = oauth
     return redirect(next_url)
-

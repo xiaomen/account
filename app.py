@@ -67,6 +67,9 @@ def test():
         output_userinfo(douban, oauth_info, '/people/@me?alt=json',
             headers = {'Authorization' : 'Bearer %s' % douban.tokengetter_func()})
 
+        oauth_info = g.oauth('renren')
+        output_userinfo(douban, oauth_info, {'access_token': renren.tokengetter_func()})
+
         return 'Hello World'
 
 def output_userinfo(o, oauth_info, url, data=None, headers=None):
