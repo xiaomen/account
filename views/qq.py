@@ -37,6 +37,7 @@ def authorized(resp):
         return redirect(url_for('index'))
     next_url = session.pop('qq_oauthnext') or url_for('index')
 
+    #TODO None redirect to index
     if resp is None:
         return redirect(next_url)
 
@@ -51,4 +52,3 @@ def authorized(resp):
         return redirect(url_for('index'))
     session['from_oauth'] = oauth
     return redirect(next_url)
-

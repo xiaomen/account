@@ -4,6 +4,7 @@
 __all__ = ['qq']
 
 import os
+import json
 import config
 import urllib2
 import logging
@@ -20,7 +21,6 @@ class QQOAuth(BasicOAuth):
             for c in content.split('&'):
                 k, v = c.split('=')
                 data[k] = v
-            
             openid_url = self.base_url + 'oauth2.0/me?access_token=' + data['access_token']
             content = urllib2.urlopen(openid_url).read().strip()
             content = json.loads(content[content.find('(')+1:content.find(')')].strip())
