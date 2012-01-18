@@ -31,7 +31,7 @@ class RenrenOAuth(BasicOAuth):
         data, content_type = encode_request_data(data, 'urlencoded')
         if content_type is not None:
             headers['Content-Type'] = content_type
-        resp, content = client.request(url, method='POST',
+        resp, content = client.request(self.base_url, method='POST',
                                              body=data,
                                              headers=headers)
         return OAuthResponse(resp, content)
