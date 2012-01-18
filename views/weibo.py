@@ -3,45 +3,45 @@
 
 import logging
 from models import *
-from lib.douban import douban
+from lib.weibo import weibo
 from flask import Blueprint, g, session, \
         request, redirect, url_for
 
 logger = logging.getLogger(__name__)
 
-douban_oauth = Blueprint('douban_oauth', __name__)
+weibo_oauth = Blueprint('weibo_oauth', __name__)
 
-@douban.tokengetter
-def get_douban_token():
+@weibo.tokengetter
+def get_weibo_token():
     if g.user:
-        oauth_info = g.oauth('douban')
+        oauth_info = g.oauth('weibo')
         if not oauth_info:
             return
         return oauth_info.oauth_token, oauth_info.oauth_secret
 
-@douban_oauth.route('/Login')
+@weibo_oauth.route('/Login')
 def login():
     next_url = url_for('account.register')
     if g.user:
-        if g.oauth('douban'):
+        if g.oauth('weibo'):
             return redirect(request.referrer or url_for('index'))
         next_url = url_for('account.bind')
-    callback = 'http://%s%s' % (request.environ['HTTP_HOST'], url_for('douban_oauth.authorized'))
-    return douban.authorize(callback, next_url)
+    callback = 'http://%s%s' % (request.environ['HTTP_HOST'], url_for('weibo_oauth.authorized'))
+    return weibo.authorize(callback, next_url)
 
-@douban_oauth.route('/Authorized')
-@douban.authorized_handler
+@weibo_oauth.route('/Authorized')
+@weibo.authorized_handler
 def authorized(resp):
-    csrf = session.pop('douban_oauthcsrf', None)
+    csrf = session.pop('weibo_oauthcsrf', None)
     if request.args.get('state') !=  csrf:
         return redirect(url_for('index'))
-    next_url = session.pop('douban_oauthnext') or url_for('index')
+    next_url = session.pop('weibo_oauthnext') or url_for('index')
     if resp is None:
         return redirect(next_url)
 
-    oauth = OAuth.query.filter_by(oauth_uid=resp['douban_user_id']).first()
+    oauth = OAuth.query.filter_by(oauth_uid=resp['user_id']).first()
     if oauth is None:
-        oauth = OAuth(None, resp['douban_user_id'], 'douban')
+        oauth = OAuth(None, resp['user_id'], 'weibo')
 
     oauth.oauth_token = resp['access_token']
     oauth.oauth_secret = resp['access_token']
