@@ -45,7 +45,6 @@ def authorized(resp):
         oauth = OAuth(None, resp['uid'], 'weibo')
 
     oauth.oauth_token = resp['access_token']
-    oauth.oauth_secret = resp['access_token']
     if not g.user and oauth.uid:
         session['user_id'] = oauth.uid
         return redirect(url_for('index'))

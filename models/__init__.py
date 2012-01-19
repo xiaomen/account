@@ -7,9 +7,10 @@ import hashlib
 from flaskext.sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
-
 def init_db(app):
     db.init_app(app)
+    db.app = app
+    db.create_all()
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -47,7 +48,6 @@ class OAuth(db.Model):
     oauth_type = db.Column(db.String(20))
     oauth_uid = db.Column(db.String(200))
     oauth_token = db.Column(db.String(200))
-    oauth_secret = db.Column(db.String(200))
 
     def __init__(self, uid, ouid, otype, *args, **kwargs):
         self.uid = uid

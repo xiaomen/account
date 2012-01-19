@@ -17,7 +17,7 @@ def get_qq_token():
         oauth_info = g.oauth('qq')
         if not oauth_info:
             return
-        return oauth_info.oauth_token, oauth_info.oauth_secret
+        return oauth_info.oauth_token
 
 @qq_oauth.route('/Login')
 def login():
@@ -46,7 +46,6 @@ def authorized(resp):
         oauth = OAuth(None, resp['openid'], 'qq')
 
     oauth.oauth_token = resp['access_token']
-    oauth.oauth_secret = resp['access_token']
     if not g.user and oauth.uid:
         session['user_id'] = oauth.uid
         return redirect(url_for('index'))
