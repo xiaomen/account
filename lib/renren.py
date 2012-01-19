@@ -9,13 +9,16 @@ import hashlib
 from base import BasicOAuth, OAuthResponse, encode_request_data
 
 def make_sig(data):
-    keys = data.keys()
-    keys.sort()
-    s = ''.join(['%s=%s' % (k, data[k]) for k in keys])
+    s = ['%s=%s' % (k, v) for k, v in data.iteritems()]
+    s.sort()
+    s = ''.join(s)
     s += config.RENREN_APP_SECRET
+    print s
     m = hashlib.md5()
     m.update(s)
-    return m.hexdigest()
+    ret = m.hexdigest()
+    print ret
+    return ret
 
 class RenrenOAuth(BasicOAuth):
     def request(self, api, data=None, headers=None):
