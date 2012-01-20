@@ -50,7 +50,7 @@ def authorized(resp):
     if not g.user and oauth.uid:
         session['user_id'] = oauth.uid
         if old_token != oauth.oauth_token:
-            bind_oauth(oauth, oauth_uid)
+            bind_oauth(oauth, oauth.uid)
         return redirect(url_for('index'))
     session['from_oauth'] = oauth
     return redirect(next_url)
