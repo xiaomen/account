@@ -4,6 +4,7 @@
 import logging
 import hashlib
 from models import *
+from utils import bind_oauth
 from flask import Blueprint, session, g, \
         redirect, request, url_for, render_template
 
@@ -24,7 +25,7 @@ def bind():
     oauth = session.pop('from_oauth', None)
     allow = 'allow' in request.form
     if g.user and oauth and allow:
-        bind(oauth, g.user.id)
+        bind_oauth(oauth, g.user.id)
     return redirect(url_for('index'))
 
 @account.route('/Register', methods=['POST','GET'])
@@ -45,7 +46,7 @@ def register():
     db.session.commit()
     session['user_id'] = user.id
     if oauth:
-        bind(oauth, user.id)
+        bind_oauth(oauth, user.id)
     return redirect(url_for('index'))
 
 @account.route('/Login', methods=['POST', 'GET'])
@@ -76,7 +77,3 @@ def logout():
     session.pop('user', None)
     return redirect(request.referrer or url_for('index'))
 
-def bind(oauth, uid):
-    oauth.bind(uid)
-    db.session.add(oauth)
-    db.session.commit()

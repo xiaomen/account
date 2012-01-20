@@ -4,6 +4,7 @@
 import logging
 from models import *
 from lib.qq import qq
+from utils import bind_oauth
 from flask import Blueprint, g, session, \
         request, redirect, url_for
 
@@ -45,9 +46,12 @@ def authorized(resp):
     if oauth is None:
         oauth = OAuth(None, resp['openid'], 'qq')
 
+    old_token = oauth.oauth_token
     oauth.oauth_token = resp['access_token']
     if not g.user and oauth.uid:
         session['user_id'] = oauth.uid
+        if old_token != oauth_token:
+            bind_oauth(oauth, oauth_uid)
         return redirect(url_for('index'))
     session['from_oauth'] = oauth
     return redirect(next_url)
