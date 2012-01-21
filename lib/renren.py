@@ -23,7 +23,8 @@ def make_sig(data):
 class RenrenOAuth(BasicOAuth):
     def check_oauth_response(self, resp, content):
         data = super(RenrenOAuth, self).check_oauth_response(resp, content)
-        data['renren_uid'] = data['user']['id']
+        if data:
+            data['renren_uid'] = data['user']['id']
         return data
 
     def request(self, api, data=None, headers=None):
