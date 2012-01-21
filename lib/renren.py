@@ -21,6 +21,17 @@ def make_sig(data):
     return ret
 
 class RenrenOAuth(BasicOAuth):
+    def check_oauth_response(self, resp, content):
+        try:
+            data = json.loads(content)
+            if resp['status'] != '200':
+                raise OAuthException('Invalid response from ' + self.name, data)
+            data['renren_uid'] = data['user']['id']
+            return data
+        except Exception, e:
+            logger.exception('oauth2_response_error')
+            return None
+
     def request(self, api, data=None, headers=None):
         headers = dict(headers or {})
         client = self.make_client()

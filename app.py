@@ -4,10 +4,10 @@
 import config
 import logging
 from models import *
-from views.qq import qq_oauth
-from views.weibo import weibo_oauth
-from views.douban import douban_oauth
-from views.renren import renren_oauth
+#from views.qq import qq_oauth
+#from views.weibo import weibo_oauth
+#from views.douban import douban_oauth
+#from views.renren import renren_oauth
 from views.account import account
 from sheep.api.statics import static_files
 from flask import Flask, render_template, session, g
@@ -23,10 +23,14 @@ app.config.update(
     SQLALCHEMY_POOL_RECYCLE = True
 )
 
-app.register_blueprint(qq_oauth, url_prefix='/QQ')
-app.register_blueprint(weibo_oauth, url_prefix='/Weibo')
-app.register_blueprint(douban_oauth, url_prefix='/Douban')
-app.register_blueprint(renren_oauth, url_prefix='/Renren')
+#app.register_blueprint(qq_oauth, url_prefix='/QQ')
+#app.register_blueprint(weibo_oauth, url_prefix='/Weibo')
+#app.register_blueprint(douban_oauth, url_prefix='/Douban')
+#app.register_blueprint(renren_oauth, url_prefix='/Renren')
+
+from views.oauth import views
+views.register_blueprints(app)
+
 app.register_blueprint(account, url_prefix='/Account')
 
 logger = logging.getLogger(__name__)
