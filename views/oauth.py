@@ -8,20 +8,10 @@ from lib.douban import douban
 from lib.renren import renren
 from base import Base_OAuth_Login
 
-
 qq_oauth_login = Base_OAuth_Login('qq', qq, 'openid')
 weibo_oauth_login = Base_OAuth_Login('weibo', weibo, 'uid')
 douban_oauth_login = Base_OAuth_Login('douban', douban, 'douban_user_id')
 renren_oauth_login = Base_OAuth_Login('renren', renren, 'renren_uid')
-
-
-#douban_oauth = Blueprint('douban_oauth', __name__)
-#
-#douban.tokengetter(douban_oauth_login.get_token)
-#douban_oauth.add_url_rule('/Login', view_func=douban_oauth_login.login)
-#douban_oauth.add_url_rule('/Authorized', view_func=\
-#        douban.authorized_handler(douban_oauth_login.authorized)
-#)
 
 class OAuth_views(object):
     def __init__(self):
