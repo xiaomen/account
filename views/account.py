@@ -18,7 +18,7 @@ def index():
         return render_template('account.html')
     return render_template('logout.html')
 
-@account.route('/Bind', methods=['GET', 'POST'])
+@account.route('/bind', methods=['GET', 'POST'])
 def bind():
     if request.method == 'GET':
         return render_template('bind.html')
@@ -28,7 +28,7 @@ def bind():
         bind_oauth(oauth, g.user.id)
     return redirect(url_for('index'))
 
-@account.route('/Register', methods=['POST','GET'])
+@account.route('/register', methods=['POST','GET'])
 def register():
     if g.user is not None:
         return redirect(url_for('index'))
@@ -49,7 +49,7 @@ def register():
         bind_oauth(oauth, user.id)
     return redirect(url_for('index'))
 
-@account.route('/Login', methods=['POST', 'GET'])
+@account.route('/login', methods=['POST', 'GET'])
 def login():
     if g.user is not None:
         return redirect(url_for('index'))
@@ -71,7 +71,7 @@ def login():
     session['user_id'] = user.id
     return redirect(url_for('index'))
 
-@account.route('/Logout')
+@account.route('/logout')
 def logout():
     session.pop('user_id', None)
     session.pop('user', None)

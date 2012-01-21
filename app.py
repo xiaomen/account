@@ -4,7 +4,7 @@
 import config
 import logging
 from models import *
-from views.oauth import views
+from views.oauth import oauth
 from views.account import account
 from sheep.api.statics import static_files
 from flask import Flask, render_template, session, g
@@ -20,8 +20,8 @@ app.config.update(
     SQLALCHEMY_POOL_RECYCLE = True
 )
 
-views.register_blueprints(app)
-app.register_blueprint(account, url_prefix='/Account')
+oauth.register_blueprints(app)
+app.register_blueprint(account, url_prefix='/account')
 logger = logging.getLogger(__name__)
 
 init_db(app)
@@ -31,7 +31,7 @@ def index():
     if g.user is None:
         return render_template('index.html')
     else:
-        logout = '<a href="/Account/Logout">Logout</a>'
+        logout = '<a href="/account/logout">Logout</a>'
         return render_template('index.html', logout=logout)
 
 @app.before_request

@@ -39,8 +39,8 @@ class OAuth_views(object):
             url_prefix = '/%s' % name
             app.register_blueprint(blueprint, url_prefix=url_prefix)
 
-views = OAuth_views()
-views.add('qq', qq_oauth_login, qq)
-views.add('weibo', weibo_oauth_login, weibo)
-views.add('douban', douban_oauth_login, douban)
-views.add('renren', renren_oauth_login, renren)
+oauth = OAuth_views()
+oauth.add('qq', qq_oauth_login, qq)
+oauth.add('weibo', weibo_oauth_login, weibo)
+oauth.add('douban', douban_oauth_login, douban)
+oauth.add('renren', renren_oauth_login, renren)
