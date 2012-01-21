@@ -29,7 +29,7 @@ class RenrenOAuth(BasicOAuth):
             data['renren_uid'] = data['user']['id']
             return data
         except Exception, e:
-            logger.exception('oauth2_response_error')
+            print e
             return None
 
     def request(self, api, data=None, headers=None):
