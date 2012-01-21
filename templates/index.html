@@ -1,22 +1,35 @@
-{% if not logout %}
-<form action="/account/login" method="post">
-<input type="text" size="20" tabindex='1' value="" name="email">
-<input type="password" size="20" tabindex='2'  value=""  name="password">
-<button type="submit" tabindex='3'>登录</button>
-<br />
-<a href="/weibo/login"><img src="{{'/static/img/sina.png'|s_files }}" /></a>
-<a href="/douban/login"><img src="{{'/static/img/douban.png'|s_files }}" /></a>
-<a href="/renren/login"><img src="{{'/static/img/renren.png'|s_files }}" /></a>
-<a href="/qq/login"><img src="{{'/static/img/qq.png'|s_files }}" /></a>
-<br />
-{% endif %}
-{{ logout | safe }}
-<br />
-<table>
-{% for key in values %}
-<tr>
-    <td>{{ key }}</td>
-    <td>{{ values[key] }}</td>
-</tr>
-{% endfor %}
+{% extends "layout.html" %}
+
+{%block nav %}
+    <li class="select"><a href="/">首页</a></li>
+    <li><a href="http://library.xiaom.co">图书馆</a></li>
+    <li><a href="#">自习室</a></li>
+{% endblock %}
+
+{%block content %}
+    {% if not logout %}
+    <div>
+        <form action="/account/login" method="post">
+            <ul>
+                <li>
+                    <label for="email">邮箱:</label>
+                    <input type="text" size="20" tabindex='1' value="" id="email" name="email">
+                </li>
+                <li>
+                    <label for="password">密码:</label>
+                    <input type="password" size="20" tabindex='2' value="" id="password" name="password">
+                </li>
+                <li>
+                    <input type="hidden" name="_csrf_token" value="">
+                    <button type="submit" tabindex='3'>登录</button>
+                    <a href="/weibo/login"><i class="icon weibo"></i></a>
+                    <a href="/douban/login"><i class="icon douban"></i></a>
+                    <a href="/renren/login"><i class="icon renren"></i></a>
+                    <a href="/qq/login"><i class="icon qq"></i></a>
+                </li>
+            </ul>
+        </form>
+    </div>
+    {% endif %}
+{% endblock %}
 </table>

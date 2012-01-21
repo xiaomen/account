@@ -15,7 +15,7 @@ account = Blueprint('account', __name__)
 @account.route('/')
 def index():
     if g.user is None:
-        return render_template('account.html')
+        return render_template('index.html')
     return render_template('logout.html')
 
 @account.route('/bind', methods=['GET', 'POST'])
