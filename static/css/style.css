@@ -1,0 +1,143 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.clearfix:before, .clearfix:after {
+    content: "";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+html {
+    background: #fff;
+}
+
+a {
+    text-decoration: none;
+    color: #3a86c7;
+}
+
+ul {
+    list-style: none;
+}
+
+#header {
+    background: url(/static/img/bg.png);
+    height: 38px;
+    line-height: 38px;
+    padding: 10px;
+    color: white;
+}
+
+#header h1 {
+    display: inline;
+}
+
+#header span {
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+#nav {    
+    border-top: 6px solid #3a86c7;
+    font-size: 14px;
+}
+
+#nav li {
+    position: relative;
+    float: left;
+    display: block;
+    height: 32px;
+    line-height: 36px;
+    width: 60px;
+    text-align: center;
+}
+
+#nav li.select::before {
+    position: absolute;
+    content: "";
+    background: #79add0;
+    width: 60px;
+    height: 6px;
+    top: -6px;
+}
+
+#nav li.select a {
+    color: #3a86c7;
+    font-weight: bold;
+}
+
+#section {
+    border-top: 1px solid #f0f0f0;
+}
+
+#search {
+    height: 24px;
+    line-height: 24px;
+    padding: 6px 10px;
+    color: #333;
+}
+
+#submit {
+    display: inline-block;
+    margin-left: 5px;
+    padding: 5px 8px;
+    height: 10px;
+    line-height: 12px;
+    font-size: 12px;
+    border: 1px solid #e0e0e0;
+    -webkit-border-radius: 2px;
+    -webkit-box-shadow: 0 1px 1px rgba(76, 157, 210, .2);
+    color: #777;
+}
+
+#result li {
+    border-top: 1px solid #f0f0f0;
+    padding: 6px 10px;
+    color: #333;
+    font-size: 14px;
+    line-height: 1em;
+}
+
+#result h2 {
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 1.5em;
+}
+
+#footer {
+    border-top: 1px solid #f0f0f0;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: #ccc;
+}
+
+.icon {
+    margin: 0 5px 0 0;
+    background: url(/static/img/oauth.gif); no-repeat scroll 0 0;
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+}
+
+.renren {
+    background-position: 0 -64px;
+}
+
+.douban {
+    background-position: 0 -192px;
+}
+
+.weibo {
+    background-position: 0 0px;
+}
+
+.qq{
+    background-position: 0 -256px;
+}
+
+

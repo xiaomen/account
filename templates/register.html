@@ -1,9 +1,24 @@
+{% extends "index.html" %}
+
+{%block content %}
 <form action="/account/register" method="post">
-    账号
-    <input type="TEXT" size="20" tabindex="0" value="" name="name">
-    邮箱
-    <input type="text" size="20" tabindex='1' value="" name="email">
-    密码
-    <input type="password" size="20" tabindex='2'  value=""  name="password">
-    <button type="submit" tabindex='3'>注册</button>
+    <ul>
+        <li>
+            <label for="email">邮箱:</label>
+            <input type="text" size="20" tabindex='1' value="" id="email" name="email">
+        </li>
+        <li>
+            <label for="password">密码:</label>
+            <input type="password" size="20" tabindex='2' value="" id="password" name="password">
+        </li>
+        <li>
+            <label for="name">昵称:</label>
+            <input type="text" size="20" tabindex='3' value="" id="name" name="name">
+        </li>
+        <li>
+            <input type="hidden" name="_csrf_token" value="">
+            <button type="submit" tabindex='4'>注册</button>
+        </li>
+    </ul>
 </form>
+{% endblock %}

@@ -16,7 +16,7 @@ account = Blueprint('account', __name__)
 def index():
     if g.user is None:
         return render_template('index.html')
-    return render_template('logout.html')
+    return render_template('index.html', login=1)
 
 @account.route('/bind', methods=['GET', 'POST'])
 def bind():
@@ -54,19 +54,19 @@ def login():
     if g.user is not None:
         return redirect(url_for('index'))
     if request.method == 'GET':
-        return render_template('login.html')
+        return render_template('index.html')
     password = request.form.get('password', None)
     email = request.form.get('email', None)
     if not (password and email):
-        return render_template('login.html', info='less info')
+        return render_template('index.html', login_info='less info')
 
     user = User.query.filter_by(email=email).first()
     if not user:
         logger.info('no such user')
-        return render_template('login.html', info='no such user')
+        return render_template('index.html', login_info='no such user')
     if not user.check_password(password):
         logger.info('invaild passwd')
-        return render_template('login.html', info='invaild passwd')
+        return render_template('index.html', login_info='invaild passwd')
 
     session['user_id'] = user.id
     return redirect(url_for('index'))

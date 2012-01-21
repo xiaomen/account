@@ -1,5 +1,10 @@
+{% extends "index.html" %}
+
+{%block content %}
 <form method="post" action="/account/bind">
-  <h2>是否绑定？</h2>
+  <span>是否绑定？</span>
+  <input type="hidden" value="" name="_csrf_token">
   <input type="submit" value="绑定" name="allow" />
   <input type="submit" value="取消" name="cancel" />
 </form>
+{% endblock %}

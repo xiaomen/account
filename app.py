@@ -31,8 +31,7 @@ def index():
     if g.user is None:
         return render_template('index.html')
     else:
-        logout = '<a href="/account/logout">Logout</a>'
-        return render_template('index.html', logout=logout)
+        return render_template('index.html', login=1)
 
 @app.before_request
 def before_request():

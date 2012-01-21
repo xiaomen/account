@@ -7,7 +7,7 @@
 {% endblock %}
 
 {%block content %}
-    {% if not logout %}
+    {% if not login %}
     <div>
         <form action="/account/login" method="post">
             <ul>
@@ -30,6 +30,12 @@
             </ul>
         </form>
     </div>
+    {% if login_info %}
+    <span>{{ login_info }}</span>
+    {% endif %}
+    {% else %}
+    <div>
+        <a href="/account/logout">登出</a>
+    </div>
     {% endif %}
 {% endblock %}
-</table>

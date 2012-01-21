@@ -6,7 +6,7 @@
     <meta name="MobileOptimized" content="320">
     <meta name="viewport" content="width=device-width, minimum-scale=1, user-scalable=0">
     <link rel="stylesheet" href="{{'/static/css/style.css'|s_files }}" />
-    <title>{%block title%}Doorway{% endblock %}</title>
+    <title>{%block title%}校门口{% endblock %}</title>
 </head>
 <body>
     <div id="wrapper">
@@ -25,24 +25,6 @@
         </ul>
         <div id="section">
             {%block content %}
-            <div id="search">
-                <input id="q" type="text" name="q" value="" placeholder="用户关键字">
-                <span id="submit">搜书</span>
-            </div>
-            <ul id="result">
-                <li>
-                    <h2><a href="#">书名1</a></h2>
-                    <div>索书号 / 作者 / 出版社 / 出版年月</div>
-                </li>
-                <li>
-                    <h2><a href="#">书名2</a></h2>
-                    <div>索书号 / 作者 / 出版社 / 出版年月</div>
-                </li>
-                <li>
-                    <h2><a href="#">书名3</a></h2>
-                    <div>索书号 / 作者 / 出版社 / 出版年月</div>
-                </li>
-            </ul>
             {% endblock %}
         </div>
         <div id="footer">
