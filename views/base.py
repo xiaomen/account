@@ -1,6 +1,7 @@
 #!/usr/local/bin/python2.7
 #coding:utf-8
 
+import urllib
 import logging
 from models import *
 from utils import bind_oauth
@@ -33,10 +34,9 @@ class Base_OAuth_Login(object):
         return self.oauth_obj.authorize(callback, next_url)
 
     def authorized(self, resp):
-        logger.info(session)
-        logger.info(request.args)
         csrf = session.pop('%s_oauthcsrf' % self.name, None)
-        if request.args.get('state') !=  csrf:
+        state = request.args.get('state')
+        if state and urllib.unquote(state) !=  csrf:
             return redirect(url_for('index'))
         next_url = session.pop('%s_oauthnext' % self.name) or url_for('index')
         logger.info(resp)
