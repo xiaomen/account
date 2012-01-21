@@ -26,8 +26,8 @@ class OAuth_views(object):
         blueprint = self.views.get(oauth_name, None)
         if not blueprint:
             return
-        blueprint.add_url_rule('/Login', view_func=getattr(login_obj, 'login'))
-        blueprint.add_url_rule('/Authorized', view_func=\
+        blueprint.add_url_rule('/login', view_func=getattr(login_obj, 'login'))
+        blueprint.add_url_rule('/authorized', view_func=\
             getattr(oauth_obj, 'authorized_handler')(getattr(login_obj, 'authorized'))
         )
 
@@ -36,7 +36,7 @@ class OAuth_views(object):
 
     def register_blueprints(self, app):
         for name, blueprint in self.views.iteritems():
-            url_prefix = '/' + name.capitalize()
+            url_prefix = '/%s' % name
             app.register_blueprint(blueprint, url_prefix=url_prefix)
 
 views = OAuth_views()
