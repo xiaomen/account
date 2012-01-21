@@ -26,7 +26,7 @@ class BasicOAuth(OAuthRemoteApp):
 
     def authorize(self, callback=None, next_url=None):
         assert callback is not None, 'Callback is required OAuth2'
-        csrf = base64.encodestring(os.urandom(10)).strip()
+        csrf = base64.encodestring(os.urandom(10)).strip()[:-2]
         params = dict(self.request_token_params)
         params['redirect_uri'] = callback
         params['client_id'] = self.consumer_key

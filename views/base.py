@@ -33,11 +33,12 @@ class Base_OAuth_Login(object):
         return self.oauth_obj.authorize(callback, next_url)
 
     def authorized(self, resp):
+        logger.info(session)
+        logger.info(request.args)
         csrf = session.pop('%s_oauthcsrf' % self.name, None)
         if request.args.get('state') !=  csrf:
             return redirect(url_for('index'))
         next_url = session.pop('%s_oauthnext' % self.name) or url_for('index')
-        logger.info(self.name)
         logger.info(resp)
         uid = resp.get(self.uid_str, None)
         token = resp.get(self.token_str, None)
