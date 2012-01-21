@@ -37,7 +37,10 @@ class Base_OAuth_Login(object):
         if request.args.get('state') !=  csrf:
             return redirect(url_for('index'))
         next_url = session.pop('%s_oauthnext' % self.name) or url_for('index')
-        if resp is None:
+        logger.info(resp)
+        uid = resp.get(self.uid_str, None)
+        token = resp.get(self.token_str, None)
+        if not resp or not uid or not token:
             return redirect(next_url)
 
         oauth = OAuth.query.filter_by(oauth_uid=resp[self.uid_str]).first()
