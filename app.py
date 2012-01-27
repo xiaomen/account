@@ -55,12 +55,12 @@ def test():
         #output_userinfo(weibo, oauth_info, '/users/show.json', \
         #    {'uid' :oauth_info.oauth_uid}, {'Authorization' : 'OAuth2 %s' % weibo.tokengetter_func()})
 
-        #oauth_info = g.oauth('douban')
-        #output_userinfo(douban, oauth_info, '/people/@me?alt=json',
-        #    headers = {'Authorization' : 'Bearer %s' % douban.tokengetter_func()})
+        oauth_info = g.oauth('douban')
+        output_userinfo(douban, oauth_info, '/people/@me?alt=json',
+            headers = {'Authorization' : 'Bearer %s' % douban.tokengetter_func()})
 
-        oauth_info = g.oauth('renren')
-        output_userinfo(renren, oauth_info, 'users.getInfo', {'access_token': renren.tokengetter_func()})
+        #oauth_info = g.oauth('renren')
+        #output_userinfo(renren, oauth_info, 'users.getInfo', {'access_token': renren.tokengetter_func()})
 
         return 'Hello World'
 

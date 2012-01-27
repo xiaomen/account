@@ -3,8 +3,7 @@
 
 import logging
 import hashlib
-from models import *
-from utils import bind_oauth
+from models import db, User
 from flask import Blueprint, session, g, \
         redirect, request, url_for, render_template
 
@@ -76,4 +75,9 @@ def logout():
     session.pop('user_id', None)
     session.pop('user', None)
     return redirect(request.referrer or url_for('index'))
+
+def bind_oauth(oauth, uid):
+    oauth.bind(uid)
+    db.session.add(oauth)
+    db.session.commit()
 
