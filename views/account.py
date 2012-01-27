@@ -1,6 +1,7 @@
 #!/usr/local/bin/python2.7
 #coding:utf-8
 
+import re
 import logging
 import hashlib
 from models import db, User
@@ -33,13 +34,13 @@ def register():
         return redirect(url_for('index'))
     if request.method == 'GET':
         return render_template('register.html')
-    oauth = session.pop('from_oauth', None)
     username = request.form.get('name', None)
     password = request.form.get('password', None)
     email = request.form.get('email', None)
-    #TODO escape 参数
-    if not (username and password and email):
-        return render_template('register.html')
+    check, error = check_register_info(username, email, password)
+    if not check:
+        return render_template('register.html', error=error)
+    oauth = session.pop('from_oauth', None)
     user = User(username, password, email)
     db.session.add(user)
     db.session.commit()
@@ -81,3 +82,21 @@ def bind_oauth(oauth, uid):
     db.session.add(oauth)
     db.session.commit()
 
+def check_register_info(username, email, password):
+    '''
+    username a-zA-Z0-9_-, >4 <20
+    email a-zA-Z0-9_-@a-zA-Z0-9.a-zA-Z0-9
+    password a-zA-Z0-9_-!@#$%^&*
+    '''
+    if not (username and email and password):
+        return False, 'value is empty'
+    if not re.search(r'^[a-zA-Z][\w-]{3,20}$', username, re.I):
+        return False, 'username invail'
+    if not re.search(r'\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*', email, re.I):
+        return False, 'email invaild'
+    user = User.query.filter_by(email=email).first()
+    if user:
+        return False, 'email exists'
+    if not re.search(r'[\S]{6,}', password, re.I):
+        return False, 'password invaild'
+    return True, None

@@ -3,7 +3,7 @@
 {%block content %}
 <form method="post" action="/account/bind">
   <span>是否绑定？</span>
-  <input type="hidden" value="" name="_csrf_token">
+  <input type="hidden" value="{{ csrf_token() }}" name="_csrf_token">
   <input type="submit" value="绑定" name="allow" />
   <input type="submit" value="取消" name="cancel" />
 </form>

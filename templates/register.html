@@ -16,9 +16,12 @@
             <input type="text" size="20" tabindex='3' value="" id="name" name="name">
         </li>
         <li>
-            <input type="hidden" name="_csrf_token" value="">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
             <button type="submit" tabindex='4'>注册</button>
         </li>
     </ul>
 </form>
+{% if error %}
+<span>{{ error }}</span>
+{% endif %}
 {% endblock %}

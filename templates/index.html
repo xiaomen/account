@@ -20,7 +20,7 @@
                     <input type="password" size="20" tabindex='2' value="" id="password" name="password">
                 </li>
                 <li>
-                    <input type="hidden" name="_csrf_token" value="">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
                     <button type="submit" tabindex='3'>登录</button>
                     <a href="/weibo/login"><i class="icon weibo"></i></a>
                     <a href="/douban/login"><i class="icon douban"></i></a>

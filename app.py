@@ -3,10 +3,13 @@
 
 import config
 import logging
+
 from models import *
 from views.oauth import oauth
 from views.account import account
 from sheep.api.statics import static_files
+
+from flaskext.csrf import csrf
 from flask import Flask, render_template, session, g
 
 app = Flask(__name__)
@@ -25,6 +28,7 @@ app.register_blueprint(account, url_prefix='/account')
 logger = logging.getLogger(__name__)
 
 init_db(app)
+csrf(app)
 
 @app.route('/')
 def index():
