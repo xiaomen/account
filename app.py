@@ -46,6 +46,14 @@ def before_request():
         g.user = session['user']
         g.oauth = lambda otype: OAuth.query.filter_by(oauth_type=otype, uid=g.user.id).first()
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('40x.html'), 404
+
+@app.errorhandler(500)
+def page_not_found(e):
+    return render_template('40x.html'), 500
+
 @app.route('/test')
 def test():
     if g.user is None:
