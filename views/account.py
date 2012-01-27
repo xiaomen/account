@@ -57,8 +57,9 @@ def login():
         return render_template('index.html')
     password = request.form.get('password', None)
     email = request.form.get('email', None)
-    if not (password and email):
-        return render_template('index.html', login_info='less info')
+    check, error = check_login_info(email, password)
+    if not check:
+        return render_template('index.html', login_info=error)
 
     user = User.query.filter_by(email=email).first()
     if not user:
@@ -99,4 +100,11 @@ def check_register_info(username, email, password):
         return False, 'email exists'
     if not re.search(r'[\S]{6,}', password, re.I):
         return False, 'password invaild'
+    return True, None
+
+def check_login_info(email, password):
+    if not password:
+        return False, 'need password'
+    if not email or not re.search(r'\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*', email, re.I):
+        return False, 'email invaild'
     return True, None
