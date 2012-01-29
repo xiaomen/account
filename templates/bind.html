@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 
 {%block content %}
-<form method="post" action="/account/bind">
+<form method="post" action="http://account.xiaomen.co/account/bind">
   <span>是否绑定？</span>
   <input type="hidden" value="{{ csrf_token() }}" name="_csrf_token">
   <input type="submit" value="绑定" name="allow" />

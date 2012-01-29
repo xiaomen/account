@@ -49,6 +49,7 @@ def register():
         bind_oauth(oauth, user.id)
     return redirect(url_for('index'))
 
+@csrf_exempt
 @account.route('/login', methods=['POST', 'GET'])
 def login():
     if g.user is not None:
