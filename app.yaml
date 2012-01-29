@@ -2,7 +2,6 @@ application: account
 version: 1
 runtime: python
 api_version: 1
-debug: true
 
 handlers:
 - url: /static/(.*)
