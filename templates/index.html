@@ -9,7 +9,7 @@
 {%block content %}
     {% if not login %}
     <div>
-        <form action="/account/login" method="post">
+        <form action="{{ login_url }}" method="post">
             <ul>
                 <li>
                     <label for="email">邮箱:</label>

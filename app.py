@@ -10,7 +10,7 @@ from views.account import account
 from sheep.api.statics import static_files
 
 from flaskext.csrf import csrf
-from flask import Flask, render_template, session, g
+from flask import Flask, render_template, session, url_for, g
 
 app = Flask(__name__)
 app.debug = config.DEBUG
@@ -33,9 +33,8 @@ csrf(app)
 @app.route('/')
 def index():
     if g.user is None:
-        return render_template('index.html')
-    else:
-        return render_template('index.html', login=1)
+        return render_template('index.html', login_url=url_for('account.login'))
+    return render_template('index.html', login=1)
 
 @app.before_request
 def before_request():

@@ -13,12 +13,6 @@ logger = logging.getLogger(__name__)
 
 account = Blueprint('account', __name__)
 
-@account.route('/')
-def index():
-    if g.user is None:
-        return render_template('index.html')
-    return render_template('index.html', login=1)
-
 @account.route('/bind', methods=['GET', 'POST'])
 def bind():
     if request.method == 'GET':
@@ -55,24 +49,26 @@ def register():
 def login():
     if g.user is not None:
         return redirect(url_for('index'))
+    login_url = url_for('account.login', **request.args)
     if request.method == 'GET':
-        return render_template('index.html')
+        return render_template('index.html', login_url=login_url)
     password = request.form.get('password', None)
     email = request.form.get('email', None)
     check, error = check_login_info(email, password)
     if not check:
-        return render_template('index.html', login_info=error)
+        return render_template('index.html', login_info=error, login_url=login_url)
 
     user = User.query.filter_by(email=email).first()
     if not user:
         logger.info('no such user')
-        return render_template('index.html', login_info='no such user')
+        return render_template('index.html', login_info='no such user', login_url=login_url)
     if not user.check_password(password):
         logger.info('invaild passwd')
-        return render_template('index.html', login_info='invaild passwd')
+        return render_template('index.html', login_info='invaild passwd', login_url=login_url)
 
     session['user_id'] = user.id
-    return redirect(url_for('index'))
+    redirect_url = request.args.get('redirect', None)
+    return redirect(redirect_url or url_for('index'))
 
 @account.route('/logout')
 def logout():
