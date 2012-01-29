@@ -2,8 +2,8 @@
 #coding:utf-8
 
 import re
+import urllib
 import logging
-import hashlib
 from models import db, User
 from flask import Blueprint, session, g, \
         redirect, request, url_for, render_template
@@ -79,6 +79,21 @@ def logout():
     session.pop('user_id', None)
     session.pop('user', None)
     return redirect(request.referrer or url_for('index'))
+
+@account.route('/sso')
+def sso():
+    callback_url = request.args.get('callback', '')
+    redirect_url = request.args.get('redirect', '') or url_for('index')
+    state = request.args.get('state', '')
+    if not callback_url:
+        return 'callback_url is missing'
+    if not g.user:
+        r = '-1'
+    else:
+        r = str(g.user.id)
+        #return redirect(url_for('account.login', redirect=redirect_url, callback=callback_url, state=state))
+    callback_url += '?state=%s&redirect=%s&r=%s' % (state, redirect_url, urllib.quote(r))
+    return redirect(callback_url)
 
 def bind_oauth(oauth, uid):
     oauth.bind(uid)

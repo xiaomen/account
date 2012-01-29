@@ -54,7 +54,20 @@ def page_not_found(e):
 def page_not_found(e):
     return render_template('40x.html'), 500
 
-@app.route('/test')
+@app.route('/test2')
+def ssotest():
+    from flask import url_for, redirect
+    callback_url = url_for('.callback')
+    return redirect(url_for('account.sso', callback=callback_url))
+
+@app.route('/test3')
+def callback():
+    from flask import request
+    if request.args.get('r', None) and int(request.args.get('r')) > -1:
+        return 'Login'
+    return 'Not Login'
+
+@app.route('/test1')
 def test():
     if g.user is None:
         return render_template('index.html')

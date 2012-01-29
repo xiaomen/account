@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {%block nav %}
-    <li class="select"><a href="/">首页</a></li>
+    <li class="select"><a href="http://xiaomen.co">首页</a></li>
     <li><a href="http://library.xiaomen.co">图书馆</a></li>
     <li><a href="http://selfstudy.xiaomen.co/hnu">自习室</a></li>
 {% endblock %}
@@ -9,7 +9,7 @@
 {%block content %}
     {% if not login %}
     <div>
-        <form action="http://account.xiaomen.co/account/login" method="post">
+        <form action="/account/login" method="post">
             <ul>
                 <li>
                     <label for="email">邮箱:</label>
@@ -21,10 +21,10 @@
                 </li>
                 <li>
                     <button type="submit" tabindex='3'>登录</button>
-                    <a href="http://account.xiaomen.co/weibo/login"><i class="icon weibo"></i></a>
-                    <a href="http://account.xiaomen.co/douban/login"><i class="icon douban"></i></a>
-                    <a href="http://account.xiaomen.co/renren/login"><i class="icon renren"></i></a>
-                    <a href="http://account.xiaomen.co/qq/login"><i class="icon qq"></i></a>
+                    <a href="/weibo/login"><i class="icon weibo"></i></a>
+                    <a href="/douban/login"><i class="icon douban"></i></a>
+                    <a href="/renren/login"><i class="icon renren"></i></a>
+                    <a href="/qq/login"><i class="icon qq"></i></a>
                 </li>
             </ul>
         </form>
@@ -34,7 +34,7 @@
     {% endif %}
     {% else %}
     <div>
-        <a href="http://account.xiaomen.co/account/logout">登出</a>
+        <a href="/account/logout">登出</a>
     </div>
     {% endif %}
 {% endblock %}
