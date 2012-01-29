@@ -7,6 +7,7 @@ import hashlib
 from models import db, User
 from flask import Blueprint, session, g, \
         redirect, request, url_for, render_template
+from flaskext.csrf import csrf_exempt
 
 logger = logging.getLogger(__name__)
 
