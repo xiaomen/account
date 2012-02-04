@@ -2,10 +2,9 @@
 #coding:utf-8
 
 import re
-import urllib
 import logging
 from models import db, User
-from flask import Blueprint, session, g, \
+from flask import Blueprint, g, \
         redirect, request, url_for, render_template
 from flaskext.csrf import csrf_exempt
 
@@ -17,7 +16,7 @@ account = Blueprint('account', __name__)
 def bind():
     if request.method == 'GET':
         return render_template('bind.html')
-    oauth = session.pop('from_oauth', None)
+    oauth = g.session.pop('from_oauth', None)
     allow = 'allow' in request.form
     if g.user and oauth and allow:
         bind_oauth(oauth, g.user.id)
@@ -35,11 +34,11 @@ def register():
     check, error = check_register_info(username, email, password)
     if not check:
         return render_template('register.html', error=error)
-    oauth = session.pop('from_oauth', None)
+    oauth = g.session.pop('from_oauth', None)
     user = User(username, password, email)
     db.session.add(user)
     db.session.commit()
-    session['user_id'] = user.id
+    g.session['user_id'] = user.id
     if oauth:
         bind_oauth(oauth, user.id)
     return redirect(url_for('index'))
@@ -66,30 +65,15 @@ def login():
         logger.info('invaild passwd')
         return render_template('index.html', login_info='invaild passwd', login_url=login_url)
 
-    session['user_id'] = user.id
+    g.session['user_id'] = user.id
     redirect_url = request.args.get('redirect', None)
     return redirect(redirect_url or url_for('index'))
 
 @account.route('/logout')
 def logout():
-    session.pop('user_id', None)
-    session.pop('user', None)
+    g.session.pop('user_id', None)
+    g.session.pop('user', None)
     return redirect(request.referrer or url_for('index'))
-
-@account.route('/sso')
-def sso():
-    callback_url = request.args.get('callback', '')
-    redirect_url = request.args.get('redirect', '') or url_for('index')
-    state = request.args.get('state', '')
-    if not callback_url:
-        return 'callback_url is missing'
-    if not g.user:
-        r = '-1'
-    else:
-        r = str(g.user.id)
-        #return redirect(url_for('account.login', redirect=redirect_url, callback=callback_url, state=state))
-    callback_url += '?state=%s&redirect=%s&r=%s' % (state, redirect_url, urllib.quote(r))
-    return redirect(callback_url)
 
 def bind_oauth(oauth, uid):
     oauth.bind(uid)

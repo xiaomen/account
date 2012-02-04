@@ -6,7 +6,7 @@ import json
 import base64
 import logging
 from flaskext.oauth import *
-from flask import session, redirect, request
+from flask import g, redirect, request
 
 logger = logging.getLogger(__name__)
 
@@ -32,9 +32,9 @@ class BasicOAuth(OAuthRemoteApp):
         params['client_id'] = self.consumer_key
         params['state'] = csrf
         params['response_type'] = 'code'
-        session[self.name + '_oauthredir'] = callback
-        session[self.name + '_oauthnext'] = next_url
-        session[self.name + '_oauthcsrf'] = csrf
+        g.session[self.name + '_oauthredir'] = callback
+        g.session[self.name + '_oauthnext'] = next_url
+        g.session[self.name + '_oauthcsrf'] = csrf
         url = add_query(self.expand_url(self.authorize_url), params)
         return redirect(url)
 
@@ -64,7 +64,7 @@ class BasicOAuth(OAuthRemoteApp):
         assert self.tokengetter_func is not None, 'missing tokengetter function'
         rv = self.tokengetter_func()
         if rv is None:
-            rv = session.get(self.name + '_oauthtok')
+            rv = g.session.get(self.name + '_oauthtok')
             if rv is None:
                 raise OAuthException('No token available')
         if not isinstance(rv, tuple):

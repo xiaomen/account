@@ -4,7 +4,7 @@
 import urllib
 import logging
 from models import db, OAuth
-from flask import Blueprint, g, session, \
+from flask import Blueprint, g, \
         request, redirect, url_for
 
 from lib.qq import qq
@@ -38,16 +38,16 @@ class Base_OAuth_Login(object):
         return self.oauth_obj.authorize(callback, next_url)
 
     def authorized(self, resp):
-        csrf = session.pop('%s_oauthcsrf' % self.name, None)
+        csrf = g.session.pop('%s_oauthcsrf' % self.name, None)
         state = request.args.get('state')
         if state and urllib.unquote(state) !=  csrf:
             return redirect(url_for('index'))
-        next_url = session.pop('%s_oauthnext' % self.name) or url_for('index')
+        next_url = g.session.pop('%s_oauthnext' % self.name) or url_for('index')
         logger.info(resp)
-        uid = resp.get(self.uid_str, None)
-        token = resp.get(self.token_str, None)
         if not resp or not uid or not token:
             return redirect(next_url)
+        uid = resp.get(self.uid_str, None)
+        token = resp.get(self.token_str, None)
 
         oauth = OAuth.query.filter_by(oauth_uid=resp[self.uid_str]).first()
         if oauth is None:
@@ -56,13 +56,13 @@ class Base_OAuth_Login(object):
         old_token = oauth.oauth_token
         oauth.oauth_token = resp[self.token_str]
         if not g.user and oauth.uid:
-            session['user_id'] = oauth.uid
+            g.session['user_id'] = oauth.uid
             if old_token != oauth.oauth_token:
                 logger.info(old_token)
                 logger.info(oauth.oauth_token)
                 self.update_token(oauth)
             return redirect(url_for('index'))
-        session['from_oauth'] = oauth
+        g.session['from_oauth'] = oauth
         return redirect(next_url)
 
     def update_token(self, oauth):

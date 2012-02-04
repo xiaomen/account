@@ -18,6 +18,9 @@ RENREN_APP_SECRET = '1510ca7f69f84379b3655032b86d3435'
 
 DATABASE_URI = 'mysql://'
 
+SESSION_KEY = 'xid'
+SESSION_COOKIE_DOMAIN = '.xiaomen.co'
+
 try:
     from local_config import *
 except:

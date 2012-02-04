@@ -1,3 +1,4 @@
+Beaker==1.6.2
 Flask==0.8
 Flask-OAuth==0.11
 Flask-SQLAlchemy==0.15

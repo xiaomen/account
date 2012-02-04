@@ -1,16 +1,20 @@
 #!/usr/bin/python
 # encoding: UTF-8
 
+import os
 import config
 import logging
 
 from models import *
 from views.oauth import oauth
 from views.account import account
+from sheep.api.permdir import permdir
 from sheep.api.statics import static_files
+from beaker.middleware import SessionMiddleware
 
 from flaskext.csrf import csrf
-from flask import Flask, render_template, session, url_for, g
+from flask import Flask, render_template, \
+        request, url_for, g
 
 app = Flask(__name__)
 app.debug = config.DEBUG
@@ -23,12 +27,25 @@ app.config.update(
     SQLALCHEMY_POOL_RECYCLE = True
 )
 
+session_opts = {
+    'session.type': 'ext:database',
+    'session.url': config.DATABASE_URI,
+    'session.table_name': 'sessions',
+    'session.lock_dir': os.path.join(permdir, 'lockdir'),
+    'session.auto' : False,
+    'session.cookie_expires': True,
+    'session.cookie_path': '/',
+    'session.cookie_domain': config.SESSION_COOKIE_DOMAIN,
+    'session.timeout': 86400
+}
+
 oauth.register_blueprints(app)
 app.register_blueprint(account, url_prefix='/account')
 logger = logging.getLogger(__name__)
 
 init_db(app)
 csrf(app)
+app.wsgi_app = SessionMiddleware(app.wsgi_app, session_opts, key=config.SESSION_KEY)
 
 @app.route('/')
 def index():
@@ -39,11 +56,18 @@ def index():
 @app.before_request
 def before_request():
     g.user = None
+    session = request.environ['beaker.session']
+    g.session = session
     if 'user_id' in session and session['user_id']:
         if not session.get('user', None):
             session['user'] = User.query.get(session['user_id'])
         g.user = session['user']
         g.oauth = lambda otype: OAuth.query.filter_by(oauth_type=otype, uid=g.user.id).first()
+
+@app.after_request
+def after_request(resp):
+    g.session.save()
+    return resp
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -52,19 +76,6 @@ def page_not_found(e):
 @app.errorhandler(500)
 def page_not_found(e):
     return render_template('40x.html'), 500
-
-@app.route('/test2')
-def ssotest():
-    from flask import url_for, redirect
-    callback_url = url_for('.callback')
-    return redirect(url_for('account.sso', callback=callback_url))
-
-@app.route('/test3')
-def callback():
-    from flask import request
-    if request.args.get('r', None) and int(request.args.get('r')) > -1:
-        return 'Login'
-    return 'Not Login'
 
 @app.route('/test1')
 def test():
