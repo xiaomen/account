@@ -18,7 +18,6 @@ from flask import Flask, render_template, \
 
 app = Flask(__name__)
 app.debug = config.DEBUG
-app.secret_key = config.SECRET_KEY
 app.jinja_env.filters['s_files'] = static_files
 
 app.config.update(

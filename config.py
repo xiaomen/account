@@ -2,7 +2,6 @@
 #coding:utf-8
 
 DEBUG = True
-SECRET_KEY = 'sheep!@$user!#$%^'
 
 QQ_APP_KEY = '100241976'
 QQ_APP_SECRET = '90b36f781da7ea1788278c105e2beecf'

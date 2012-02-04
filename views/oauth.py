@@ -45,7 +45,8 @@ class Base_OAuth_Login(object):
             return redirect(url_for('index'))
         next_url = g.session.pop('%s_oauthnext' % self.name) or url_for('index')
         logger.info(resp)
-        if not resp or not uid or not token:
+        if not resp or not resp.get(self.uid_str, None) \
+                or not resp.get(self.token_str, None):
             return redirect(next_url)
         uid = resp.get(self.uid_str, None)
         token = resp.get(self.token_str, None)
