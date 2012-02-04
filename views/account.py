@@ -2,6 +2,7 @@
 #coding:utf-8
 
 import re
+import json
 import logging
 from models import db, User
 from flask import Blueprint, g, session, jsonify, \
@@ -69,6 +70,26 @@ def login():
     redirect_url = request.args.get('redirect', None)
     return redirect(redirect_url or url_for('index'))
 
+@account.route('/api/login', methods=['POST'])
+def api_login():
+    if g.user is not None:
+        return jsonify(status='ok', user_id=g.session['user_id'])
+    data = json.loads(request.data)
+    password = data.get('password')
+    email = data.get('email', None)
+    check, error = check_login_info(email, password)
+    if not check:
+        return jsonify(status='error', error=error)
+
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify(status='error', error='no such user')
+    if not user.check_password(password):
+        return jsonify(status='error', error='invaild passwd')
+
+    g.session['user_id'] = user.id
+    return jsonify(status='ok', user_id=user.id)
+
 def _logout():
     g.session.pop('user_id', None)
     g.session.pop('user', None)
@@ -79,6 +100,7 @@ def logout():
     return redirect(request.referrer or url_for('index'))
 
 @account.route('/api/logout')
+def api_logout():
     _logout()
     return jsonify(status='ok')
 
