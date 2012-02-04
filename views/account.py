@@ -4,7 +4,7 @@
 import re
 import logging
 from models import db, User
-from flask import Blueprint, g, session, \
+from flask import Blueprint, g, session, jsonify, \
         redirect, request, url_for, render_template
 from flaskext.csrf import csrf_exempt
 
@@ -69,11 +69,18 @@ def login():
     redirect_url = request.args.get('redirect', None)
     return redirect(redirect_url or url_for('index'))
 
-@account.route('/logout')
-def logout():
+def _logout():
     g.session.pop('user_id', None)
     g.session.pop('user', None)
+
+@account.route('/logout')
+def logout():
+    _logout()
     return redirect(request.referrer or url_for('index'))
+
+@account.route('/api/logout')
+    _logout()
+    return jsonify(status='ok')
 
 def bind_oauth(oauth, uid):
     oauth.bind(uid)

@@ -52,6 +52,8 @@ class BasicOAuth(OAuthRemoteApp):
 
     def check_oauth_response(self, resp, content):
         try:
+            logger.info(resp)
+            logger.info(content)
             data = json.loads(content)
             if resp['status'] != '200':
                 raise OAuthException('Invalid response from ' + self.name, data)
