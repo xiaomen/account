@@ -4,7 +4,7 @@
 import urllib
 import logging
 from models import db, OAuth
-from flask import Blueprint, g, session\
+from flask import Blueprint, g, session, \
         request, redirect, url_for
 
 import config
