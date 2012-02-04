@@ -4,7 +4,7 @@
 import re
 import logging
 from models import db, User
-from flask import Blueprint, g, \
+from flask import Blueprint, g, session, \
         redirect, request, url_for, render_template
 from flaskext.csrf import csrf_exempt
 
@@ -16,7 +16,7 @@ account = Blueprint('account', __name__)
 def bind():
     if request.method == 'GET':
         return render_template('bind.html')
-    oauth = g.session.pop('from_oauth', None)
+    oauth = session.pop('from_oauth', None)
     allow = 'allow' in request.form
     if g.user and oauth and allow:
         bind_oauth(oauth, g.user.id)
@@ -34,7 +34,7 @@ def register():
     check, error = check_register_info(username, email, password)
     if not check:
         return render_template('register.html', error=error)
-    oauth = g.session.pop('from_oauth', None)
+    oauth = session.pop('from_oauth', None)
     user = User(username, password, email)
     db.session.add(user)
     db.session.commit()

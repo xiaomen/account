@@ -4,7 +4,7 @@
 import urllib
 import logging
 from models import db, OAuth
-from flask import Blueprint, g, \
+from flask import Blueprint, g, session\
         request, redirect, url_for
 
 import config
@@ -39,11 +39,11 @@ class Base_OAuth_Login(object):
         return self.oauth_obj.authorize(callback, next_url)
 
     def authorized(self, resp):
-        csrf = g.session.pop('%s_oauthcsrf' % self.name, None)
+        csrf = session.pop('%s_oauthcsrf' % self.name, None)
         state = request.args.get('state')
         if state and urllib.unquote(state) !=  csrf:
             return redirect(url_for('index'))
-        next_url = g.session.pop('%s_oauthnext' % self.name) or url_for('index')
+        next_url = session.pop('%s_oauthnext' % self.name) or url_for('index')
         logger.info(resp)
         if not resp or not resp.get(self.uid_str, None) \
                 or not resp.get(self.token_str, None):
@@ -64,7 +64,7 @@ class Base_OAuth_Login(object):
                 logger.info(oauth.oauth_token)
                 self.update_token(oauth)
             return redirect(url_for('index'))
-        g.session['from_oauth'] = oauth
+        session['from_oauth'] = oauth
         return redirect(next_url)
 
     def update_token(self, oauth):

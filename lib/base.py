@@ -6,7 +6,7 @@ import json
 import base64
 import logging
 from flaskext.oauth import *
-from flask import g, redirect, request
+from flask import g, redirect, session, request
 
 logger = logging.getLogger(__name__)
 
@@ -32,9 +32,9 @@ class BasicOAuth(OAuthRemoteApp):
         params['client_id'] = self.consumer_key
         params['state'] = csrf
         params['response_type'] = 'code'
-        g.session[self.name + '_oauthredir'] = callback
-        g.session[self.name + '_oauthnext'] = next_url
-        g.session[self.name + '_oauthcsrf'] = csrf
+        session[self.name + '_oauthredir'] = callback
+        session[self.name + '_oauthnext'] = next_url
+        session[self.name + '_oauthcsrf'] = csrf
         url = add_query(self.expand_url(self.authorize_url), params)
         return redirect(url)
 
@@ -43,7 +43,7 @@ class BasicOAuth(OAuthRemoteApp):
             'code':             request.args.get('code'),
             'client_id':        self.consumer_key,
             'client_secret':    self.consumer_secret,
-            'redirect_uri':     g.session.get(self.name + '_oauthredir'),
+            'redirect_uri':     session.get(self.name + '_oauthredir'),
             'grant_type':       'authorization_code',
         }
         url = add_query(self.expand_url(self.access_token_url), remote_args)
@@ -64,7 +64,7 @@ class BasicOAuth(OAuthRemoteApp):
         assert self.tokengetter_func is not None, 'missing tokengetter function'
         rv = self.tokengetter_func()
         if rv is None:
-            rv = g.session.get(self.name + '_oauthtok')
+            rv = session.get(self.name + '_oauthtok')
             if rv is None:
                 raise OAuthException('No token available')
         if not isinstance(rv, tuple):
@@ -94,22 +94,3 @@ class BasicOAuth(OAuthRemoteApp):
         #TODO access_token 过期，redirect到auth路径重新OOXX
         #对于豆瓣的oauth可以直接把路径计算为next_url
         return OAuthResponse(resp, content)
-
-    def free_request_token(self):
-        g.session.pop(self.name + '_oauthtok', None)
-        g.session.pop(self.name + '_oauthredir', None)
-
-    def generate_request_token(self, callback=None):
-        if callback is not None:
-            callback = urljoin(request.url, callback)
-        resp, content = self._client.request_new_token(
-            self.expand_url(self.request_token_url), callback,
-                self.request_token_params)
-        if resp['status'] != '200':
-            raise OAuthException('Failed to generate request token')
-        data = parse_response(resp, content)
-        if data is None:
-            raise OAuthException('Invalid token response from ' + self.name)
-        tup = (data['oauth_token'], data['oauth_token_secret'])
-        g.session[self.name + '_oauthtok'] = tup
-        return tup
