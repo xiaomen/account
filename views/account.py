@@ -73,7 +73,8 @@ def login():
 @account.route('/api/login', methods=['POST'])
 def api_login():
     if g.user is not None:
-        return jsonify(status='ok', user_id=g.session['user_id'])
+        return jsonify(status='ok', id=g.user.id, \
+                email=g.user.email, name=g.user.name)
     data = json.loads(request.data)
     password = data.get('password')
     email = data.get('email', None)
@@ -88,7 +89,8 @@ def api_login():
         return jsonify(status='error', error='invaild passwd')
 
     g.session['user_id'] = user.id
-    return jsonify(status='ok', user_id=user.id)
+    return jsonify(status='ok', user_id=user.id, \
+            email=user.email, name=user.name)
 
 def _logout():
     g.session.pop('user_id', None)
