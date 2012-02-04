@@ -35,7 +35,7 @@ class Base_OAuth_Login(object):
             if g.oauth(self.name):
                 return redirect(request.referrer or url_for('index'))
             next_url = url_for('account.bind')
-        callback = 'http://%s%s' % (config.OAUTH_REDIRECT_DOMAIN, url_for('%s_oauth.authorized' % self.name))
+        callback = '%s%s' % (config.OAUTH_REDIRECT_DOMAIN, url_for('%s_oauth.authorized' % self.name))
         return self.oauth_obj.authorize(callback, next_url)
 
     def authorized(self, resp):
