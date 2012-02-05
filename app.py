@@ -29,9 +29,11 @@ app.config.update(
 )
 
 session_opts = {
-    'session.type': 'ext:database',
-    'session.url': config.DATABASE_URI,
-    'session.table_name': 'sessions',
+    'session.type': 'redis',
+    #'session.url': config.DATABASE_URI,
+    'session.url': '106.187.43.13:6379',
+    #'session.table_name': 'sessions',
+    'session.db': 0,
     'session.lock_dir': os.path.join(permdir, 'lockdir'),
     'session.auto' : False,
     'session.cookie_expires': True,
@@ -52,7 +54,10 @@ app.wsgi_app = SessionMiddleware(app.wsgi_app, session_opts, key=config.SESSION_
 def index():
     if not g.user:
         return render_template('index.html', login_url=url_for('account.login'))
-    return render_template('index.html', login=1)
+    user = User.query.get(g.session['user_id'])
+    return render_template('index.html', login=1, \
+            user_name=user.name,
+            user_email=user.email)
 
 @app.before_request
 def before_request():

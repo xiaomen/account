@@ -34,7 +34,9 @@
     {% endif %}
     {% else %}
     <div>
-        <a href="/account/logout">登出</a>
+        <p><span>Welcome {{ user_name }}</span></p>
+        <p><span>E-mail {{ user_email }}</span></p>
+        <p><a href="/account/logout">登出</a></p>
     </div>
     {% endif %}
 {% endblock %}
