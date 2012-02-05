@@ -50,20 +50,14 @@ app.wsgi_app = SessionMiddleware(app.wsgi_app, session_opts, key=config.SESSION_
 
 @app.route('/')
 def index():
-    if g.user is None:
+    if not g.user:
         return render_template('index.html', login_url=url_for('account.login'))
     return render_template('index.html', login=1)
 
 @app.before_request
 def before_request():
-    g.user = None
-    session = request.environ['beaker.session']
-    g.session = session
-    if 'user_id' in session and session['user_id']:
-        if not session.get('user', None):
-            session['user'] = User.query.get(session['user_id'])
-        g.user = session['user']
-        g.oauth = lambda otype: OAuth.query.filter_by(oauth_type=otype, uid=g.user.id).first()
+    g.session = request.environ['beaker.session']
+    g.user = 'user_id' in g.session and g.session['user_id']
 
 @app.after_request
 def after_request(resp):
@@ -78,30 +72,3 @@ def page_not_found(e):
 def page_not_found(e):
     return render_template('40x.html'), 500
 
-@app.route('/test1')
-def test():
-    if g.user is None:
-        return render_template('index.html')
-    else:
-        from lib.weibo import weibo
-        from lib.douban import douban
-        from lib.qq import qq
-        from lib.renren import renren
-        #oauth_info = g.oauth('weibo')
-        #output_userinfo(weibo, oauth_info, '/users/show.json', \
-        #    {'uid' :oauth_info.oauth_uid}, {'Authorization' : 'OAuth2 %s' % weibo.tokengetter_func()})
-
-        oauth_info = g.oauth('douban')
-        output_userinfo(douban, oauth_info, '/people/@me?alt=json',
-            headers = {'Authorization' : 'Bearer %s' % douban.tokengetter_func()})
-
-        #oauth_info = g.oauth('renren')
-        #output_userinfo(renren, oauth_info, 'users.getInfo', {'access_token': renren.tokengetter_func()})
-
-        return 'Hello World'
-
-def output_userinfo(o, oauth_info, url, data=None, headers=None):
-    if not oauth_info:
-        return None
-    user_info = o.request(url, data, headers)
-    print user_info.data

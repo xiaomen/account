@@ -24,7 +24,7 @@ class Base_OAuth_Login(object):
 
     def get_token(self):
         if g.user:
-            oauth_info = g.oauth(self.name)
+            oauth_info = OAuth.query.filter_by(oauth_type=self.name, uid=g.session['user_id']).first()
             if not oauth_info:
                 return
             return oauth_info.oauth_token
@@ -32,7 +32,8 @@ class Base_OAuth_Login(object):
     def login(self):
         next_url = url_for('account.register')
         if g.user:
-            if g.oauth(self.name):
+            oauth_info = OAuth.query.filter_by(oauth_type=self.name, uid=g.session['user_id']).first()
+            if oauth_info:
                 return redirect(request.referrer or url_for('index'))
             next_url = url_for('account.bind')
         callback = '%s%s' % (config.OAUTH_REDIRECT_DOMAIN, url_for('%s_oauth.authorized' % self.name))

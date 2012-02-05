@@ -20,12 +20,12 @@ def bind():
     oauth = session.pop('from_oauth', None)
     allow = 'allow' in request.form
     if g.user and oauth and allow:
-        bind_oauth(oauth, g.user.id)
+        bind_oauth(oauth, g.session['user_id'])
     return redirect(url_for('index'))
 
 @account.route('/register', methods=['POST','GET'])
 def register():
-    if g.user is not None:
+    if g.user:
         return redirect(url_for('index'))
     if request.method == 'GET':
         return render_template('register.html')
@@ -47,7 +47,7 @@ def register():
 @csrf_exempt
 @account.route('/login', methods=['POST', 'GET'])
 def login():
-    if g.user is not None:
+    if g.user:
         return redirect(url_for('index'))
     login_url = url_for('account.login', **request.args)
     if request.method == 'GET':
@@ -72,9 +72,10 @@ def login():
 
 @account.route('/api/login', methods=['POST'])
 def api_login():
-    if g.user is not None:
-        return jsonify(status='ok', id=g.user.id, \
-                email=g.user.email, name=g.user.name)
+    if g.user:
+        user = User.query.get(session['user_id'])
+        return jsonify(status='ok', id=user.id, \
+                email=user.email, name=user.name)
     data = json.loads(request.data)
     password = data.get('password')
     email = data.get('email', None)
@@ -94,7 +95,6 @@ def api_login():
 
 def _logout():
     g.session.pop('user_id', None)
-    g.session.pop('user', None)
 
 @account.route('/logout')
 def logout():
