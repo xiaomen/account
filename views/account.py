@@ -70,11 +70,12 @@ def login():
     redirect_url = request.args.get('redirect', None)
     return redirect(redirect_url or url_for('index'))
 
+@csrf_exempt
 @account.route('/api/login', methods=['POST'])
 def api_login():
     if g.user:
         user = User.query.get(session['user_id'])
-        return jsonify(status='ok', id=user.id, \
+        return jsonify(status='logged in', id=user.id, \
                 email=user.email, name=user.name)
     data = json.loads(request.data)
     password = data.get('password')
