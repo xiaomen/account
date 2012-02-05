@@ -30,10 +30,7 @@ app.config.update(
 
 session_opts = {
     'session.type': 'redis',
-    #'session.url': config.DATABASE_URI,
-    'session.url': '106.187.43.13:6379',
-    #'session.table_name': 'sessions',
-    'session.db': 0,
+    'session.url': '106.187.43.13:6379?db=0',
     'session.lock_dir': os.path.join(permdir, 'lockdir'),
     'session.auto' : False,
     'session.cookie_expires': True,
