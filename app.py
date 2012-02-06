@@ -10,7 +10,8 @@ from views.oauth import oauth
 from views.account import account
 from sheep.api.permdir import permdir
 from sheep.api.statics import static_files
-from beaker.middleware import SessionMiddleware
+from sheep.api.sessions import SessionMiddleware
+from werkzeug.contrib.sessions import FilesystemSessionStore
 
 from flaskext.csrf import csrf
 from flask import Flask, render_template, \
@@ -28,24 +29,16 @@ app.config.update(
     SESSION_COOKIE_DOMAIN = config.SESSION_COOKIE_DOMAIN,
 )
 
-session_opts = {
-    'session.type': 'redis',
-    'session.url': '106.187.43.13:6379?db=0',
-    'session.lock_dir': os.path.join(permdir, 'lockdir'),
-    'session.auto' : False,
-    'session.cookie_expires': True,
-    'session.cookie_path': '/',
-    'session.cookie_domain': config.SESSION_COOKIE_DOMAIN,
-    'session.timeout': 86400
-}
-
 oauth.register_blueprints(app)
 app.register_blueprint(account, url_prefix='/account')
 logger = logging.getLogger(__name__)
 
 init_db(app)
 csrf(app)
-app.wsgi_app = SessionMiddleware(app.wsgi_app, session_opts, key=config.SESSION_KEY)
+app.wsgi_app = SessionMiddleware(app.wsgi_app, \
+        FilesystemSessionStore(), \
+        cookie_name=config.SESSION_KEY, cookie_path='/', \
+        cookie_domain=config.SESSION_COOKIE_DOMAIN)
 
 @app.route('/')
 def index():
@@ -58,13 +51,8 @@ def index():
 
 @app.before_request
 def before_request():
-    g.session = request.environ['beaker.session']
+    g.session = request.environ['xiaomen.session']
     g.user = 'user_id' in g.session and g.session['user_id']
-
-@app.after_request
-def after_request(resp):
-    g.session.save()
-    return resp
 
 @app.errorhandler(404)
 def page_not_found(e):
