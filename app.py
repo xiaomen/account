@@ -2,6 +2,7 @@
 # encoding: UTF-8
 
 import os
+import time
 import config
 import logging
 
@@ -52,6 +53,7 @@ def index():
 @app.before_request
 def before_request():
     g.session = request.environ['xiaomen.session']
+    g.session['_access_time'] = time.time()
     g.user = 'user_id' in g.session and g.session['user_id']
 
 @app.errorhandler(404)
