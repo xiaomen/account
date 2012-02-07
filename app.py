@@ -11,8 +11,8 @@ from views.oauth import oauth
 from views.account import account
 from sheep.api.permdir import permdir
 from sheep.api.statics import static_files
-from sheep.api.sessions import SessionMiddleware
-from werkzeug.contrib.sessions import FilesystemSessionStore
+from sheep.api.sessions import SessionMiddleware, \
+    FilesystemSessionStore
 
 from flaskext.csrf import csrf
 from flask import Flask, render_template, \
