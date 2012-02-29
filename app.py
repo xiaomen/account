@@ -55,11 +55,3 @@ def before_request():
     g.session = request.environ['xiaomen.session']
     g.user = 'user_id' in g.session and g.session['user_id']
 
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('40x.html'), 404
-
-@app.errorhandler(500)
-def page_not_found(e):
-    return render_template('40x.html'), 500
-
