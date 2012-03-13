@@ -25,8 +25,9 @@ app.jinja_env.filters['s_files'] = static_files
 
 app.config.update(
     SQLALCHEMY_DATABASE_URI = config.DATABASE_URI,
-    SQLALCHEMY_POOL_SIZE = 1000,
-    SQLALCHEMY_POOL_RECYCLE = True,
+    SQLALCHEMY_POOL_SIZE = 100,
+    SQLALCHEMY_POOL_TIMEOUT = 10,
+    SQLALCHEMY_POOL_RECYCLE = 3600,
     SESSION_COOKIE_DOMAIN = config.SESSION_COOKIE_DOMAIN,
 )
 
