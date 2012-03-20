@@ -7,6 +7,7 @@ import config
 import logging
 
 from models import *
+from views.api import api
 from views.oauth import oauth
 from views.account import account
 from sheep.api.permdir import permdir
@@ -33,6 +34,7 @@ app.config.update(
 
 oauth.register_blueprints(app)
 app.register_blueprint(account, url_prefix='/account')
+app.register_blueprint(api, url_prefix='/api')
 logger = logging.getLogger(__name__)
 
 init_db(app)
