@@ -16,7 +16,7 @@ from sheep.api.sessions import SessionMiddleware, \
 
 from flaskext.csrf import csrf
 from flask import Flask, render_template, \
-        request, url_for, g
+        request, url_for, g, redirect
 
 app = Flask(__name__)
 app.debug = config.DEBUG
@@ -47,6 +47,8 @@ def index():
     if not g.user:
         return render_template('index.html', login_url=url_for('account.login'))
     user = User.query.get(g.session['user_id'])
+    if not user:
+        return redirect(url_for('account.logout'))
     return render_template('index.html', login=1, \
             user_name=user.name,
             user_email=user.email)
@@ -54,5 +56,5 @@ def index():
 @app.before_request
 def before_request():
     g.session = request.environ['xiaomen.session']
-    g.user = 'user_id' in g.session and g.session['user_id']
+    g.user = g.session.get('user_id', None)
 

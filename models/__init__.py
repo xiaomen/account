@@ -4,6 +4,7 @@
 __all__ = ['db', 'OAuth', 'User', 'init_db']
 
 import hashlib
+from random import choice
 from flaskext.sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -12,34 +13,40 @@ def init_db(app):
     db.app = app
     db.create_all()
 
+def create_token(length=16):
+    chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    salt = ''.join([choice(chars) for i in range(length)])
+    return salt
+
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(16))
-    passwd = db.Column(db.String(200))
-    email = db.Column(db.String(30))
+    name = db.Column(db.CHAR(16), nullable=False)
+    passwd = db.Column(db.CHAR(32), nullable=False)
+    email = db.Column(db.CHAR(255), nullable=False)
     avatar = db.Column(db.String(255))
+    token = db.Column(db.CHAR(16))
 
     def __init__(self, username, password, email, *args, **kwargs):
         self.name = username
-        self.passwd = User.create_password(username, password)
+        self.passwd = User.create_password(password)
         self.email = email
+        self.token = create_token(16)
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
 
     @staticmethod
-    def create_password(username, password):
-        m = hashlib.sha1()
-        m.update(username)
-        p1 = m.hexdigest()
-        p1 = p1[10:20] + p1[:10]
-        m = hashlib.md5()
-        m.update(p1)
-        m.update(password)
-        return m.hexdigest()
+    def create_password(raw):
+        salt = create_token(8)
+        hsh = hashlib.sha1(salt + raw).hexdigest()
+        return "%s$%s" % (salt, hsh)
 
-    def check_password(self, passwd):
-        return self.passwd == User.create_password(self.name, passwd)
+    def check_password(self, raw):
+        if '$' not in self.passwd:
+            return False
+        salt, hsh = self.passwd.split('$')
+        verify = hashlib.sha1(salt + raw).hexdigest()
+        return verify == hsh
 
 class OAuth(db.Model):
     __tablename__ = 'oauth'
