@@ -23,7 +23,7 @@ class User(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.CHAR(16), nullable=False)
     passwd = db.Column(db.CHAR(32), nullable=False)
-    email = db.Column(db.CHAR(255), nullable=False)
+    email = db.Column(db.String(200), nullable=False)
     avatar = db.Column(db.String(255))
     token = db.Column(db.CHAR(16))
 
