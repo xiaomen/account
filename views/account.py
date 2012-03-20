@@ -79,7 +79,8 @@ def logout():
 def setting():
     if not g.user:
         return redirect(url_for('account.login'))
-
+    if request.method == 'GET':
+        return render_template('setting.html')
 
 def _login(user):
     g.session['user_id'] = user.id
