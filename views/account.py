@@ -4,7 +4,7 @@
 import re
 import json
 import logging
-from models import db, User
+from models import db, User, Domain
 from flask import Blueprint, g, session, jsonify, \
         redirect, request, url_for, render_template
 from flaskext.csrf import csrf_exempt
@@ -79,8 +79,14 @@ def logout():
 def setting():
     if not g.user:
         return redirect(url_for('account.login'))
+    user = User.query.get(g.session['user_id'])
     if request.method == 'GET':
         return render_template('setting.html')
+    username = request.form.get('name', None)
+    password = request.form.get('password', None)
+    domain = request.form.get('domain', None)
+
+
 
 def _login(user):
     g.session['user_id'] = user.id
