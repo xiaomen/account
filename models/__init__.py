@@ -51,7 +51,7 @@ class User(db.Model):
 class OAuth(db.Model):
     __tablename__ = 'oauth'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    uid = db.Column('uid', db.Integer)
+    uid = db.Column('uid', db.Integer, nullable=False)
     oauth_type = db.Column(db.String(20))
     oauth_uid = db.Column(db.String(200))
     oauth_token = db.Column(db.String(200))
@@ -65,4 +65,10 @@ class OAuth(db.Model):
 
     def bind(self, uid):
         self.uid = uid
+
+class Profile(db.Model):
+    __tablename__ = 'profile'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    uid = db.Column('uid', db.Integer, nullable=False)
+    domain = db.Column(db.String(10))
 

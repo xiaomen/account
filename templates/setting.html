@@ -1,0 +1,27 @@
+{% extends "index.html" %}
+
+{%block content %}
+<form action="/account/setting" method="post">
+    <ul>
+        <li>
+            <label for="password">密码:</label>
+            <input type="password" size="20" tabindex='1' value="" id="password" name="password">
+        </li>
+        <li>
+            <label for="domain">短域名:</label>
+            <input type="text" size="10" tabindex='2' value="" id="domain" name="domain">
+        </li>
+        <li>
+            <label for="name">昵称:</label>
+            <input type="text" size="20" tabindex='3' value="" id="name" name="name">
+        </li>
+        <li>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" tabindex='4'>更新</button>
+        </li>
+    </ul>
+</form>
+{% if error %}
+<span>{{ error }}</span>
+{% endif %}
+{% endblock %}
