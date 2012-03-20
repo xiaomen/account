@@ -3,24 +3,46 @@
 
 import json
 import logging
-from .account import _logout, check_login_info
 from models import db, User
-from flask import g, request, jsonify, Blueprint
 from flaskext.csrf import csrf_exempt
+from flask import g, request, jsonify, Blueprint
+from .account import _logout, _login, check_login_info, \
+        check_register_info
 
 logger = logging.getLogger(__name__)
 
 api = Blueprint('api', __name__)
 
 @csrf_exempt
-@api.route('/login', methods=['POST'])
-def api_login():
+@api.route('/register', methods=['POST'])
+def register():
     if g.user:
-        user = User.query.get(g.user)
+        user = User.query.get(g.session['user_id'])
         return jsonify(status='logged in', id=user.id, \
                 email=user.email, name=user.name)
     data = json.loads(request.data)
-    password = data.get('password')
+    password = data.get('password', None)
+    email = data.get('email', None)
+    username = data.get('name', None)
+    check, error = check_register_info(username, email, password)
+    if not check:
+        return jsonify(status='error', error=error)
+    user = User(username, password, email)
+    db.session.add(user)
+    db.session.commit()
+    _login(user)
+    return jsonify(status='register ok and logged in', id=user.id, \
+            email=user.email, name=user.name)
+
+@csrf_exempt
+@api.route('/login', methods=['POST'])
+def api_login():
+    if g.user:
+        user = User.query.get(g.session['user_id'])
+        return jsonify(status='logged in', id=user.id, \
+                email=user.email, name=user.name)
+    data = json.loads(request.data)
+    password = data.get('password', None)
     email = data.get('email', None)
     check, error = check_login_info(email, password)
     if not check:
@@ -32,7 +54,7 @@ def api_login():
     if not user.check_password(password):
         return jsonify(status='error', error='invaild passwd')
 
-    g.session['user_id'] = user.id
+    _login(user)
     return jsonify(status='ok', user_id=user.id, \
             email=user.email, name=user.name)
 
