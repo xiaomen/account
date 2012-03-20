@@ -70,6 +70,17 @@ def login():
     redirect_url = request.args.get('redirect', None)
     return redirect(redirect_url or url_for('index'))
 
+@account.route('/logout')
+def logout():
+    _logout()
+    return redirect(request.referrer or url_for('index'))
+
+@account.route('/setting', methods=['POST', 'GET'])
+def setting():
+    if not g.user:
+        return redirect(url_for('account.login'))
+
+
 def _login(user):
     g.session['user_id'] = user.id
     g.session['user_token'] = user.token
@@ -77,11 +88,6 @@ def _login(user):
 def _logout():
     g.session.pop('user_id', None)
     g.session.pop('user_token', None)
-
-@account.route('/logout')
-def logout():
-    _logout()
-    return redirect(request.referrer or url_for('index'))
 
 def bind_oauth(oauth, uid):
     oauth.bind(uid)
