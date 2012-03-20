@@ -39,7 +39,7 @@ def register():
     user = User(username, password, email)
     db.session.add(user)
     db.session.commit()
-    g.session['user_id'] = user.id
+    _login(user)
     if oauth:
         bind_oauth(oauth, user.id)
     return redirect(url_for('index'))
@@ -66,12 +66,17 @@ def login():
         logger.info('invaild passwd')
         return render_template('index.html', login_info='invaild passwd', login_url=login_url)
 
-    g.session['user_id'] = user.id
+    _login(user)
     redirect_url = request.args.get('redirect', None)
     return redirect(redirect_url or url_for('index'))
 
+def _login(user):
+    g.session['user_id'] = user.id
+    g.session['user_token'] = user.token
+
 def _logout():
     g.session.pop('user_id', None)
+    g.session.pop('user_token', None)
 
 @account.route('/logout')
 def logout():

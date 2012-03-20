@@ -49,7 +49,7 @@ def index():
     if not g.user:
         return render_template('index.html', login_url=url_for('account.login'))
     user = User.query.get(g.session['user_id'])
-    if not user:
+    if not user or g.session['user_token'] != user.token:
         return redirect(url_for('account.logout'))
     return render_template('index.html', login=1, \
             user_name=user.name,
@@ -58,5 +58,6 @@ def index():
 @app.before_request
 def before_request():
     g.session = request.environ['xiaomen.session']
-    g.user = g.session.get('user_id', None)
+    g.user = 'user_id' in g.session and g.session['user_id'] and \
+            'user_token' in g.session and g.session['user_token']
 
