@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # encoding: UTF-8
 
-__all__ = ['db', 'OAuth', 'User', 'init_db']
+__all__ = ['db', 'OAuth', 'User', 'Profile', 'init_db']
 
 import hashlib
 from random import choice
