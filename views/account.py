@@ -120,7 +120,7 @@ def check_register_info(username, email, password):
     '''
     if not (username and email and password):
         return False, 'value is empty'
-    if not re.search(r'^[a-zA-Z][\w-]{3,20}$', username, re.I):
+    if not re.search(r'^[a-zA-Z]{3,20}$', username, re.I):
         return False, 'username invail'
     if not re.search(r'\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*', email, re.I):
         return False, 'email invaild'
