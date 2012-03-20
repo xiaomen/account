@@ -70,30 +70,6 @@ def login():
     redirect_url = request.args.get('redirect', None)
     return redirect(redirect_url or url_for('index'))
 
-@csrf_exempt
-@account.route('/api/login', methods=['POST'])
-def api_login():
-    if g.user:
-        user = User.query.get(session['user_id'])
-        return jsonify(status='logged in', id=user.id, \
-                email=user.email, name=user.name)
-    data = json.loads(request.data)
-    password = data.get('password')
-    email = data.get('email', None)
-    check, error = check_login_info(email, password)
-    if not check:
-        return jsonify(status='error', error=error)
-
-    user = User.query.filter_by(email=email).first()
-    if not user:
-        return jsonify(status='error', error='no such user')
-    if not user.check_password(password):
-        return jsonify(status='error', error='invaild passwd')
-
-    g.session['user_id'] = user.id
-    return jsonify(status='ok', user_id=user.id, \
-            email=user.email, name=user.name)
-
 def _logout():
     g.session.pop('user_id', None)
 
@@ -101,11 +77,6 @@ def _logout():
 def logout():
     _logout()
     return redirect(request.referrer or url_for('index'))
-
-@account.route('/api/logout')
-def api_logout():
-    _logout()
-    return jsonify(status='ok')
 
 def bind_oauth(oauth, uid):
     oauth.bind(uid)
@@ -122,7 +93,7 @@ def check_register_info(username, email, password):
         return False, 'value is empty'
     if not re.search(r'^[a-zA-Z]{3,20}$', username, re.I):
         return False, 'username invail'
-    if not re.search(r'\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*', email, re.I):
+    if not re.search(r'^.+@[^.].*\.[a-z]{2,10}$', email, re.I):
         return False, 'email invaild'
     user = User.query.filter_by(email=email).first()
     if user:
