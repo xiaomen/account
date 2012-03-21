@@ -13,18 +13,22 @@ logger = logging.getLogger(__name__)
 
 account = Blueprint('account', __name__)
 
-@account.route('/forget/', methods=['GET', 'POST'])
-@account.route('/forget/<uuid>', methods=['GET', 'POST'])
-def forget(uuid=None):
-    if not uuid:
-        if request.method == 'GET':
-            return render_template('forget.html')
-        email = request.form.get('email', None)
-        status = check_email(email)
-        if status:
-            return render_template('forget.html', error=status[1])
+@account.route('/forget', methods=['GET', 'POST'])
+def forget():
+    if request.method == 'GET':
+        return render_template('forget.html')
+    email = request.form.get('email', None)
+    status = check_email(email)
+    if status:
+        return render_template('forget.html', error=status[1])
+    user = get_user_by(email=email).first()
+    if user:
+        stub = User.create_token(20)
+        send_email(user.email, \
+                'Xiaomen.co Account Service',
+                '<p><a href="http://account.xiaomen.co/reset/%s>click this</a><p>' % stub)
 
-        return render_template('forget.html', send="请查看邮箱")
+    return render_template('forget.html', send=1)
 
 @account.route('/bind', methods=['GET', 'POST'])
 def bind():
