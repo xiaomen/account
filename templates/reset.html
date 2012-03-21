@@ -1,0 +1,28 @@
+{% extends "index.html" %}
+
+{%block content %}
+{% if not ok %}
+{% if not hidden %}
+<form action="/account/reset/{{ stub }}" method="post">
+    <ul>
+        <li>
+            <label for="password">密码:</label>
+            <input type="password" size="20" tabindex='1' value="" id="password" name="password">
+        </li>
+        <li>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" tabindex='4'>修改</button>
+        </li>
+    </ul>
+</form>
+{% else %}
+<p><a href="/">back</a></p>
+{% endif %}
+{% if error %}
+<span>{{ error }}</span>
+{% endif %}
+{% else %}
+<p>update ok</p>
+<p><a href="/">back</a></p>
+{% endif %}
+{% endblock %}

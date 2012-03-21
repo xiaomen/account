@@ -2,11 +2,14 @@
 #coding:utf-8
 
 import json
+import config
 import logging
 from utils import *
+from datetime import datetime
 from models import db, User, Forget, create_token
 from flask import Blueprint, g, session, jsonify, \
-        redirect, request, url_for, render_template
+        redirect, request, url_for, render_template, \
+        abort
 from flaskext.csrf import csrf_exempt
 
 logger = logging.getLogger(__name__)
@@ -15,6 +18,8 @@ account = Blueprint('account', __name__)
 
 @account.route('/forget', methods=['GET', 'POST'])
 def forget():
+    if get_current_user():
+        return redirect(url_for('index'))
     if request.method == 'GET':
         return render_template('forget.html')
     email = request.form.get('email', None)
@@ -24,13 +29,50 @@ def forget():
     user = get_user_by(email=email).first()
     if user:
         stub = create_token(20)
-        send_email(user.email, \
+        try:
+            send_email(user.email, \
                 'Xiaomen.co Account Service',
-                '<p><a href="http://account.xiaomen.co/reset/%s>click this</a><p>' % stub)
+                r'''http://account.xiaomen.co/account/reset/%s click this''' % stub)
+        except:
+            logger.exception("send mail failed")
+
         db.session.add(Forget(user.id, stub))
         db.session.commit()
 
     return render_template('forget.html', send=1)
+
+@account.route('/reset/<stub>', methods=['GET', 'POST'])
+def reset(stub=None):
+    forget = get_forget_by(stub=stub).first()
+    if get_current_user():
+        if forget:
+            _delete_forget(forget)
+            db.session.commit()
+        return redirect(url_for('index'))
+
+    if not forget:
+        raise abort(404)
+
+    if request.method == 'GET':
+
+        if (datetime.now()  - forget.created).seconds > config.FORGET_STUB_EXPIRE:
+            _delete_forget(forget)
+            db.session.commit()
+            return render_template('reset.html', hidden=1, \
+                    error='stub expired')
+
+        return render_template('reset.html', stub=stub)
+
+    password = request.form.get('password', None)
+    status = check_password(password)
+    if status:
+        return render_template('reset.html', stub=stub, \
+                error=status[1])
+    user = get_user(forget.uid)
+    _change_password(user, password)
+    _delete_forget(forget)
+    db.session.commit()
+    return render_template('reset.html', ok=1)
 
 @account.route('/bind', methods=['GET', 'POST'])
 def bind():
@@ -131,6 +173,9 @@ def setting():
 def _set_domain(user, domain):
     user.domain = domain
     db.session.add(user)
+
+def _delete_forget(forget):
+    db.session.delete(forget)
 
 def _change_password(user, password):
     user.token = create_token(16)

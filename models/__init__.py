@@ -73,7 +73,7 @@ class Forget(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     uid = db.Column('uid', db.Integer, nullable=False, unique=True)
     stub = db.Column('stub', db.CHAR(20), nullable=False, unique=True)
-    created = db.Column(db.DateTime, default=datetime.utcnow)
+    created = db.Column(db.DateTime, default=datetime.now)
 
     def __init__(self, uid, stub):
         self.uid = uid
