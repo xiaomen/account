@@ -1,10 +1,9 @@
 #!/usr/local/bin/python2.7
 #coding:utf-8
 
-import re
 import json
 import logging
-from utils import get_current_user
+from utils import *
 from models import db, User, Profile, create_token
 from flask import Blueprint, g, session, jsonify, \
         redirect, request, url_for, render_template
@@ -60,7 +59,7 @@ def login():
     if not check:
         return render_template('index.html', login_info=error, login_url=login_url)
 
-    user = User.query.filter_by(email=email).first()
+    user = get_user_by(email=email).first()
     if not user:
         logger.info('no such user')
         return render_template('index.html', login_info='no such user', login_url=login_url)
@@ -82,7 +81,7 @@ def setting():
     user = get_current_user()
     if not user:
         return redirect(url_for('account.login'))
-    profile = Profile.query.filter_by(uid=g.session['user_id']).first()
+    profile = get_profile_by(uid=g.session['user_id']).first()
     if not profile:
         profile = Profile(user.id)
 
@@ -94,19 +93,19 @@ def setting():
     domain = request.form.get('domain', None)
 
     if username != user.name:
-        check, error = check_update_info(username)
-        if not check:
-            return render_template('setting.html', error=error, user=user)
-    _change_username(user, username)
-
-    if domain:
-        status = _check_domain(domain)
+        status = check_username(username)
         if status:
             return render_template('setting.html', error=status[0], user=user)
+        _change_username(user, username)
+
+    if domain:
+        for status in [check_domain(domain), check_domain_exists(domain)]
+            if status:
+                return render_template('setting.html', error=status[0], user=user)
         _set_domain(profile, user, domain)
 
     if password:
-        status = _check_password(password)
+        status = check_password(password)
         if status:
             return render_template('setting.html', error=status[0], user=user)
         _change_password(user, password)
@@ -142,7 +141,7 @@ def bind_oauth(oauth, uid):
     db.session.commit()
 
 def check_update_info(username):
-    status = _check_username(username),
+    status = check_username(username),
     if status:
         return status
     return True, None
@@ -154,10 +153,10 @@ def check_register_info(username, email, password):
     password a-zA-Z0-9_-!@#$%^&*
     '''
     check_list = [
-        _check_username(username),
-        _check_email(email),
-        _check_email_exists(email),
-        _check_password(password),
+        check_username(username),
+        check_email(email),
+        check_email_exists(email),
+        check_password(password),
     ]
     for status in check_list:
         if not status:
@@ -167,43 +166,12 @@ def check_register_info(username, email, password):
 
 def check_login_info(email, password):
     check_list = [
-        _check_password(password),
-        _check_email(email),
+        check_password(password),
+        check_email(email),
     ]
     for status in check_list:
         if not status:
             continue
         return status
     return True, None
-
-def _check_password(password):
-    if not password:
-        return False, 'need password'
-    if not re.search(r'[\S]{6,}', password, re.I):
-        return False, 'password invaild'
-
-def _check_domain(domain):
-    if not domain:
-        return False, 'need domain'
-    if not re.search(r'^[a-zA-Z0-9_-]{4,10}$', domain, re.I):
-        return False, 'domain invail'
-
-def _check_username(username):
-    if not username:
-        return False, 'need username'
-    if not re.search(r'^[a-zA-Z0-9_-]{3,20}$', username, re.I):
-        return False, 'username invail'
-
-def _check_email(email):
-    if not email:
-        return False, 'need email'
-    if not re.search(r'^.+@[^.].*\.[a-z]{2,10}$', email, re.I):
-        return False, 'email invaild'
-
-def _check_email_exists(email):
-    if not email:
-        return False, 'need email'
-    user = User.query.filter_by(email=email).first()
-    if user:
-        return False, 'email exists'
 
