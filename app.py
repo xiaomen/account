@@ -6,6 +6,7 @@ import time
 import config
 import logging
 
+from utils import *
 from models import *
 from views.api import api
 from views.oauth import oauth
@@ -48,8 +49,8 @@ app.wsgi_app = SessionMiddleware(app.wsgi_app, \
 def index():
     if not g.user:
         return render_template('index.html', login_url=url_for('account.login'))
-    user = User.query.get(g.session['user_id'])
-    if not user or g.session['user_token'] != user.token:
+    user = get_current_user()
+    if not user:
         return redirect(url_for('account.logout'))
     return render_template('index.html', login=1, \
             user_name=user.name,
