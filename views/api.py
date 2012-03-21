@@ -69,6 +69,6 @@ def api_logout():
 def api_people(username):
     people = get_user(username)
     if people:
-        return jsonify(status='ok', name=people.name)
+        return jsonify(status='ok', name=people.name, uid=people.id)
     return jsonify(status='not found')
 
