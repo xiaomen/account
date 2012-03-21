@@ -99,17 +99,17 @@ def setting():
             return render_template('setting.html', error=error, user=user)
     _change_username(user, username)
 
-    if password:
-        status = _check_password(password)
-        if status:
-            return render_template('setting.html', error=status[0], user=user)
-        _change_password(user, password)
-
     if domain:
         status = _check_domain(domain)
         if status:
             return render_template('setting.html', error=status[0], user=user)
         _set_domain(profile, user, domain)
+
+    if password:
+        status = _check_password(password)
+        if status:
+            return render_template('setting.html', error=status[0], user=user)
+        _change_password(user, password)
     db.session.commit()
     return render_template('setting.html', error='update ok', \
             profile=profile, user=user)
@@ -120,7 +120,8 @@ def _set_domain(profile, user, domain):
 
 def _change_password(user, password):
     user.token = create_token(16)
-    user.password = User.create_password(password)
+    user.passwd = User.create_password(password)
+    _login(user)
     db.session.add(user)
 
 def _change_username(user, username):
