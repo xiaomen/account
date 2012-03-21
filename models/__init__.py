@@ -70,7 +70,7 @@ class Profile(db.Model):
     __tablename__ = 'profile'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     uid = db.Column('uid', db.Integer, nullable=False, unique=True)
-    domain = db.Column(db.String(10))
+    domain = db.Column(db.String(10), unique=True)
 
     def __init__(self, uid, *args, **kwargs):
         self.uid = uid
