@@ -99,7 +99,7 @@ def setting():
         _change_username(user, username)
 
     if domain:
-        for status in [check_domain(domain), check_domain_exists(domain)]
+        for status in [check_domain(domain), check_domain_exists(domain)]:
             if status:
                 return render_template('setting.html', error=status[0], user=user)
         _set_domain(profile, user, domain)
