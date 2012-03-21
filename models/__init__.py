@@ -1,10 +1,11 @@
 #!/usr/bin/python
 # encoding: UTF-8
 
-__all__ = ['db', 'OAuth', 'User', 'init_db', 'create_token']
+__all__ = ['db', 'OAuth', 'User', 'Forget', 'init_db', 'create_token']
 
 import hashlib
 from random import choice
+from datetime import datetime
 from flaskext.sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -31,7 +32,7 @@ class User(db.Model):
     def __init__(self, username, password, email, *args, **kwargs):
         self.name = username
         self.passwd = User.create_password(password)
-        self.email = email
+        self.email = email.lower()
         self.token = create_token(16)
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
@@ -66,4 +67,15 @@ class OAuth(db.Model):
 
     def bind(self, uid):
         self.uid = uid
+
+class Forget(db.Model):
+    __tablename__ = 'forget'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    uid = db.Column('uid', db.Integer, nullable=False, unique=True)
+    stub = db.Column('stub', db.CHAR(20), nullable=False, unique=True)
+    created = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __init__(self, uid, stub):
+        self.uid = uid
+        self.stub = stub
 

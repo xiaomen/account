@@ -23,6 +23,10 @@ DATABASE_URI = 'mysql://'
 SESSION_KEY = 'xid'
 SESSION_COOKIE_DOMAIN = '.xiaomen.co'
 
+SMTP_SERVER = 'smtp.126.com'
+SMTP_USER = 'xiaomenco@126.com'
+SMTP_PASSWORD = 'ZhaoHuiMiMa!@#'
+
 try:
     from local_config import *
 except:

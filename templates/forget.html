@@ -2,7 +2,7 @@
 
 {%block content %}
 {% if not send %}
-<form method="post" action="/account/forget/">
+<form method="post" action="/account/forget">
   <label for="email">邮箱:</label>
   <input type="text" size="30" tabindex='1' value="" id="email" name="email">
   <input type="hidden" value="{{ csrf_token() }}" name="_csrf_token">
@@ -13,6 +13,6 @@
 <span>{{ error }}</span>
 {% endif %}
 {% else %}
-<span>{{ send }}</span>
+<span>请查看邮箱</span>
 {% endif %}
 {% endblock %}
