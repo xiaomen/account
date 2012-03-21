@@ -13,6 +13,19 @@ logger = logging.getLogger(__name__)
 
 account = Blueprint('account', __name__)
 
+@account.route('/forget/', methods=['GET', 'POST'])
+@account.route('/forget/<uuid>', methods=['GET', 'POST'])
+def forget(uuid=None):
+    if not uuid:
+        if request.method == 'GET':
+            return render_template('forget.html')
+        email = request.form.get('email', None)
+        status = check_email(email)
+        if status:
+            return render_template('forget.html', error=status[1])
+
+        return render_template('forget.html', send="请查看邮箱")
+
 @account.route('/bind', methods=['GET', 'POST'])
 def bind():
     if request.method == 'GET':
@@ -92,19 +105,19 @@ def setting():
     if username != user.name:
         status = check_username(username)
         if status:
-            return render_template('setting.html', error=status[0], user=user)
+            return render_template('setting.html', error=status[1], user=user)
         _change_username(user, username)
 
     if domain:
         for status in [check_domain(domain), check_domain_exists(domain)]:
             if status:
-                return render_template('setting.html', error=status[0], user=user)
+                return render_template('setting.html', error=status[1], user=user)
         _set_domain(user, domain)
 
     if password:
         status = check_password(password)
         if status:
-            return render_template('setting.html', error=status[0], user=user)
+            return render_template('setting.html', error=status[1], user=user)
         _change_password(user, password)
     db.session.commit()
     return render_template('setting.html', error='update ok', user=user)

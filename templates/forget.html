@@ -1,0 +1,18 @@
+{% extends "index.html" %}
+
+{%block content %}
+{% if not send %}
+<form method="post" action="/account/forget/">
+  <label for="email">邮箱:</label>
+  <input type="text" size="30" tabindex='1' value="" id="email" name="email">
+  <input type="hidden" value="{{ csrf_token() }}" name="_csrf_token">
+  <input type="submit" value="确定" name="allow" />
+  <input type="submit" value="取消" name="cancel" />
+</form>
+{% if error %}
+<span>{{ error }}</span>
+{% endif %}
+{% else %}
+<span>{{ send }}</span>
+{% endif %}
+{% endblock %}
