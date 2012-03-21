@@ -10,6 +10,7 @@ from utils import *
 from models import *
 from views.api import api
 from views.oauth import oauth
+from views.people import people
 from views.account import account
 from sheep.api.permdir import permdir
 from sheep.api.statics import static_files
@@ -35,6 +36,7 @@ app.config.update(
 
 oauth.register_blueprints(app)
 app.register_blueprint(account, url_prefix='/account')
+app.register_blueprint(people, url_prefix='/people')
 app.register_blueprint(api, url_prefix='/api')
 logger = logging.getLogger(__name__)
 
