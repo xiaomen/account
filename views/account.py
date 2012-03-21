@@ -83,19 +83,40 @@ def setting():
     if not user:
         return redirect(url_for('account.login'))
     profile = Profile.query.filter_by(uid=g.session['user_id']).first()
+    if not profile:
+        profile = Profile(user.id)
 
     if request.method == 'GET':
-        return render_template('setting.html')
+        return render_template('setting.html', \
+                user=user, profile=profile)
     username = request.form.get('name', None)
     password = request.form.get('password', None)
     domain = request.form.get('domain', None)
 
-    check, error = check_update_info(username, password)
-    if not check:
-        return render_template('setting.html', error=error)
-    _change_password(user, password)
+    if username != user.name:
+        check, error = check_update_info(username)
+        if not check:
+            return render_template('setting.html', error=error, user=user)
     _change_username(user, username)
+
+    if password:
+        status = _check_password(password)
+        if status:
+            return render_template('setting.html', error=status[0], user=user)
+        _change_password(user, password)
+
+    if domain:
+        status = _check_domain(domain)
+        if status:
+            return render_template('setting.html', error=status[0], user=user)
+        _set_domain(profile, user, domain)
     db.session.commit()
+    return render_template('setting.html', error='update ok', \
+            profile=profile, user=user)
+
+def _set_domain(profile, user, domain):
+    profile.domain = domain
+    db.session.add(profile)
 
 def _change_password(user, password):
     user.token = create_token(16)
@@ -119,14 +140,9 @@ def bind_oauth(oauth, uid):
     db.session.add(oauth)
     db.session.commit()
 
-def check_update_info(username, password):
-    check_list = [
-        _check_password(password),
-        _check_username(username),
-    ]
-    for status in check_list:
-        if not status:
-            continue
+def check_update_info(username):
+    status = _check_username(username),
+    if status:
         return status
     return True, None
 
@@ -164,6 +180,12 @@ def _check_password(password):
         return False, 'need password'
     if not re.search(r'[\S]{6,}', password, re.I):
         return False, 'password invaild'
+
+def _check_domain(domain):
+    if not domain:
+        return False, 'need domain'
+    if not re.search(r'^[a-zA-Z0-9_-]{4,10}$', domain, re.I):
+        return False, 'domain invail'
 
 def _check_username(username):
     if not username:

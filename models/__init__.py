@@ -72,3 +72,8 @@ class Profile(db.Model):
     uid = db.Column('uid', db.Integer, nullable=False, unique=True)
     domain = db.Column(db.String(10))
 
+    def __init__(self, uid, *args, **kwargs):
+        self.uid = uid
+        for k, v in kwargs.iteritems():
+            setattr(self, k, v)
+
