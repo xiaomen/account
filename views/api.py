@@ -5,7 +5,7 @@ import json
 import logging
 from models import db, User
 from utils import get_current_user, \
-        get_user_by
+        get_user_by, get_user
 from flaskext.csrf import csrf_exempt
 from flask import g, request, jsonify, Blueprint
 from .account import _logout, _login, check_login_info, \
@@ -64,3 +64,11 @@ def api_login():
 def api_logout():
     _logout()
     return jsonify(status='ok')
+
+@api.route('/people/<username>')
+def api_people(username):
+    people = get_user(username)
+    if people:
+        return jsonify(status='ok', name=people.name)
+    return jsonify(status='not found')
+
