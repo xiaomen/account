@@ -23,9 +23,11 @@ DATABASE_URI = 'mysql://'
 SESSION_KEY = 'xid'
 SESSION_COOKIE_DOMAIN = '.xiaomen.co'
 
-SMTP_SERVER = 'smtp.126.com'
-SMTP_USER = 'xiaomenco@126.com'
-SMTP_PASSWORD = 'ZhaoHuiMiMa!@#'
+SMTP_SERVER = 'smtp.qq.com'
+SMTP_USER = '1925601625@qq.com'
+SMTP_PASSWORD = 'xiaomenkou!@#$%^()'
+
+FORGET_STUB_EXPIRE = 30*60
 
 try:
     from local_config import *

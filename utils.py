@@ -6,7 +6,7 @@ import email
 import config
 import smtplib
 from flask import g
-from models import db, User
+from models import db, User, Forget
 
 def get_current_user():
     if not g.session or not g.session.get('user_id') or not g.session.get('user_token'):
@@ -51,6 +51,10 @@ def get_user(username):
 #cache
 def get_user_by(**kw):
     return User.query.filter_by(**kw)
+
+#cache
+def get_forget_by(**kw):
+    return Forget.query.filter_by(**kw)
 
 def check_password(password):
     if not password:
