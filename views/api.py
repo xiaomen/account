@@ -4,6 +4,7 @@
 import json
 import logging
 from models import db, User
+from utils import get_current_user
 from flaskext.csrf import csrf_exempt
 from flask import g, request, jsonify, Blueprint
 from .account import _logout, _login, check_login_info, \
@@ -16,8 +17,8 @@ api = Blueprint('api', __name__)
 @csrf_exempt
 @api.route('/register', methods=['POST'])
 def register():
-    if g.user:
-        user = User.query.get(g.session['user_id'])
+    user = get_current_user()
+    if user:
         return jsonify(status='logged in', id=user.id, \
                 email=user.email, name=user.name)
     data = json.loads(request.data)
@@ -37,8 +38,8 @@ def register():
 @csrf_exempt
 @api.route('/login', methods=['POST'])
 def api_login():
-    if g.user:
-        user = User.query.get(g.session['user_id'])
+    user = get_current_user()
+    if user:
         return jsonify(status='logged in', id=user.id, \
                 email=user.email, name=user.name)
     data = json.loads(request.data)

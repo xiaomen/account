@@ -4,7 +4,8 @@
 import re
 import json
 import logging
-from models import db, User, Domain
+from utils import get_current_user
+from models import db, User, Profile, create_token
 from flask import Blueprint, g, session, jsonify, \
         redirect, request, url_for, render_template
 from flaskext.csrf import csrf_exempt
@@ -19,13 +20,14 @@ def bind():
         return render_template('bind.html')
     oauth = session.pop('from_oauth', None)
     allow = 'allow' in request.form
-    if g.user and oauth and allow:
+    user = get_current_user()
+    if user and oauth and allow:
         bind_oauth(oauth, g.session['user_id'])
     return redirect(url_for('index'))
 
 @account.route('/register', methods=['POST','GET'])
 def register():
-    if g.user:
+    if get_current_user():
         return redirect(url_for('index'))
     if request.method == 'GET':
         return render_template('register.html')
@@ -47,7 +49,7 @@ def register():
 @csrf_exempt
 @account.route('/login', methods=['POST', 'GET'])
 def login():
-    if g.user:
+    if get_current_user():
         return redirect(url_for('index'))
     login_url = url_for('account.login', **request.args)
     if request.method == 'GET':
@@ -77,16 +79,32 @@ def logout():
 
 @account.route('/setting', methods=['POST', 'GET'])
 def setting():
-    if not g.user:
+    user = get_current_user()
+    if not user:
         return redirect(url_for('account.login'))
-    user = User.query.get(g.session['user_id'])
+    profile = Profile.query.filter_by(uid=g.session['user_id']).first()
+
     if request.method == 'GET':
         return render_template('setting.html')
     username = request.form.get('name', None)
     password = request.form.get('password', None)
     domain = request.form.get('domain', None)
 
+    check, error = check_update_info(username, password)
+    if not check:
+        return render_template('setting.html', error=error)
+    _change_password(user, password)
+    _change_username(user, username)
+    db.session.commit()
 
+def _change_password(user, password):
+    user.token = create_token(16)
+    user.password = User.create_password(password)
+    db.session.add(user)
+
+def _change_username(user, username):
+    user.name = username
+    db.session.add(user)
 
 def _login(user):
     g.session['user_id'] = user.id
@@ -101,28 +119,68 @@ def bind_oauth(oauth, uid):
     db.session.add(oauth)
     db.session.commit()
 
+def check_update_info(username, password):
+    check_list = [
+        _check_password(password),
+        _check_username(username),
+    ]
+    for status in check_list:
+        if not status:
+            continue
+        return status
+    return True, None
+
 def check_register_info(username, email, password):
     '''
     username a-zA-Z0-9_-, >4 <20
     email a-zA-Z0-9_-@a-zA-Z0-9.a-zA-Z0-9
     password a-zA-Z0-9_-!@#$%^&*
     '''
-    if not (username and email and password):
-        return False, 'value is empty'
-    if not re.search(r'^[a-zA-Z]{3,20}$', username, re.I):
-        return False, 'username invail'
-    if not re.search(r'^.+@[^.].*\.[a-z]{2,10}$', email, re.I):
-        return False, 'email invaild'
-    user = User.query.filter_by(email=email).first()
-    if user:
-        return False, 'email exists'
-    if not re.search(r'[\S]{6,}', password, re.I):
-        return False, 'password invaild'
+    check_list = [
+        _check_username(username),
+        _check_email(email),
+        _check_email_exists(email),
+        _check_password(password),
+    ]
+    for status in check_list:
+        if not status:
+            continue
+        return status
     return True, None
 
 def check_login_info(email, password):
+    check_list = [
+        _check_password(password),
+        _check_email(email),
+    ]
+    for status in check_list:
+        if not status:
+            continue
+        return status
+    return True, None
+
+def _check_password(password):
     if not password:
         return False, 'need password'
-    if not email or not re.search(r'\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*', email, re.I):
+    if not re.search(r'[\S]{6,}', password, re.I):
+        return False, 'password invaild'
+
+def _check_username(username):
+    if not username:
+        return False, 'need username'
+    if not re.search(r'^[a-zA-Z0-9_-]{3,20}$', username, re.I):
+        return False, 'username invail'
+
+def _check_email(email):
+    if not email:
+        return False, 'need email'
+    if not re.search(r'^.+@[^.].*\.[a-z]{2,10}$', email, re.I):
         return False, 'email invaild'
-    return True, None
+
+def _check_email_exists(email):
+    if not email:
+        return False, 'need email'
+    user = User.query.filter_by(email=email).first()
+    if user:
+        return False, 'email exists'
+

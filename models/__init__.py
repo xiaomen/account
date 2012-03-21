@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # encoding: UTF-8
 
-__all__ = ['db', 'OAuth', 'User', 'Profile', 'init_db']
+__all__ = ['db', 'OAuth', 'User', 'Profile', 'init_db', 'create_token']
 
 import hashlib
 from random import choice
@@ -22,8 +22,8 @@ class User(db.Model):
     __tablename__ = 'users'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.CHAR(16), nullable=False)
-    passwd = db.Column(db.CHAR(32), nullable=False)
-    email = db.Column(db.String(200), nullable=False)
+    passwd = db.Column(db.CHAR(50), nullable=False)
+    email = db.Column(db.String(200), nullable=False, unique=True)
     avatar = db.Column(db.String(255))
     token = db.Column(db.CHAR(16))
 
@@ -51,7 +51,7 @@ class User(db.Model):
 class OAuth(db.Model):
     __tablename__ = 'oauth'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    uid = db.Column('uid', db.Integer, nullable=False)
+    uid = db.Column('uid', db.Integer, nullable=False, unique=True)
     oauth_type = db.Column(db.String(20))
     oauth_uid = db.Column(db.String(200))
     oauth_token = db.Column(db.String(200))
@@ -69,6 +69,6 @@ class OAuth(db.Model):
 class Profile(db.Model):
     __tablename__ = 'profile'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    uid = db.Column('uid', db.Integer, nullable=False)
+    uid = db.Column('uid', db.Integer, nullable=False, unique=True)
     domain = db.Column(db.String(10))
 
