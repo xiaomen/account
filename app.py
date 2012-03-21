@@ -47,14 +47,12 @@ app.wsgi_app = SessionMiddleware(app.wsgi_app, \
 
 @app.route('/')
 def index():
-    if not g.user:
-        return render_template('index.html', login_url=url_for('account.login'))
     user = get_current_user()
     if not user:
-        return redirect(url_for('account.logout'))
+        return render_template('index.html', login_url=url_for('account.login'))
     return render_template('index.html', login=1, \
-            user_name=user.name,
-            user_email=user.email)
+            user = user,
+            setting_url = url_for('account.setting'))
 
 @app.before_request
 def before_request():
