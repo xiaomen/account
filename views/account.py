@@ -4,7 +4,7 @@
 import json
 import logging
 from utils import *
-from models import db, User, create_token
+from models import db, User, Forget, create_token
 from flask import Blueprint, g, session, jsonify, \
         redirect, request, url_for, render_template
 from flaskext.csrf import csrf_exempt
@@ -23,10 +23,12 @@ def forget():
         return render_template('forget.html', error=status[1])
     user = get_user_by(email=email).first()
     if user:
-        stub = User.create_token(20)
+        stub = create_token(20)
         send_email(user.email, \
                 'Xiaomen.co Account Service',
                 '<p><a href="http://account.xiaomen.co/reset/%s>click this</a><p>' % stub)
+        db.session.add(Forget(user.id, stub))
+        db.session.commit()
 
     return render_template('forget.html', send=1)
 
