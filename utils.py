@@ -3,7 +3,7 @@
 
 import re
 from flask import g
-from models import db, User, Profile
+from models import db, User
 
 def get_current_user():
     if not g.session or not g.session.get('user_id') or not g.session.get('user_token'):
@@ -21,18 +21,11 @@ def get_user(username):
     except:
         if check_domain(username):
             return None
-        profile = get_profile_by(domain=username).first()
-        if not profile:
-            return None
-        return User.query.get(profile.uid)
+        return get_user_by(domain=username).first()
 
 #cache
 def get_user_by(**kw):
     return User.query.filter_by(**kw)
-
-#cache
-def get_profile_by(**kw):
-    return Profile.query.filter_by(**kw)
 
 def check_password(password):
     if not password:
@@ -68,6 +61,6 @@ def check_email_exists(email):
 def check_domain_exists(domain):
     if not domain:
         return False, 'need domain'
-    profile = get_profile_by(domain=domain).first()
-    if profile:
+    user = get_user_by(domain=domain).first()
+    if user:
         return False, 'domain exists'

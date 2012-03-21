@@ -4,7 +4,7 @@
 import json
 import logging
 from utils import *
-from models import db, User, Profile, create_token
+from models import db, User, create_token
 from flask import Blueprint, g, session, jsonify, \
         redirect, request, url_for, render_template
 from flaskext.csrf import csrf_exempt
@@ -81,13 +81,10 @@ def setting():
     user = get_current_user()
     if not user:
         return redirect(url_for('account.login'))
-    profile = get_profile_by(uid=g.session['user_id']).first()
-    if not profile:
-        profile = Profile(user.id)
 
     if request.method == 'GET':
         return render_template('setting.html', \
-                user=user, profile=profile)
+                user=user)
     username = request.form.get('name', None)
     password = request.form.get('password', None)
     domain = request.form.get('domain', None)
@@ -102,7 +99,7 @@ def setting():
         for status in [check_domain(domain), check_domain_exists(domain)]:
             if status:
                 return render_template('setting.html', error=status[0], user=user)
-        _set_domain(profile, user, domain)
+        _set_domain(user, domain)
 
     if password:
         status = check_password(password)
@@ -110,12 +107,11 @@ def setting():
             return render_template('setting.html', error=status[0], user=user)
         _change_password(user, password)
     db.session.commit()
-    return render_template('setting.html', error='update ok', \
-            profile=profile, user=user)
+    return render_template('setting.html', error='update ok', user=user)
 
-def _set_domain(profile, user, domain):
-    profile.domain = domain
-    db.session.add(profile)
+def _set_domain(user, domain):
+    user.domain = domain
+    db.session.add(user)
 
 def _change_password(user, password):
     user.token = create_token(16)

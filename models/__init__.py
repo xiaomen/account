@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # encoding: UTF-8
 
-__all__ = ['db', 'OAuth', 'User', 'Profile', 'init_db', 'create_token']
+__all__ = ['db', 'OAuth', 'User', 'init_db', 'create_token']
 
 import hashlib
 from random import choice
@@ -26,6 +26,7 @@ class User(db.Model):
     email = db.Column(db.String(200), nullable=False, unique=True)
     avatar = db.Column(db.String(255))
     token = db.Column(db.CHAR(16))
+    domain = db.Column(db.String(10), unique=True)
 
     def __init__(self, username, password, email, *args, **kwargs):
         self.name = username
@@ -65,15 +66,4 @@ class OAuth(db.Model):
 
     def bind(self, uid):
         self.uid = uid
-
-class Profile(db.Model):
-    __tablename__ = 'profile'
-    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    uid = db.Column('uid', db.Integer, nullable=False, unique=True)
-    domain = db.Column(db.String(10), unique=True)
-
-    def __init__(self, uid, *args, **kwargs):
-        self.uid = uid
-        for k, v in kwargs.iteritems():
-            setattr(self, k, v)
 

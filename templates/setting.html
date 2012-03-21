@@ -9,10 +9,10 @@
         </li>
         <li>
             <label for="domain">短域名:</label>
-            {% if not profile or not profile.domain %}
+            {% if not user.domain %}
             <input type="text" size="10" tabindex='2' value="" id="domain" name="domain">
             {% else %}
-            <span>{{ profile.domain }}</span>
+            <span>{{ user.domain }}</span>
             {% endif %}
         </li>
         <li>
