@@ -52,10 +52,13 @@ def index():
     user = get_current_user()
     if not user:
         return render_template('index.html', login_url=url_for('account.login'))
-    username = user.domain if user.domain else user.id
+    if user.domain:
+        username = user.domain
+    else:
+        username = user.id
     return render_template('index.html', login=1, \
             user = user,
-            my_url = url_for('people.show_people', username=user.domain))
+            my_url = url_for('people.show_people', username=username))
 
 @app.before_request
 def before_request():
