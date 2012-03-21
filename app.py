@@ -57,6 +57,4 @@ def index():
 @app.before_request
 def before_request():
     g.session = request.environ['xiaomen.session']
-    g.user = 'user_id' in g.session and g.session['user_id'] and \
-            'user_token' in g.session and g.session['user_token']
 

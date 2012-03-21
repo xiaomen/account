@@ -65,7 +65,7 @@ class Base_OAuth_Login(object):
 
         old_token = oauth.oauth_token
         oauth.oauth_token = token
-        if not g.user and oauth.uid:
+        if not get_current_user() and oauth.uid:
             #need profile!
             user = User.query.get(int(oauth.uid))
             if user:
