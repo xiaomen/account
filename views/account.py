@@ -18,7 +18,8 @@ account = Blueprint('account', __name__)
 
 @account.route('/forget', methods=['GET', 'POST'])
 def forget():
-    if get_current_user():
+    if get_current_user() or \
+            (request.form and 'cancel' in request.form):
         return redirect(url_for('index'))
     if request.method == 'GET':
         return render_template('forget.html')
