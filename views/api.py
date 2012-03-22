@@ -8,8 +8,8 @@ from utils import get_current_user, \
         get_user_by, get_user
 from flaskext.csrf import csrf_exempt
 from flask import g, request, jsonify, Blueprint
-from .account import _logout, _login, check_login_info, \
-        check_register_info
+from .account import account_logout, account_login, \
+        check_login_info, check_register_info
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +32,7 @@ def register():
     user = User(username, password, email)
     db.session.add(user)
     db.session.commit()
-    _login(user)
+    account_login(user)
     return jsonify(status='register ok and logged in', id=user.id, \
             email=user.email, name=user.name)
 
@@ -56,13 +56,13 @@ def api_login():
     if not user.check_password(password):
         return jsonify(status='error', error='invaild passwd')
 
-    _login(user)
+    account_login(user)
     return jsonify(status='ok', user_id=user.id, \
             email=user.email, name=user.name)
 
 @api.route('/logout')
 def api_logout():
-    _logout()
+    account_logout()
     return jsonify(status='ok')
 
 @api.route('/people/<username>')
