@@ -81,7 +81,7 @@ def bind():
     allow = 'allow' in request.form
     user = get_current_user()
     if user and oauth and allow:
-        bind_oauth(oauth, g.session['user_id'])
+        _bind_oauth(oauth, g.session['user_id'])
     return redirect(url_for('index'))
 
 @account.route('/register', methods=['POST','GET'])
@@ -100,9 +100,9 @@ def register():
     user = User(username, password, email)
     db.session.add(user)
     db.session.commit()
-    _login(user)
+    account_login(user)
     if oauth:
-        bind_oauth(oauth, user.id)
+        _bind_oauth(oauth, user.id)
     return redirect(url_for('index'))
 
 @csrf_exempt
@@ -127,13 +127,13 @@ def login():
         logger.info('invaild passwd')
         return render_template('index.html', login_info='invaild passwd', login_url=login_url)
 
-    _login(user)
+    account_login(user)
     redirect_url = request.args.get('redirect', None)
     return redirect(redirect_url or url_for('index'))
 
 @account.route('/logout')
 def logout():
-    _logout()
+    account_logout()
     return redirect(request.referrer or url_for('index'))
 
 @account.route('/setting', methods=['POST', 'GET'])
@@ -179,58 +179,23 @@ def _delete_forget(forget):
 def _change_password(user, password):
     user.token = create_token(16)
     user.passwd = User.create_password(password)
-    _login(user)
+    account_login(user)
     db.session.add(user)
 
 def _change_username(user, username):
     user.name = username
     db.session.add(user)
 
-def _login(user):
-    g.session['user_id'] = user.id
-    g.session['user_token'] = user.token
-
-def _logout():
-    g.session.pop('user_id', None)
-    g.session.pop('user_token', None)
-
-def bind_oauth(oauth, uid):
+def _bind_oauth(oauth, uid):
     oauth.bind(uid)
     db.session.add(oauth)
     db.session.commit()
 
-def check_update_info(username):
-    status = check_username(username),
-    if status:
-        return status
-    return True, None
+def account_login(user):
+    g.session['user_id'] = user.id
+    g.session['user_token'] = user.token
 
-def check_register_info(username, email, password):
-    '''
-    username a-zA-Z0-9_-, >4 <20
-    email a-zA-Z0-9_-@a-zA-Z0-9.a-zA-Z0-9
-    password a-zA-Z0-9_-!@#$%^&*
-    '''
-    check_list = [
-        check_username(username),
-        check_email(email),
-        check_email_exists(email),
-        check_password(password),
-    ]
-    for status in check_list:
-        if not status:
-            continue
-        return status
-    return True, None
-
-def check_login_info(email, password):
-    check_list = [
-        check_password(password),
-        check_email(email),
-    ]
-    for status in check_list:
-        if not status:
-            continue
-        return status
-    return True, None
+def account_logout():
+    g.session.pop('user_id', None)
+    g.session.pop('user_token', None)
 

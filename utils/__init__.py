@@ -71,7 +71,9 @@ def check_domain(domain):
 def check_username(username):
     if not username:
         return False, 'need username'
-    if not re.search(r'^[a-zA-Z0-9_-]{3,20}$', username, re.I):
+    if not isinstance(username, unicode):
+        username = unicode(username, 'utf-8')
+    if not re.search(ur'^[\u4e00-\u9fa5A-Za-z0-9-_]{3,20}$', username, re.I):
         return False, 'username invail'
 
 def check_email(email):
@@ -93,6 +95,41 @@ def check_domain_exists(domain):
     user = get_user_by(domain=domain).first()
     if user:
         return False, 'domain exists'
+
+def check_update_info(username):
+    status = check_username(username),
+    if status:
+        return status
+    return True, None
+
+def check_register_info(username, email, password):
+    '''
+    username a-zA-Z0-9_-, >4 <20
+    email a-zA-Z0-9_-@a-zA-Z0-9.a-zA-Z0-9
+    password a-zA-Z0-9_-!@#$%^&*
+    '''
+    check_list = [
+        check_username(username),
+        check_email(email),
+        check_email_exists(email),
+        check_password(password),
+    ]
+    for status in check_list:
+        if not status:
+            continue
+        return status
+    return True, None
+
+def check_login_info(email, password):
+    check_list = [
+        check_password(password),
+        check_email(email),
+    ]
+    for status in check_list:
+        if not status:
+            continue
+        return status
+    return True, None
 
 if __name__ == '__main__':
     send_email('ilskdw@126.com', 'xiaomenco account service', '<p>hello world</p>')

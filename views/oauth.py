@@ -3,7 +3,7 @@
 
 import urllib
 import logging
-from .account import _login
+from .account import account_login
 from utils import get_current_user, \
         get_user
 from models import db, OAuth
@@ -70,7 +70,7 @@ class Base_OAuth_Login(object):
             #need profile!
             user = get_user(oauth.uid)
             if user:
-                _login(user)
+                account_login(user)
 
                 if old_token != oauth.oauth_token:
                     logger.info(old_token)
