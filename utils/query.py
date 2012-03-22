@@ -2,6 +2,7 @@
 #coding:utf-8
 
 from flask import g
+from validators import check_domain
 from models import db, User, Forget
 
 def get_current_user():
