@@ -1,0 +1,5 @@
+venv
+permdir
+*.pyc
+*.swp
+dev.yaml
