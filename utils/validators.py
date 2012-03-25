@@ -32,6 +32,7 @@ def check_email(email):
 def check_email_exists(email):
     if not email:
         return False, 'need email'
+    from .query import get_user_by
     user = get_user_by(email=email).first()
     if user:
         return False, 'email exists'
@@ -39,6 +40,7 @@ def check_email_exists(email):
 def check_domain_exists(domain):
     if not domain:
         return False, 'need domain'
+    from .query import get_user_by
     user = get_user_by(domain=domain).first()
     if user:
         return False, 'domain exists'
