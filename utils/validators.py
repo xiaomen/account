@@ -2,6 +2,7 @@
 #coding:utf-8
 
 import re
+from query import get_user_by
 
 def check_password(password):
     if not password:
