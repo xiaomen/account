@@ -196,6 +196,5 @@ def account_login(user):
     g.session['user_token'] = user.token
 
 def account_logout():
-    g.session.pop('user_id', None)
-    g.session.pop('user_token', None)
+    g.session.clear()
 
