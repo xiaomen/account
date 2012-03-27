@@ -22,12 +22,12 @@ def get_user(username):
     except:
         if check_domain(username):
             return None
-        return get_user_by(domain=username).first()
+        return get_user_by(domain=username)
 
 @Cache('account', 300)
 def get_user_by(**kw):
-    return User.query.filter_by(**kw)
+    return User.query.filter_by(**kw).first()
 
 @Cache('account', 300)
 def get_forget_by(**kw):
-    return Forget.query.filter_by(**kw)
+    return Forget.query.filter_by(**kw).first()

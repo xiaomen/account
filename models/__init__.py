@@ -53,7 +53,7 @@ class User(db.Model):
 class OAuth(db.Model):
     __tablename__ = 'oauth'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    uid = db.Column('uid', db.Integer, nullable=False, unique=True)
+    uid = db.Column('uid', db.Integer, nullable=False, index=True)
     oauth_type = db.Column(db.String(20))
     oauth_uid = db.Column(db.String(200))
     oauth_token = db.Column(db.String(200))
@@ -71,7 +71,7 @@ class OAuth(db.Model):
 class Forget(db.Model):
     __tablename__ = 'forget'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    uid = db.Column('uid', db.Integer, nullable=False, unique=True)
+    uid = db.Column('uid', db.Integer, nullable=False, index=True)
     stub = db.Column('stub', db.CHAR(20), nullable=False, unique=True)
     created = db.Column(db.DateTime, default=datetime.now)
 
