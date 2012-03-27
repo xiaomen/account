@@ -27,7 +27,7 @@ def forget():
     status = check_email(email)
     if status:
         return render_template('forget.html', error=status[1])
-    user = get_user_by(email=email).first()
+    user = get_user_by(email=email)
     if user:
         stub = create_token(20)
         try:
@@ -44,7 +44,7 @@ def forget():
 
 @account.route('/reset/<stub>', methods=['GET', 'POST'])
 def reset(stub=None):
-    forget = get_forget_by(stub=stub).first()
+    forget = get_forget_by(stub=stub)
     if get_current_user():
         if forget:
             _delete_forget(forget)
@@ -119,7 +119,7 @@ def login():
     if not check:
         return render_template('index.html', login_info=error, login_url=login_url)
 
-    user = get_user_by(email=email).first()
+    user = get_user_by(email=email)
     if not user:
         logger.info('no such user')
         return render_template('index.html', login_info='no such user', login_url=login_url)

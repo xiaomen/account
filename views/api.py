@@ -50,7 +50,7 @@ def api_login():
     if not check:
         return jsonify(status='error', error=error)
 
-    user = get_user_by(email=email).first()
+    user = get_user_by(email=email)
     if not user:
         return jsonify(status='error', error='no such user')
     if not user.check_password(password):
