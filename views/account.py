@@ -6,6 +6,7 @@ import config
 import logging
 from utils import *
 from datetime import datetime
+from sheep.api.cache import Cache
 from models import db, User, Forget, create_token
 from flask import Blueprint, g, session, jsonify, \
         redirect, request, url_for, render_template, \
@@ -71,6 +72,10 @@ def reset(stub=None):
     _change_password(user, password)
     _delete_forget(forget)
     db.session.commit()
+    #clear cache
+    cache = Cache('account')
+    cache.delete(stub=forget)
+    clear_user_cache(user, cache)
     return render_template('reset.html', ok=1)
 
 @account.route('/bind', methods=['GET', 'POST'])
@@ -100,6 +105,8 @@ def register():
     user = User(username, password, email)
     db.session.add(user)
     db.session.commit()
+    #clear cache
+    clear_user_cache(user)
     account_login(user)
     if oauth:
         _bind_oauth(oauth, user.id)
@@ -167,7 +174,18 @@ def setting():
             return render_template('setting.html', error=status[1], user=user)
         _change_password(user, password)
     db.session.commit()
+    #clear cache
+    clear_user_cache(user)
     return render_template('setting.html', error='update ok', user=user)
+
+def clear_user_cache(user, cache=None):
+    cache = cache or Cache('account')
+    params = []
+    params.append(((user.id,), {}))
+    params.append(((user.domain, ), {}))
+    params.append(((), {'domain':user.domain}))
+    params.append(((), {'email':user.email}))
+    cache.delete_multi(params)
 
 def _set_domain(user, domain):
     user.domain = domain

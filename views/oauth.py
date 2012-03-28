@@ -5,7 +5,7 @@ import urllib
 import logging
 from .account import account_login
 from utils import get_current_user, \
-        get_user
+        get_user, get_oauth_by
 from models import db, OAuth
 from flask import Blueprint, g, session, \
         request, redirect, url_for
@@ -28,7 +28,7 @@ class Base_OAuth_Login(object):
     def get_token(self):
         user = get_current_user()
         if user:
-            oauth_info = OAuth.query.filter_by(oauth_type=self.name, uid=g.session['user_id']).first()
+            oauth_info = get_oauth_by(oauth_type=self.name, uid=g.session['user_id'])
             if not oauth_info:
                 return
             return oauth_info.oauth_token
@@ -37,7 +37,7 @@ class Base_OAuth_Login(object):
         next_url = url_for('account.register')
         user = get_current_user()
         if user:
-            oauth_info = OAuth.query.filter_by(oauth_type=self.name, uid=g.session['user_id']).first()
+            oauth_info = get_oauth_by(oauth_type=self.name, uid=g.session['user_id'])
             if oauth_info:
                 return redirect(request.referrer or url_for('index'))
             next_url = url_for('account.bind')
@@ -60,7 +60,7 @@ class Base_OAuth_Login(object):
         uid = resp.get(self.uid_str, None)
         token = resp.get(self.token_str, None)
 
-        oauth = OAuth.query.filter_by(oauth_uid=resp[self.uid_str]).first()
+        oauth = get_oauth_by(oauth_uid=resp[self.uid_str])
         if oauth is None:
             oauth = OAuth(None, resp[self.uid_str], self.name)
 
