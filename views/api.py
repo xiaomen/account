@@ -9,7 +9,8 @@ from utils import get_current_user, \
 from flaskext.csrf import csrf_exempt
 from flask import g, request, jsonify, Blueprint
 from .account import account_logout, account_login, \
-        check_login_info, check_register_info
+        check_login_info, check_register_info, \
+        clear_user_cache
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +33,8 @@ def register():
     user = User(username, password, email)
     db.session.add(user)
     db.session.commit()
+    #clear cache
+    clear_user_cache(user)
     account_login(user)
     return jsonify(status='register ok and logged in', id=user.id, \
             email=user.email, name=user.name)
