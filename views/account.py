@@ -6,7 +6,7 @@ import config
 import logging
 from utils import *
 from datetime import datetime
-from sheep.api.cache import Cache
+from sheep.api.cache import backend
 from models import db, User, Forget, create_token
 from flask import Blueprint, g, session, jsonify, \
         redirect, request, url_for, render_template, \
@@ -28,7 +28,7 @@ def forget():
     status = check_email(email)
     if status:
         return render_template('forget.html', error=status[1])
-    user = get_user_by(email=email)
+    user = get_user_by_email(email=email)
     if user:
         stub = create_token(20)
         try:
@@ -45,7 +45,7 @@ def forget():
 
 @account.route('/reset/<stub>', methods=['GET', 'POST'])
 def reset(stub=None):
-    forget = get_forget_by(stub=stub)
+    forget = get_forget_by_stub(stub=stub)
     if get_current_user():
         if forget:
             _delete_forget(forget)
@@ -70,12 +70,10 @@ def reset(stub=None):
                 error=status[1])
     user = get_user(forget.uid)
     _change_password(user, password)
+    backend.delete('account:%s' % forget.stub)
     _delete_forget(forget)
     db.session.commit()
-    #clear cache
-    cache = Cache('account')
-    cache.delete(stub=forget)
-    clear_user_cache(user, cache)
+    clear_user_cache(user)
     return render_template('reset.html', ok=1)
 
 @account.route('/bind', methods=['GET', 'POST'])
@@ -126,7 +124,7 @@ def login():
     if not check:
         return render_template('index.html', login_info=error, login_url=login_url)
 
-    user = get_user_by(email=email)
+    user = get_user_by_email(email=email)
     if not user:
         logger.info('no such user')
         return render_template('index.html', login_info='no such user', login_url=login_url)
@@ -178,14 +176,9 @@ def setting():
     clear_user_cache(user)
     return render_template('setting.html', error='update ok', user=user)
 
-def clear_user_cache(user, cache=None):
-    cache = cache or Cache('account')
-    params = []
-    params.append(((user.id,), {}))
-    params.append(((user.domain, ), {}))
-    params.append(((), {'domain':user.domain}))
-    params.append(((), {'email':user.email}))
-    cache.delete_multi(params)
+def clear_user_cache(user):
+    keys = ['account:%s' % key for key in [str(user.id), user.domain, user.email]]
+    backend.delete_many(*keys)
 
 def _set_domain(user, domain):
     user.domain = domain

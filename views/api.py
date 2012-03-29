@@ -5,7 +5,7 @@ import json
 import logging
 from models import db, User
 from utils import get_current_user, \
-        get_user_by, get_user
+        get_user_by_email, get_user
 from flaskext.csrf import csrf_exempt
 from flask import g, request, jsonify, Blueprint
 from .account import account_logout, account_login, \
@@ -53,7 +53,7 @@ def api_login():
     if not check:
         return jsonify(status='error', error=error)
 
-    user = get_user_by(email=email)
+    user = get_user_by_email(email=email)
     if not user:
         return jsonify(status='error', error='no such user')
     if not user.check_password(password):

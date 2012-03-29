@@ -32,16 +32,16 @@ def check_email(email):
 def check_email_exists(email):
     if not email:
         return False, 'need email'
-    from .query import get_user_by
-    user = get_user_by(email=email)
+    from .query import get_user_by_email
+    user = get_user_by_email(email)
     if user:
         return False, 'email exists'
 
 def check_domain_exists(domain):
     if not domain:
         return False, 'need domain'
-    from .query import get_user_by
-    user = get_user_by(domain=domain)
+    from .query import get_user_by_domain
+    user = get_user_by_domain(domain)
     if user:
         return False, 'domain exists'
 
