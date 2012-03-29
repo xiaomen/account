@@ -2,7 +2,7 @@
 #coding:utf-8
 
 from flask import g
-from sheep.api.cache import Cache
+from sheep.api.cache import cache
 from validators import check_domain
 from models import db, User, Forget, OAuth
 
@@ -14,7 +14,7 @@ def get_current_user():
         return None
     return user
 
-@Cache('account', 300)
+@cache('account:{username}', 300)
 def get_user(username):
     try:
         username = int(username)
@@ -22,15 +22,22 @@ def get_user(username):
     except:
         if check_domain(username):
             return None
-        return get_user_by(domain=username)
+        return get_user_by_domain(domain=username)
 
-@Cache('account', 300)
-def get_user_by(**kw):
-    return User.query.filter_by(**kw).first()
+@cache('account:{domain}', 300)
+def get_user_by_domain(domain):
+    return get_user_by(domain=domain).first()
 
-@Cache('account', 100)
-def get_forget_by(**kw):
-    return Forget.query.filter_by(**kw).first()
+@cache('account:{email}', 300)
+def get_user_by_email(email):
+    return get_user_by(email=email).first()
+
+@cache('account:{stub}', 100)
+def get_forget_by_stub(stub):
+    return Forget.query.filter_by(stub=stub).first()
 
 def get_oauth_by(**kw):
     return OAuth.query.filter_by(**kw).first()
+
+def get_user_by(**kw):
+    return User.query.filter_by(**kw)
