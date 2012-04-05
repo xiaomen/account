@@ -3,3 +3,5 @@ permdir
 *.pyc
 *.swp
 dev.yaml
+db_dumps.sql
+local_config.py
