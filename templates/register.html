@@ -1,6 +1,7 @@
 {% extends "index.html" %}
 
 {%block content %}
+<h3>完善用户信息</h3>
 <form action="/account/register" method="post">
     <ul>
         <li>
@@ -17,7 +18,7 @@
         </li>
         <li>
             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-            <button type="submit" tabindex='4'>注册</button>
+            <button type="submit" tabindex='4'>确认提交</button>
         </li>
     </ul>
 </form>
