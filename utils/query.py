@@ -2,6 +2,7 @@
 #coding:utf-8
 
 from flask import g
+from redistore import redistore
 from sheep.api.cache import cache
 from validators import check_domain
 from models import db, User, Forget, OAuth
@@ -9,10 +10,10 @@ from models import db, User, Forget, OAuth
 def get_current_user():
     if not g.session or not g.session.get('user_id') or not g.session.get('user_token'):
         return None
-    user = get_user(g.session['user_id'])
-    if not user or g.session['user_token'] != user.token:
+    token = redistore.get('account|uid-%s|token' % g.session['user_id'])
+    if not token or g.session['user_token'] != token:
         return None
-    return user
+    return get_user(g.session['user_id'])
 
 @cache('account:{username}', 300)
 def get_user(username):
