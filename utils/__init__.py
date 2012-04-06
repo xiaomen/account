@@ -3,4 +3,5 @@
 
 from mail import *
 from query import *
+from redistore import *
 from validators import *
