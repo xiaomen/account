@@ -9,7 +9,7 @@
 {% for mail in mails %}
 <tr>
 <td>{{ mail.to_uid }}</td>
-<td><a href="/mail/view?id={{ mail.id }}">{{ mail.title }}</a></td>
+<td><a href="/mail/view/{{ mail.id }}">{{ mail.title }}</a></td>
 </tr>
 {% endfor %}
 <table>

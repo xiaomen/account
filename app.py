@@ -61,8 +61,10 @@ def index():
         username = user.domain
     else:
         username = user.id
+
     return render_template('index.html', login=1, \
             user = user,
+            unread_mail_count = get_unread_mail_count(user.id),
             my_url = url_for('people.show_people', username=username))
 
 @app.before_request
