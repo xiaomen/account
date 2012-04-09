@@ -16,6 +16,23 @@ logger = logging.getLogger(__name__)
 
 mail = Blueprint('mail', __name__)
 
+class mail_obj: pass
+
+def gen_maillist(mails, key):
+    maillist = []
+    for mail in mails:
+        from_user = get_user(getattr(mail, key))
+        if not from_user:
+            continue
+        m = mail_obj()
+        setattr(m, key, from_user.name)
+        setattr(m, key+'_url', from_user.domain or from_user.id)
+        m.id = mail.id
+        m.title = mail.title
+        m.is_read = mail.is_read
+        maillist.append(m)
+    return maillist
+
 @mail.route('/')
 def index():
     return recv()
@@ -27,16 +44,19 @@ def recv():
         return redirect(url_for('account.login'))
 
     mails = get_mail_recv_all(user.id)
+    mails = gen_maillist(mails, 'from_uid')
+
     return render_template('recv.html', mails = mails)
 
 @mail.route('/sent')
 def sent():
-    if not get_current_user():
+    user = get_current_user()
+    if not user:
         return redirect(url_for('account.login'))
 
-    uid = g.session['user_id']
+    mails = get_mail_sent_all(user.id)
+    mails = gen_maillist(mails, 'to_uid')
 
-    mails = get_mail_sent_all(uid)
     return render_template('sent.html', mails = mails)
 
 @mail.route('/view/<mail_id>')

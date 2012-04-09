@@ -8,7 +8,7 @@
     </tr>
     {% for mail in mails %}
     <tr>
-        <td>{{ mail.to_uid }}</td>
+        <td><a href="/people/{{ mail.to_uid_url }}">{{ mail.to_uid }}</a></td>
         <td><a href="/mail/view/{{ mail.id }}">{{ mail.title }}</a></td>
     </tr>
     {% endfor %}
