@@ -7,7 +7,7 @@ import logging
 from utils import *
 from datetime import datetime
 from sheep.api.cache import backend
-from models import db, User, Forget, create_token
+from models.account import db, User, Forget, create_token
 from flask import Blueprint, g, session, jsonify, \
         redirect, request, url_for, render_template, \
         abort

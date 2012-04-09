@@ -1,0 +1,19 @@
+{% extends "index.html" %}
+
+{%block content %}
+<table>
+<tr>
+<td>收件人</td>
+<td>标题</td>
+</tr>
+{% for mail in mails %}
+<tr>
+<td>{{ mail.to_uid }}</td>
+<td><a href="/mail/view?id={{ mail.id }}">{{ mail.title }}</a></td>
+</tr>
+{% endfor %}
+<table>
+{% if error %}
+<span>{{ error }}</span>
+{% endif %}
+{% endblock %}

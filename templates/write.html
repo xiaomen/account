@@ -1,0 +1,27 @@
+{% extends "index.html" %}
+
+{%block content %}
+<form method="post" action="/mail/write">
+  <ul>
+	<li>
+	  <label for="to_uid">收件人</label>
+	  <input type="text" name="to_uid" value="" size="6"/>
+    </li>
+	<li>
+	  <label for="title">标题</label>
+	  <input type="text" name="title" value="" size="45"/>
+    </li>
+	<li>
+	  <label for="content">内容</label>
+	  <textarea name="content" rows="3" cols="4"></textarea>
+    </li>
+	<li>
+	  <button type="submit">发送</button>
+	</li>
+  </ul>
+  <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+</form>
+{% if error %}
+<span>{{ error }}</span>
+{% endif %}
+{% endblock %}

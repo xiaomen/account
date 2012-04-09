@@ -26,7 +26,7 @@ ul {
 }
 
 #header {
-    background: url(http://sheep-farm.b0.upaiyun.com/account/static/img/bg.png);
+    background: url(http://127.0.0.1:8080/static/img/bg.png);
     height: 38px;
     line-height: 38px;
     padding: 10px;
@@ -118,7 +118,7 @@ ul {
 
 .icon {
     margin: 0 5px 0 0;
-    background: url(http://sheep-farm.b0.upaiyun.com/account/static/img/oauth.gif); no-repeat scroll 0 0;
+    background: url(http://127.0.0.1:8080/static/img/oauth.gif); no-repeat scroll 0 0;
     display: inline-block;
     height: 16px;
     width: 16px;
