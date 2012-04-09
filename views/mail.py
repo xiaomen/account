@@ -61,9 +61,15 @@ def write():
     if not user:
         return redirect(url_for('account.login'))
 
-    if (request.method == 'GET'):
-        return render_template('write.html')
+    if request.method == 'GET':
+        to_uid = request.args.get('to')
+        who = get_user(to_uid)
+        if not to_uid or not who:
+            return redirect(url_for('mail.index'))
+        return render_template('write.html', to_uid=to_uid, who=who)
 
+    to_uid = request.form.get('to_uid')
+    #TODO if check_mail
     Mail.create(from_uid = user.id,
                 to_uid = to_uid,
                 title = request.form.get('title'),
