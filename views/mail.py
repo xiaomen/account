@@ -69,6 +69,9 @@ def view(mail_id):
     if not mail:
         raise abort(404)
 
+    if not check_mail_access(user.id, mail):
+        return redirect(url_for('account.login'))
+
     Mail.mark_as_read(mail)
 
     mobj = mail_obj()

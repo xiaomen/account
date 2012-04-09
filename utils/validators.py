@@ -3,6 +3,11 @@
 
 import re
 
+def check_mail_access(uid, mail):
+    if uid != mail.from_uid or uid != mail.to_uid:
+        return False
+    return True
+
 def check_mail(to_uid, title, content):
     from .query import get_user
     if not to_uid:
