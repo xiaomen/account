@@ -45,9 +45,13 @@ def get_forget_by_stub(stub):
 def get_unread_mail_count(to_uid):
     return get_mail_by(to_uid=to_uid, is_read=0).count()
 
-@cache('mail:recv:{uid}', 300)
-def get_mail_recv_all(uid):
+@cache('mail:inbox:{uid}', 300)
+def get_mail_inbox_all(uid):
     return get_mail_by(to_uid=uid).all()
+
+@cache('mail:outbox:{uid}', 300)
+def get_mail_outbox_all(uid):
+    return get_mail_by(from_uid=uid).all()
 
 @cache('mail:view:{mid}', 300)
 def get_mail(mid):
@@ -56,10 +60,6 @@ def get_mail(mid):
         return Mail.query.get(mid)
     except:
         return None
-
-@cache('mail:sent:{uid}', 300)
-def get_mail_sent_all(uid):
-    return get_mail_by(from_uid=uid).all()
 
 def get_mail_by(**kw):
     return Mail.query.filter_by(**kw)

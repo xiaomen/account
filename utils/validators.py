@@ -4,7 +4,7 @@
 import re
 
 def check_mail_access(uid, mail):
-    if uid != mail.from_uid or uid != mail.to_uid:
+    if uid != mail.from_uid and uid != mail.to_uid:
         return False
     return True
 
