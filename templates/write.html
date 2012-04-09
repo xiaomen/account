@@ -9,11 +9,11 @@
     </li>
     <li>
         <label for="title">标题</label>
-        <input type="text" name="title" value="" size="45"/>
+        <input type="text" name="title" value="{{ title }}" size="45"/>
     </li>
     <li>
         <label for="content">内容</label>
-        <textarea name="content" rows="5" cols="10"></textarea>
+        <textarea name="content" rows="5" cols="10" value="{{ content }}"></textarea>
     </li>
     <li>
         <button type="submit">发送</button>

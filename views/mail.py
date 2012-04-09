@@ -89,11 +89,19 @@ def write():
         return render_template('write.html', to_uid=to_uid, who=who)
 
     to_uid = request.form.get('to_uid')
-    #TODO if check_mail
+    title = request.form.get('title')
+    content = request.form.get('content')
+
+    error = check_mail(to_uid, title, content)
+    if error is not None:
+        who = get_user(to_uid)
+        return render_template('write.html', to_uid=to_uid, \
+                who=who, title=title, content=content, error=error)
+
     Mail.create(from_uid = user.id,
                 to_uid = to_uid,
-                title = request.form.get('title'),
-                content = request.form.get('content'))
+                title = title,
+                content = content)
 
     #clean cache
     backend.delete('mail:recv:%s' % to_uid)

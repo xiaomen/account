@@ -3,6 +3,19 @@
 
 import re
 
+def check_mail(to_uid, title, content):
+    from .query import get_user
+    if not to_uid:
+        return u'没有收件人'
+    to = get_user(to_uid)
+    if not to:
+        return u'收件人不存在'
+    if not title:
+        return u'亲，取个标题吧'
+    if not content:
+        return u'亲, 你的豆油没有内容哦'
+    return None
+
 def check_password(password):
     if not password:
         return False, 'need password'
