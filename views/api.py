@@ -3,7 +3,7 @@
 
 import json
 import logging
-from models import db, User
+from models.account import db, User
 from utils import get_current_user, \
         get_user_by_email, get_user
 from flaskext.csrf import csrf_exempt

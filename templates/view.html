@@ -1,0 +1,25 @@
+{% extends "index.html" %}
+
+{%block content %}
+<table>
+<tr>
+<td>发件人：</td>
+<td>{{ mail.from_uid }}</td>
+</tr>
+<tr>
+<td>收件人：</td>
+<td>{{ mail.to_uid }}</td>
+</tr>
+<tr>
+<td>标题：</td>
+<td>{{ mail.title }}</td>
+</tr>
+<tr>
+<td>内容：</td>
+<td>{{ mail.content }}</td>
+</tr>
+<table>
+{% if error %}
+<span>{{ error }}</span>
+{% endif %}
+{% endblock %}

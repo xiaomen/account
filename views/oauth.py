@@ -6,7 +6,7 @@ import logging
 from .account import account_login
 from utils import get_current_user, \
         get_user, get_oauth_by
-from models import db, OAuth
+from models.account import db, OAuth
 from flask import Blueprint, g, session, \
         request, redirect, url_for
 
