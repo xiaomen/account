@@ -5,7 +5,9 @@ from flask import g
 from redistore import redistore
 from sheep.api.cache import cache
 from validators import check_domain
-from models import db, User, Forget, OAuth
+
+from models.mail import Mail
+from models.account import User, Forget, OAuth
 
 def get_current_user():
     if not g.session or not g.session.get('user_id') or not g.session.get('user_token'):
@@ -37,8 +39,28 @@ def get_user_by_email(email):
 def get_forget_by_stub(stub):
     return Forget.query.filter_by(stub=stub).first()
 
+@cache('mail:unread:{to_uid}', 300)
+def get_unread_mail_count(to_uid):
+    return get_mail_by(to_uid=to_uid, is_read=0).count()
+
+@cache('mail:recv:{uid}', 300)
+def get_mail_recv_all(uid):
+    return get_mail_by(to_uid=uid).all()
+
+@cache('mail:view:{mid}', 300)
+def get_mail(mid):
+    return Mail.query.get(mid)
+
+@cache('mail:sent:{uid}', 300)
+def get_mail_sent_all(uid):
+    return get_mail_by(from_uid=uid).all()
+
+def get_mail_by(**kw):
+    return Mail.query.filter_by(**kw)
+
 def get_oauth_by(**kw):
     return OAuth.query.filter_by(**kw).first()
 
 def get_user_by(**kw):
     return User.query.filter_by(**kw)
+
