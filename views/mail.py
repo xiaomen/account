@@ -70,8 +70,7 @@ def view(mail_id):
         raise abort(404)
 
     if not check_mail_access(user.id, mail):
-        return redirect(url_for('account.login'))
-
+        return recv()
     Mail.mark_as_read(mail)
 
     mobj = mail_obj()
@@ -96,7 +95,7 @@ def write():
         to_uid = request.args.get('to')
         who = get_user(to_uid)
         if not to_uid or not who:
-            return redirect(url_for('mail.index'))
+            return recv()
         return render_template('write.html', to_uid=to_uid, who=who)
 
     to_uid = request.form.get('to_uid')
@@ -119,5 +118,5 @@ def write():
     backend.delete('mail:unread:%s' % to_uid)
     backend.delete('mail:sent:%d' % user.id)
 
-    return redirect(url_for('mail.index'))
+    return recv()
 
