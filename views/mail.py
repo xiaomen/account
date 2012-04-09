@@ -70,10 +70,18 @@ def view(mail_id):
         raise abort(404)
 
     Mail.mark_as_read(mail)
+
+    mobj = mail_obj()
+    from_user = get_user(mail.from_uid)
+    mobj.from_uid = from_user.name
+    mobj.from_uid_url = from_user.domain or from_user.id
+    mobj.title = mail.title
+    mobj.content = mail.content
+
     backend.delete('mail:unread:%d' % user.id)
     backend.delete('mail:recv:%d' % user.id)
 
-    return render_template('view.html', mail = mail)
+    return render_template('view.html', mail = mobj)
 
 @mail.route('/write', methods=['GET', 'POST'])
 def write():

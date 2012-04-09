@@ -4,11 +4,7 @@
 <table>
     <tr>
         <td>发件人：</td>
-        <td>{{ mail.from_uid }}</td>
-    </tr>
-    <tr>
-        <td>收件人：</td>
-        <td>{{ mail.to_uid }}</td>
+        <td><a href="/people/{{ mail.from_uid_url }}">{{ mail.from_uid }}</a></td>
     </tr>
     <tr>
         <td>标题：</td>
