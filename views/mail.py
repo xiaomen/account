@@ -22,7 +22,7 @@ def gen_maillist(mails, key, pos=0):
     maillist = []
     for mail in mails:
         from_user = get_user(getattr(mail, key))
-        if not from_user or not int(mail.show[pos]):
+        if not from_user or not int(mail.isshow[pos]):
             continue
         m = mail_obj()
         setattr(m, key, from_user.name)
