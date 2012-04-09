@@ -2,24 +2,21 @@
 
 {%block content %}
 <table>
-<tr>
-<td>发件人</td>
-<td>标题</td>
-<td></td>
-</tr>
-{% for mail in mails %}
-<tr>
-<td>{{ mail.from_uid }}</td>
-<td><a href="/mail/view/{{ mail.id }}">{{ mail.title }}</a></td>
-<td>
-{% if not mail.is_read %}
-new
-{% endif %}
-</td>
-</tr>
-{% endfor %}
+    <tr>
+        <td>发件人</td>
+        <td>标题</td>
+        <td></td>
+    </tr>
+    {% for mail in mails %}
+    <tr>
+        <td>{{ mail.from_uid }}</td>
+        <td><a href="/mail/view/{{ mail.id }}">{{ mail.title }}</a></td>
+        <td>
+            {% if not mail.is_read %}new{% endif %}
+        </td>
+    </tr>
+    {% endfor %}
 <table>
-{% if error %}
-<span>{{ error }}</span>
-{% endif %}
+<p><a href="/mail/">收件箱</a></p>
+<p><a href="/mail/sent">发件箱</a></p>
 {% endblock %}
