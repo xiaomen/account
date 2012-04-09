@@ -9,7 +9,7 @@
     {% for mail in mails %}
     <tr>
         <td><a href="/people/{{ mail.to_uid_url }}">{{ mail.to_uid }}</a></td>
-        <td><a href="/mail/view/{{ mail.id }}">{{ mail.title }}</a></td>
+        <td><a href="/mail/view/outbox/{{ mail.id }}">{{ mail.title }}</a></td>
     </tr>
     {% endfor %}
 <table>

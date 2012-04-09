@@ -21,6 +21,8 @@ def get_current_user():
 def get_user(username):
     try:
         username = int(username)
+        if username <= 0:
+            return None
         return User.query.get(username)
     except:
         if check_domain(username):

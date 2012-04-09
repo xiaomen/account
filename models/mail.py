@@ -4,7 +4,7 @@
 # Copyright 2012 crackcell
 #
 
-from datetime import *
+from datetime import datetime
 
 from flaskext.sqlalchemy import SQLAlchemy
 
@@ -22,15 +22,15 @@ class Mail(db.Model):
     title = db.Column(db.String(45))
     content = db.Column(db.Text)
     is_read = db.Column(db.Integer, default=False, index=True)
-    time = db.Column(db.DateTime)
+    time = db.Column(db.DateTime, default=datetime.now)
+    show = db.Column(db.CHAR(3), default='1|1')
 
-    def __init__(self, from_uid, to_uid, title, content, is_read, time, *args, **kwargs):
+    def __init__(self, from_uid, to_uid, title, content, is_read, *args, **kwargs):
         self.from_uid = from_uid
         self.to_uid = to_uid
         self.title = title
         self.content = content
         self.is_read = is_read
-        self.time = time
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
 
@@ -40,7 +40,6 @@ class Mail(db.Model):
                     to_uid = to_uid,
                     title = title,
                     content = content,
-                    time = "%s" % datetime.now(),
                     is_read = False)
         db.session.add(mail)
         db.session.commit()
@@ -51,3 +50,16 @@ class Mail(db.Model):
         db.session.add(mail)
         db.session.commit()
 
+    @staticmethod
+    def delete_inbox(mail):
+        show = mail.show
+        mail.show = '0' + show[-2:]
+        db.session.add(mail)
+        db.session.commit()
+
+    @staticmethod
+    def delete_outbox(mail):
+        show = mail.show
+        mail.show = show[:-1] + '0'
+        db.session.add(mail)
+        db.session.commit()

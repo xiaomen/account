@@ -18,11 +18,11 @@ mail = Blueprint('mail', __name__)
 
 class mail_obj: pass
 
-def gen_maillist(mails, key):
+def gen_maillist(mails, key, pos=0):
     maillist = []
     for mail in mails:
         from_user = get_user(getattr(mail, key))
-        if not from_user:
+        if not from_user or not int(mail.show[pos]):
             continue
         m = mail_obj()
         setattr(m, key, from_user.name)
@@ -55,18 +55,19 @@ def sent():
         return redirect(url_for('account.login'))
 
     mails = get_mail_sent_all(user.id)
-    mails = gen_maillist(mails, 'to_uid')
+    mails = gen_maillist(mails, 'to_uid', -1)
 
     return render_template('sent.html', mails = mails)
 
-@mail.route('/view/<mail_id>')
-def view(mail_id):
+@mail.route('/view/<box>/<mail_id>')
+def view(box, mail_id):
     user = get_current_user()
     if not user:
         return redirect(url_for('account.login'))
 
     mail = get_mail(mail_id)
-    if not mail:
+    #TODO ugly
+    if not mail or box not in ['inbox', 'outbox']:
         raise abort(404)
 
     if not check_mail_access(user.id, mail):
@@ -75,6 +76,8 @@ def view(mail_id):
     Mail.mark_as_read(mail)
 
     mobj = mail_obj()
+    mobj.id = mail_id
+    mobj.delete = '%s/%s' %(box, str(mail_id))
     from_user = get_user(mail.from_uid)
     mobj.from_uid = from_user.name
     mobj.from_uid_url = from_user.domain or from_user.id
@@ -85,6 +88,26 @@ def view(mail_id):
     backend.delete('mail:recv:%d' % user.id)
 
     return render_template('view.html', mail = mobj)
+
+@mail.route('/delete/<box>/<mail_id>')
+def delete(box, mail_id):
+    user = get_current_user()
+    if not user:
+        return redirect(url_for('account.login'))
+
+    mail = get_mail(mail_id)
+    if not mail or box not in ['inbox', 'outbox'] or \
+            not check_mail_access(user.id, mail):
+        return redirect(url_for('mail.index'))
+
+    if box == 'inbox':
+        Mail.delete_inbox(mail)
+        backend.delete('mail:recv:%d' % user.id)
+    elif box == 'outbox':
+        Mail.delete_outbox(mail)
+        backend.delete('mail:sent:%d' % user.id)
+
+    return redirect(url_for('mail.index'))
 
 @mail.route('/write', methods=['GET', 'POST'])
 def write():
