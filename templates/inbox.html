@@ -10,7 +10,7 @@
     {% for mail in mails %}
     <tr>
         <td><a href="/people/{{ mail.from_uid_url }}">{{ mail.from_uid }}</a></td>
-        <td><a href="/mail/view/inbox/{{ mail.id }}">{{ mail.title }}</a></td>
+        <td><a href="/mail/view/{{ mail.id }}">{{ mail.title }}</a></td>
         <td>
             {% if not mail.is_read %}new{% endif %}
         </td>
@@ -18,5 +18,5 @@
     {% endfor %}
 <table>
 <p><a href="/mail/">收件箱</a></p>
-<p><a href="/mail/sent">发件箱</a></p>
+<p><a href="/mail/outbox">发件箱</a></p>
 {% endblock %}

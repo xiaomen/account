@@ -9,10 +9,10 @@
     {% for mail in mails %}
     <tr>
         <td><a href="/people/{{ mail.to_uid_url }}">{{ mail.to_uid }}</a></td>
-        <td><a href="/mail/view/outbox/{{ mail.id }}">{{ mail.title }}</a></td>
+        <td><a href="/mail/view/{{ mail.id }}">{{ mail.title }}</a></td>
     </tr>
     {% endfor %}
 <table>
 <p><a href="/mail/">收件箱</a></p>
-<p><a href="/mail/sent">发件箱</a></p>
+<p><a href="/mail/outbox">发件箱</a></p>
 {% endblock %}

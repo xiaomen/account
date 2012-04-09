@@ -5,6 +5,7 @@
 #
 
 import logging
+from urlparse import urlparse
 
 from utils import *
 from models.mail import *
@@ -35,39 +36,53 @@ def gen_maillist(mails, key, pos=0):
 
 @mail.route('/')
 def index():
-    return recv()
+    return inbox()
 
-@mail.route('/recv')
-def recv():
+@mail.route('/inbox')
+def inbox():
     user = get_current_user()
     if not user:
         return redirect(url_for('account.login'))
 
-    mails = get_mail_recv_all(user.id)
+    mails = get_mail_inbox_all(user.id)
     mails = gen_maillist(mails, 'from_uid')
 
-    return render_template('recv.html', mails = mails)
+    return render_template('inbox.html', mails = mails)
 
-@mail.route('/sent')
-def sent():
+@mail.route('/outbox')
+def outbox():
     user = get_current_user()
     if not user:
         return redirect(url_for('account.login'))
 
-    mails = get_mail_sent_all(user.id)
+    mails = get_mail_outbox_all(user.id)
     mails = gen_maillist(mails, 'to_uid', -1)
 
-    return render_template('sent.html', mails = mails)
+    return render_template('outbox.html', mails = mails)
 
-@mail.route('/view/<box>/<mail_id>')
-def view(box, mail_id):
+@mail.route('/view/<mail_id>')
+def view(mail_id):
+    box = request.headers.get('Referer', '')
+    box = urlparse(box)
+
+    if url_for('mail.index') == box.path or \
+            url_for('mail.inbox') == box.path:
+        box = 'inbox'
+    elif url_for('mail.outbox') == box.path:
+        box = 'outbox'
+    else:
+        box = None
+
+    if not box:
+        return redirect(url_for('mail.index'))
+
     user = get_current_user()
     if not user:
         return redirect(url_for('account.login'))
 
     mail = get_mail(mail_id)
     #TODO ugly
-    if not mail or box not in ['inbox', 'outbox']:
+    if not mail:
         raise abort(404)
 
     if not check_mail_access(user.id, mail):
@@ -85,7 +100,7 @@ def view(box, mail_id):
     mobj.content = mail.content
 
     backend.delete('mail:unread:%d' % user.id)
-    backend.delete('mail:recv:%d' % user.id)
+    backend.delete('mail:inbox:%d' % user.id)
 
     return render_template('view.html', mail = mobj)
 
@@ -102,10 +117,10 @@ def delete(box, mail_id):
 
     if box == 'inbox':
         Mail.delete_inbox(mail)
-        backend.delete('mail:recv:%d' % user.id)
+        backend.delete('mail:inbox:%d' % user.id)
     elif box == 'outbox':
         Mail.delete_outbox(mail)
-        backend.delete('mail:sent:%d' % user.id)
+        backend.delete('mail:outbox:%d' % user.id)
 
     return redirect(url_for('mail.index'))
 
@@ -138,9 +153,9 @@ def write():
                 content = content)
 
     #clean cache
-    backend.delete('mail:recv:%s' % to_uid)
+    backend.delete('mail:inbox:%s' % to_uid)
     backend.delete('mail:unread:%s' % to_uid)
-    backend.delete('mail:sent:%d' % user.id)
+    backend.delete('mail:outbox:%d' % user.id)
 
     return redirect(url_for('mail.index'))
 
