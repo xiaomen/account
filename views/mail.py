@@ -9,8 +9,8 @@ import logging
 from utils import *
 from models.mail import *
 from sheep.api.cache import backend
-from flask import Flask, render_template, redirect, \
-    request, url_for, g, Blueprint
+from flask import render_template, redirect, \
+    request, url_for, g, Blueprint, abort
 
 logger = logging.getLogger(__name__)
 
@@ -22,12 +22,11 @@ def index():
 
 @mail.route('/recv')
 def recv():
-    if not get_current_user():
+    user = get_current_user()
+    if not user:
         return redirect(url_for('account.login'))
 
-    uid = g.session['user_id']
-
-    mails = get_mail_recv_all(uid)
+    mails = get_mail_recv_all(user.id)
     return render_template('recv.html', mails = mails)
 
 @mail.route('/sent')
@@ -46,8 +45,10 @@ def view(mail_id):
     if not user:
         return redirect(url_for('account.login'))
 
-    #TODO SQL inject
     mail = get_mail(mail_id)
+    if not mail:
+        raise abort(404)
+
     Mail.mark_as_read(mail)
     backend.delete('mail:unread:%d' % user.id)
     backend.delete('mail:recv:%d' % user.id)
@@ -60,8 +61,6 @@ def write():
     if not user:
         return redirect(url_for('account.login'))
 
-    #TODO SQL inject and cache
-    to_uid = request.form.get('to_uid')
     if (request.method == 'GET'):
         return render_template('write.html')
 

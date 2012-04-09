@@ -49,7 +49,11 @@ def get_mail_recv_all(uid):
 
 @cache('mail:view:{mid}', 300)
 def get_mail(mid):
-    return Mail.query.get(mid)
+    try:
+        mid = int(mid)
+        return Mail.query.get(mid)
+    except:
+        return None
 
 @cache('mail:sent:{uid}', 300)
 def get_mail_sent_all(uid):
