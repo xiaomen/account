@@ -4,6 +4,7 @@
 # Copyright 2012 crackcell
 #
 
+import re
 import logging
 from urlparse import urlparse
 
@@ -102,7 +103,10 @@ def view(mail_id):
     backend.delete('mail:unread:%d' % user.id)
     backend.delete('mail:inbox:%d' % user.id)
 
-    return render_template('view.html', mail = mobj)
+    if box == 'inbox':
+        return render_template('view.html', mail = mobj, reply=1)
+    else:
+        return render_template('view.html', mail = mobj)
 
 @mail.route('/delete/<box>/<mail_id>')
 def delete(box, mail_id):
@@ -132,10 +136,19 @@ def write():
 
     if request.method == 'GET':
         to_uid = request.args.get('to')
+        reply_mid = request.args.get('reply')
+        title = ''
+        content = ''
+        if reply_mid:
+            mail = get_mail(reply_mid)
+            to_uid = mail.to_uid
+            title = reply_mail_title(mail.title)
+            content = '--------\n' + mail.content
         who = get_user(to_uid)
         if not to_uid or not who:
             return redirect(url_for('mail.index'))
-        return render_template('write.html', to_uid=to_uid, who=who)
+        return render_template('write.html', to_uid=to_uid, who=who, \
+                title=title, content=content)
 
     to_uid = request.form.get('to_uid')
     title = request.form.get('title')
@@ -158,4 +171,15 @@ def write():
     backend.delete('mail:outbox:%d' % user.id)
 
     return redirect(url_for('mail.index'))
+
+def reply_mail_title(title):
+    if not isinstance(title, unicode):
+        title = unicode(title, 'utf-8')
+    m = re.search(ur'^Re\((?P<num>\d+)\):[\u4e00-\u9fa5\w]+$', title)
+    if not m:
+        return 'Re(1):' + title
+    num = int(m.group('num')) + 1
+    title = title.replace('Re(%s)' % m.group('num'), 'Re(%d)' % num, 1)
+    return title
+
 

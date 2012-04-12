@@ -15,6 +15,9 @@
         <td>{{ mail.content }}</td>
     </tr>
 <table>
+{% if reply %}
+<p><a href="/mail/write?reply={{ mail.id }}">回复</a></p>
+{% endif %}
 <p><a href="/mail/delete/{{ mail.delete }}">删除</a></p>
 <p><a href="/mail/">收件箱</a></p>
 <p><a href="/mail/outbox">发件箱</a></p>
