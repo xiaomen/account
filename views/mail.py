@@ -143,7 +143,7 @@ def write():
             mail = get_mail(reply_mid)
             to_uid = mail.from_uid
             title = reply_mail_title(mail.title)
-            content = '--------\n' + mail.content
+            content = '--------\n%s--------\n' % mail.content
         who = get_user(to_uid)
         if not to_uid or not who:
             return redirect(url_for('mail.index'))
