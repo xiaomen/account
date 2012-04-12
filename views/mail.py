@@ -141,7 +141,7 @@ def write():
         content = ''
         if reply_mid:
             mail = get_mail(reply_mid)
-            to_uid = mail.to_uid
+            to_uid = mail.from_uid
             title = reply_mail_title(mail.title)
             content = '--------\n' + mail.content
         who = get_user(to_uid)
