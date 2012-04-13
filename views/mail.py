@@ -141,6 +141,8 @@ def write():
         content = ''
         if reply_mid:
             mail = get_mail(reply_mid)
+            if user.id != mail.to_uid:
+                return redirect(url_for('mail.index'))
             to_uid = mail.from_uid
             title = reply_mail_title(mail.title)
             content = '--------\n%s\n--------\n' % mail.content
