@@ -21,10 +21,10 @@ mail = Blueprint('mail', __name__)
 class mail_obj: pass
 
 def gen_maillist(mails, key, pos=0):
-    maillist = []
+    mail_list = []
     for mail in mails:
         from_user = get_user(getattr(mail, key))
-        if not from_user or not int(mail.isshow[pos]):
+        if not from_user or not int(mail.is_show[pos]):
             continue
         m = mail_obj()
         setattr(m, key, from_user.name)
@@ -32,8 +32,8 @@ def gen_maillist(mails, key, pos=0):
         m.id = mail.id
         m.title = mail.title
         m.is_read = mail.is_read
-        maillist.append(m)
-    return maillist
+        mail_list.append(m)
+    return mail_list
 
 @mail.route('/')
 def index():

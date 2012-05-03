@@ -23,7 +23,7 @@ class Mail(db.Model):
     content = db.Column(db.Text)
     is_read = db.Column(db.Integer, default=False, index=True)
     time = db.Column(db.DateTime, default=datetime.now)
-    isshow = db.Column(db.CHAR(3), default='1|1')
+    is_show = db.Column(db.CHAR(3), default='1|1')
 
     def __init__(self, from_uid, to_uid, title, content, is_read, *args, **kwargs):
         self.from_uid = from_uid
@@ -52,14 +52,14 @@ class Mail(db.Model):
 
     @staticmethod
     def delete_inbox(mail):
-        show = mail.isshow
-        mail.isshow = '0' + show[-2:]
+        show = mail.is_show
+        mail.is_show = '0' + show[-2:]
         db.session.add(mail)
         db.session.commit()
 
     @staticmethod
     def delete_outbox(mail):
-        show = mail.isshow
-        mail.isshow = show[:-1] + '0'
+        show = mail.is_show
+        mail.is_show = show[:-1] + '0'
         db.session.add(mail)
         db.session.commit()
