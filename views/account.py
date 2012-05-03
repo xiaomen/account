@@ -205,7 +205,6 @@ def _bind_oauth(oauth, uid):
 def account_login(user):
     g.session['user_id'] = user.id
     g.session['user_token'] = user.token
-    redistore.set('account|uid-%s|token' % user.id, user.token)
 
 def account_logout():
     g.session.clear()
