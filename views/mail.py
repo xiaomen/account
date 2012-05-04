@@ -89,7 +89,10 @@ def view(mail_id):
     if not check_mail_access(user.id, mail):
         return redirect(url_for('mail.index'))
 
-    Mail.mark_as_read(mail)
+    if not mail.is_read:
+        Mail.mark_as_read(mail)
+        backend.delete('mail:unread:%d' % user.id)
+        backend.delete('mail:inbox:%d' % user.id)
 
     mobj = mail_obj()
     mobj.id = mail_id
@@ -99,9 +102,6 @@ def view(mail_id):
     mobj.from_uid_url = from_user.domain or from_user.id
     mobj.title = mail.title
     mobj.content = mail.content
-
-    backend.delete('mail:unread:%d' % user.id)
-    backend.delete('mail:inbox:%d' % user.id)
 
     if box == 'inbox':
         return render_template('view.html', mail = mobj, reply=1)
