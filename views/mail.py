@@ -149,7 +149,7 @@ def write():
         who = get_user(to_uid)
         if not to_uid or not who:
             return redirect(url_for('mail.index'))
-        return render_template('write.html', to_uid=to_uid, who=who, \
+        return render_template('write.html', who=who, \
                 title=title, content=content)
 
     to_uid = request.form.get('to_uid')
@@ -159,8 +159,8 @@ def write():
     who = get_user(to_uid)
     error = check_mail(who, title, content)
     if error is not None:
-        return render_template('write.html', to_uid=to_uid, \
-                who=who, title=title, content=content, error=error)
+        return render_template('write.html', who=who, \
+                title=title, content=content, error=error)
 
     Mail.create(from_uid = user.id,
                 to_uid = who.id,
