@@ -89,7 +89,7 @@ def view(mail_id):
     if not check_mail_access(user.id, mail):
         return redirect(url_for('mail.index'))
 
-    if not mail.is_read:
+    if not mail.is_read and mail.to_uid == user.id:
         Mail.mark_as_read(mail)
         backend.delete('mail:unread:%d' % user.id)
         backend.delete('mail:inbox:%d' % user.id)
