@@ -168,8 +168,8 @@ def write():
                 content = content)
 
     #clean cache
-    backend.delete('mail:inbox:%s' % who.id)
-    backend.delete('mail:unread:%s' % who.id)
+    backend.delete('mail:inbox:%d' % who.id)
+    backend.delete('mail:unread:%d' % who.id)
     backend.delete('mail:outbox:%d' % user.id)
 
     return redirect(url_for('mail.index'))
