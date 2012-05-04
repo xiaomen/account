@@ -8,12 +8,8 @@ def check_mail_access(uid, mail):
         return False
     return True
 
-def check_mail(to_uid, title, content):
-    from .query import get_user
-    if not to_uid:
-        return u'没有收件人'
-    to = get_user(to_uid)
-    if not to:
+def check_mail(who, title, content):
+    if not who:
         return u'收件人不存在'
     if not title:
         return u'亲，取个标题吧'
