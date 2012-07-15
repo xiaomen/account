@@ -1,37 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
     <meta name="viewport" content="width=device-width, minimum-scale=1, user-scalable=0">
+    <meta charset="UTF-8" />
+    <title>{% block title %}校门口{% endblock %}</title>
+    <link rel="stylesheet" href="{{'/static/css/reset.css'|s_files }}" />
+    <link rel="stylesheet" href="{{'/static/css/base.css'|s_files }}" />
     <link rel="stylesheet" href="{{'/static/css/style.css'|s_files }}" />
-    <title>{%block title%}校门口{% endblock %}</title>
+    <script src="{{ '/static/js/jquery-1.7.2.min.js' | s_files }}" type="text/javascript"></script>
 </head>
 <body>
-    <div id="wrapper">
-        <div id="header">
-            {%block header%}
-            <h1>校门口</h1>
-            {% endblock %}
-        </div>
-
-        <ul id="nav" class="clearfix">
-            {%block nav %}
-            <li><a href="http://xiaomen.co">首页</a></li>
-            <li class="select"><a href="http://library.xiaomen.co">图书馆</a></li>
-            <li><a href="http://selfstudy.xiaomen.co">自习室</a></li>
-            {% endblock %}
-        </ul>
-        <div id="section">
-            {%block content %}
-            {% endblock %}
-        </div>
-        <div id="footer">
-            {% block footer%}
-            <a href="#" title="反馈">反馈</a> | 2012 • 校门口 | 湘ICP备12001784号
-            {% endblock %}
-        </div>
+<div class="header">
+    <div class="logo">
+        <img src="/static/img/logo.png" />
     </div>
+</div>
+<div class="wrapper">
+    <div class="subtitle"><h2>{% block subtitle %}校门口{% endblock %}</h2></div>
+    <div class="breadcrumb">
+        {% block breadcrumb %}{% endblock %}
+    </div>
+    <div class="body">
+        {% block body %}{% endblock %}
+    </div>
+</div>
+<div class="footer">
+    <p>2012 • 校门口 | 湘ICP备12001784号</p>
+</div>
 </body>
 </html>
