@@ -1,18 +1,44 @@
 {% extends "layout.html" %}
 
-{% block breadcrumb %}
-<span>校门口</span>
-{% endblock %}
-
-{% block body %}
-<table class="welcome-table">
-    <tr class="site-title">
-        <td><a href="http://library.xiaomen.co>">图书馆</a></td>
-        <td class="last"><a href="http://selfstudy.xiaomen.co">自习室</a></td>
+{% block content %}
+<table class="slide" cellpadding="0" cellspacing="0">
+    <tr>
+        <td colspan="2" class="bigpicture"><img src="/static/img/library.jpg"></img></td>
     </tr>
-    <tr class="site-picture">
-        <td><a href="http://library.xiaomen.co"><img src="{{ '/static/img/library.jpg' | s_files }}" /></a></td>
-        <td class="last"><a href="http://selfstudy.xiaomen.co"><img src="{{ '/static/img/selfstudy.jpg' | s_files }}" /></a></td>
+    <tr>
+        <td class="thumbnail" id="selfstudy"><img src="/static/img/selfstudy.jpg" /></td>
+        <td class="thumbnail" id="library"><img src="/static/img/library.jpg" /></td>
     </tr>
 </table>
+<script type="text/javascript">
+$(document).ready(function() {
+    var now = "library"; 
+    var lib_thumb = $("#library"); 
+    var self_thumb = $("#selfstudy"); 
+    var bigpicture = $(".bigpicture"); 
+    setInterval(function() {
+        var now_img = $(".bigpicture img"); 
+        var new_img; 
+        if(now === "library") {
+            bigpicture.append('<img src="/static/img/selfstudy.jpg" style="display: none" class="new_picture" />'); 
+            now = "selfstudy"; 
+        }else {
+            bigpicture.append('<img src="/static/img/library.jpg" style="display: none" class="new_picture" />'); 
+            now = "library"; 
+        }
+        new_img = $(".new_picture");
+        now_img.fadeOut("normal", function() {
+            now_img.remove(); 
+        }); 
+        new_img.fadeIn(); 
+    },  10000); 
+    bigpicture.click(function() {
+        if(now === "library") {
+            window.location.href = "http://library.xiaomen.co"; 
+        }else{
+            window.location.href = "http://selfstudy.xiaomen.co"; 
+        }
+    }); 
+}); 
+</script>
 {% endblock %}

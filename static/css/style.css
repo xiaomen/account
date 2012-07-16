@@ -1,29 +1,59 @@
-.welcome-table {
-    width: 100%; 
+
+.slide {
+    width: 700px; 
+    height: 400px; 
+    margin: 0 auto; 
+    position: absolute; 
 }
 
-.welcome-table td {
-    width: 50%; 
-    padding: 0 10px; 
+.slide .bigpicture {
+    cursor: pointer; 
 }
 
-.last {
-    margin-left: 40px; 
+.slide .bigpicture img {
+    width: 700px; 
+    background-color: white; 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    z-index: 100; 
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px
+    cursor: pointer;  
 }
 
-.site-title td {
-    font-size: 25px; 
+.thumbnail {
+    height: 64px; 
+
 }
 
-.site-title td a {
-    color: black; 
-    text-decoration: none; 
+.thumbnail img {
+    width: 350px; 
+    opacity: 0.7; 
 }
 
-.site-picture td {
-    opacity: 0.95; 
+.thumbnail:hover img {
+    opacity: 0.85; 
 }
 
-.site-picture td:hover {
-    opacity: 1;
+#selfstudy img {
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+#library img {
+    -webkit-border-bottom-right-radius: 5px;
+    -moz-border-radius-bottomright: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.login-form {
+    width: 500px; 
+    margin: 0 auto; 
+    margin-top: 100px; 
 }

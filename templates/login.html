@@ -1,8 +1,7 @@
-{% extends "index.html" %}
+{% extends "layout.html" %}
 
-{%block content %}
-<form action="/account/register" method="post">
-    <legend>完善用户信息</legend>
+{% block content %}
+<form action="{{ login_url }}" method="POST" class="login-form">
     {% if login_info %}
     <div class="login-info">
         <p>{{ login_info }}</p>
@@ -26,22 +25,15 @@
     </div>
     <div class="control-group">
         <div class="control-label">
-            <label>昵称</label>
-        </div>
-        <div class="control">
-            <input name="name" type="text" />
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
             <label>&nbsp; </label>
         </div>
         <div class="control submit-form">
-            <button type="submit">提交</button>
+            <button type="submit">登录</button>
+            <a href="/weibo/login"><i class="icon weibo"></i></a>
+            <a href="/douban/login"><i class="icon douban"></i></a>
+            <a href="/renren/login"><i class="icon renren"></i></a>
+            <a href="/qq/login"><i class="icon qq"></i></a>
         </div>
     </div>
 </form>
-{% if error %}
-<span>{{ error }}</span>
-{% endif %}
 {% endblock %}

@@ -1,98 +1,201 @@
-* {
-    padding: 0px;
-    margin: 0px;
+
+.nav {
+    background-color: #3999cc; 
+    padding: 10px 25px; 
+    margin-top: 30px; 
+    text-align: right; 
 }
 
-::selection {
-    background: rgba(44, 199, 255, 0.7);
-    color: white;
+.nav a {
+    color: white; 
+    text-decoration: none; 
 }
 
-input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
-    color: #EFEFEF; 
-}
-input:-moz-placeholder, textarea:-moz-placeholder {
-    color: #EFEFEF; 
-}
-
-
-body {
-    background: url('/selfstudy/static/img/bg.png') #edeae2 repeat-x top left;
-    font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei", STHeiti !important;
-}
-
-.header, .wrapper, .footer {
-    width: 960px;
-    margin: 0 auto;
-}
-
-.logo {
-    margin-top: 20px;
-    margin-left: 30px;
-}
-
-.wrapper {
-    margin-top: 30px;
-}
-
-.subtitle {
-    text-align: right;
-}
-
-.subtitle h2 {
-    color: white;
-    font-weight: normal;
-    margin-right: 20px;
-}
-
-.body {
-    background-color: white;
-    padding: 30px;
-    min-height: 300px; 
-}
-
-.wrap {
-    margin: 0 auto;
-}
-
-.intro td {
-    padding-left: 30px;
-}
-
-.intro td h2 {
-    font-weight: normal;
-}
-
-.slogan {
-    color: #AAA;
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 26px;
-}
-
-.footer {
-    color: #CCC;
-    text-align: right;
-    font-size: 12px;
-    margin-top: 10px;
-    margin-bottom: 30px; 
-}
-
-.breadcrumb {
-    height: 40px; 
-    line-height: 40px; 
-    font-size: 14px; 
-    background-color: #2CC7FF; 
-    padding-left: 30px; 
-}
-
-.breadcrumb .sep:after {
-    content: "/"; 
-    color: #EEE; 
+.nav .sep {
+    color: white; 
     margin: 0 10px; 
 }
 
-.breadcrumb a {
-    color: white; 
+.nav .sep:after {
+    content: '|'; 
+}
+
+.wrapper {
+    width: 960px; 
+    margin: 0 auto; 
+}
+
+.footer {
+    padding: 5px; 
+    margin-top: 40px; 
+    text-align: center; 
+    border-top: 2px solid #3999cc; 
+    font-size: 12px; 
+}
+
+.footer a {
     text-decoration: none; 
+    color: #999; 
+}
+
+.footer a:hover {
+    text-decoration: underline; 
+}
+
+.footer .sep {
+    margin: 0 2px; 
+}
+
+.footer .sep:after {
+    content: '·'; 
+}
+
+.body-wrapper {
+    margin: 0 20px; 
+}
+
+.header {
+    border-bottom: 3px solid #3999cc; 
+    margin: 10px 0; 
+    padding: 10px 0; 
+    margin-bottom: 0px; 
+}
+
+.sidebar {
+    width: 200px; 
+}
+
+.website-nav {
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
+    margin-top: 5px; 
+    margin-bottom: 160px; 
+}
+
+.website-nav li {
+    list-style: none; 
+    padding: 20px 10px; 
+    border-bottom: 1px solid #3999cc; 
+}
+
+.website-nav li a {
+    color: #3999cc; 
+    text-decoration: none; 
+}
+
+.website-nav li:hover a {
+    text-decoration: underline; 
+}
+
+.website-nav li.active {
+    background-color: #3999cc; 
+}
+
+.website-nav li.active a {
+    color: white; 
+}
+
+.site-notice {
+    border-top: 2px solid #3999cc; 
+    border-bottom: 2px solid #3999cc; 
+    padding: 20px 0; 
+}
+
+.site-notice p {
+    color: #565656; 
+    text-indent: 2em; 
+    -webkit-margin-after: 0;
+    -webkit-margin-before: 0;
+    margin: 5px 0; 
+}
+
+.table-content {
+    width: 100%; 
+}
+
+.content {
+    padding: 20px; 
+}
+
+.control-group {
+    width: 100%;
+    margin: 20px;
+}
+
+.control-label {
+    float: left;
+    width: 120px;
+    text-align: right;
+    margin-right: 40px;
+}
+
+.control-label label {
+    font-size: 18px;
+    vertical-align: top;
+}
+
+.control input {
+    background: white;
+    border: none;
+    outline: none;
+    font-size: 18px;
+    border-bottom: 1px solid #3999cc; 
+}
+
+.control textarea {
+    border: none;
+    outline: none;
+    max-height: 570px;
+    min-height: 570px;
+    font-size: 18px;
+}
+
+.submit-form button {
+    border: none; 
+    outline: none; 
+    padding: 0; 
+    margin: 0; 
+    background-color: transparent; 
+}
+
+.submit-form button {
+    font-size: 16px; 
+    text-decoration: none; 
+    color: white; 
+    background-color: #3999cc; 
+    padding: 5px 10px; 
+    margin: 0 10px; 
+    margin-left: 0; 
+}                    
+
+.icon {
+    margin: 0 5px 0 0;
+    background: url(http://sheep-farm.b0.upaiyun.com/account/static/img/oauth.gif); no-repeat scroll 0 0;
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+}
+
+.renren {
+    background-position: 0 -64px;
+}
+
+.douban {
+    background-position: 0 -192px;
+}
+
+.weibo {
+    background-position: 0 0px;
+}
+
+.qq{
+    background-position: 0 -256px;
+}
+
+form legend {
+    margin-top: 30px; 
+    font-size: 24px; 
+    margin-left: 30px; 
+    font-weight: bold; 
 }
