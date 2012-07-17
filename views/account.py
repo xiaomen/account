@@ -117,20 +117,20 @@ def login():
         return redirect(url_for('index'))
     login_url = url_for('account.login', **request.args)
     if request.method == 'GET':
-        return render_template('index.html', login_url=login_url)
+        return render_template('login.html', login_url=login_url)
     password = request.form.get('password', None)
     email = request.form.get('email', None)
     check, error = check_login_info(email, password)
     if not check:
-        return render_template('index.html', login_info=error, login_url=login_url)
+        return render_template('login.html', login_info=error, login_url=login_url)
 
     user = get_user_by_email(email=email)
     if not user:
         logger.info('no such user')
-        return render_template('index.html', login_info='no such user', login_url=login_url)
+        return render_template('login.html', login_info='no such user', login_url=login_url)
     if not user.check_password(password):
         logger.info('invaild passwd')
-        return render_template('index.html', login_info='invaild passwd', login_url=login_url)
+        return render_template('login.html', login_info='invaild passwd', login_url=login_url)
 
     account_login(user)
     redirect_url = request.args.get('redirect', None)
