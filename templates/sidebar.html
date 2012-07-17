@@ -1,0 +1,8 @@
+<ul class="website-nav">
+    <li {% if index %}class="active"{% endif %}><a href="/">首页</a></li>
+    <li {% if selfstudy %}class="active"{% endif %}><a href="http://selfstudy.xiaomen.co/">自习室</a></li>
+    <li {% if library %}class="active"{% endif %}><a href="http://library.xiaomen.co/">图书馆</a></li>
+</ul>
+<div class="site-notice">
+    {% block notice %}<p>校门口是一个为高校提供信息服务的网站。</p><p>目前处于测试阶段，支持湖南大学</p>{% endblock %}
+</div>
