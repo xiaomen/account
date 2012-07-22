@@ -1,7 +1,6 @@
 #!/usr/local/bin/python2.7
 #coding:utf-8
 
-import json
 import logging
 from models.account import db, User
 from utils import get_current_user, \
@@ -23,7 +22,7 @@ def register():
     if user:
         return jsonify(status='logged in', id=user.id, \
                 email=user.email, name=user.name)
-    data = json.loads(request.data)
+    data = request.json
     password = data.get('password', None)
     email = data.get('email', None)
     username = data.get('name', None)
@@ -46,7 +45,7 @@ def api_login():
     if user:
         return jsonify(status='logged in', id=user.id, \
                 email=user.email, name=user.name)
-    data = json.loads(request.data)
+    data = request.json
     password = data.get('password', None)
     email = data.get('email', None)
     check, error = check_login_info(email, password)
