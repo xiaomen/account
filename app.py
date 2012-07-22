@@ -5,6 +5,8 @@ import os
 import time
 import config
 import logging
+from functools import wraps
+from werkzeug.useragents import UserAgent
 
 from utils import *
 from models import *
@@ -52,7 +54,21 @@ app.wsgi_app = SessionMiddleware(app.wsgi_app, \
         cookie_name=config.SESSION_KEY, cookie_path='/', \
         cookie_domain=config.SESSION_COOKIE_DOMAIN)
 
+def check_ua(method):
+    @wraps(method)
+    def wrapper(*args, **kwargs):
+        ua = UserAgent(request.headers.get('User-Agent'))
+        if ua.browser == 'msie':
+            try:
+                if int(float(ua.version)) < 8:
+                    return render_template("noie.html")
+            except:
+                return render_template("noie.html")
+        return method(*args, **kwargs) 
+    return wrapper
+
 @app.route('/')
+@check_ua
 def index():
     user = get_current_user()
     if not user:
