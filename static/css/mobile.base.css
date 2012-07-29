@@ -1,0 +1,93 @@
+* {
+    margin: 0; 
+    padding: 0; 
+}
+
+body {
+    font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
+    font-size: 13px; 
+}
+
+.topbar {
+    height: 38px; 
+    line-height: 40px; 
+    background-color: #3999CC; 
+}
+
+.useraera {
+    float: right; 
+}
+
+ul.nav {
+    list-style: none; 
+    margin: 0; 
+    padding: 0; 
+    margin: 0 10px; 
+}
+
+ul.nav li {
+    float: left; 
+}
+
+ul.nav li a {
+    color: white; 
+    text-decoration: none; 
+    margin: 0 10px; 
+}
+
+ul.nav li:after {
+    content: "|"; 
+    color: white; 
+}
+
+ul.nav li:last-child:after {
+    content: ""; 
+}
+
+.header {
+    width: 100%; 
+}
+
+.header-wrap {
+    margin: 0 20px; 
+    border-bottom: 3px solid #3999CC; 
+    padding: 20px 0; 
+}
+
+.subtitle {
+    float: right; 
+    margin: 20px 0; 
+    color: #3999CC; 
+}
+
+.subtitle h2 {
+    font-weight: normal; 
+    letter-spacing: 0.25em; 
+}
+
+.logo {
+    width: 208px; 
+}
+
+.footer-wrap {
+    text-align: center; 
+    border-top: 1px solid #3999CC; 
+    margin: 30px 20px; 
+    padding: 5px 0; 
+}
+
+.footer ul.nav {
+    display: inline-block; 
+}
+
+.footer ul.nav li a {
+    color: #777; 
+}
+
+.footer ul.nav li:after {
+    color: #777; 
+}
+
+.content-wrap {
+    margin: 0 20px; 
+}

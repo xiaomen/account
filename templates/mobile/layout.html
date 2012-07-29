@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta name="HandheldFriendly" content="true" />
+    <meta charset="utf-8" />
+    <title>{% block title %}图书馆 - 校门口{% endblock %}</title>
+    <link rel="stylesheet" href="{{'/static/css/reset.css' | s_files }}" />
+    <link rel="stylesheet" href="{{ '/static/css/mobile.base.css' | s_files }}" type="text/css" />
+    <link rel="stylesheet" href="{{ '/static/css/mobile.css' | s_files }}" type="text/css" />
+</head>
+<body>
+<div class="topbar">
+    <div class="useraera">
+        <ul class="nav">
+            {% if login %}
+            <li><a href="{{ my_url }}">{{ user.name }}</a></li>
+            {% else %}
+            {% endif %}
+        </ul>
+    </div>
+    <div class="common-nav">
+        <ul class="nav">
+            <li><a href="http://www.xiaomen.co/">首页</a></li>
+            <li><a href="http://selfstudy.xiaomen.co/">自习室</a></li>
+            <li><a href="http://library.xiaomen.co/">图书馆</a></li>
+        </ul>
+    </div>
+</div>
+<div class="header">
+    <div class="header-wrap">
+        <div class="subtitle">
+            <h2>校门口</h2>
+        </div>
+        <div class="logo">
+            <img src="{{ '/static/img/mobile.logo.jpg' | s_files }}" />
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="content-wrap">
+        {% block content %}{% endblock %}
+    </div>
+</div>
+<div class="footer">
+    <div class="footer-wrap">
+        <div class="footer-nav">
+            <ul class="nav">
+                <li><a href="/report">反馈</a></li>
+                <li><a href="http://xiaomen.co/">xiaomen.co</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
