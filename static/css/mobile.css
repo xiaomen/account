@@ -1,0 +1,27 @@
+.wrap {
+    width: 100%; 
+    padding: 0 20px; 
+}
+
+.img {
+    margin: 20px 0; 
+    text-align: center; 
+}
+
+.img img {
+    width: 60%; 
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+
+.img .site-title {
+    text-align: center; 
+    color: #3999CC; 
+    margin-top: 5px; 
+}
+
+a {
+    color: #3999CC; 
+    text-decoration: none; 
+}

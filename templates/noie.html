@@ -1,56 +1,69 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<div class="noie-wrap">
+    <h2 style="text-align: center">抱歉，您的浏览器的版本太低了</h2>
+    <h5 style="font-weight: normal; ">请升级您的浏览器至最新版本，或选用以下浏览器</h5>
+    <table class="browser">
+        <tr>
+            <td><a href="http://windows.microsoft.com/zh-CN/internet-explorer/products/ie/home" class="ie">IE9</a></td>
+            <td><a href="http://www.mozilla.com/firefox/" class="fx">Firefox</a></td>
+            <td><a href="http://www.google.cn/chrome/" class="cr">Chrome</a></td>
+            <td><a href="http://www.apple.com.cn/safari/" class="sf">Safari</a></td>
+        </tr>
+    </table>
+    <h5 style="font-weight: normal; ">如果您使用的是如下的浏览器，请开启高速模式再尝试访问本站</h5>
+    <table class="browser">
+        <tr>
+            <td><a href="http://chrome.360.cn/" class="b360">360极速</a></td>
+            <td><a href="http://www.maxthon.cn/" class="mt">遨游</a></td>
+            <td><a href="http://browser.qq.com/" class="qq">QQ浏览器</a></td>
+            <td><a href="http://ie.sogou.com/" class="sg">搜狗高速浏览器</a></td>
+        </tr>
+    </table>
+</div>
 <style type="text/css">
-.dui-mask {
-    background: rgba(127,  127,  127,  0.5); 
-    background: -webkit-gradient(radial, 50% 50%, 250, 50% 50%, 800, from(rgba(127,  127,  127,  0.5)), to(rgba(0,  0,  0,  0.7))); 
-    background: -webkit-radial-gradient(rgba(127,  127,  127,  0.5), rgba(127,  127,  127,  0.5) 35%, rgba(0,  0,  0,  0.7)); 
-    background: -moz-radial-gradient(rgba(127,  127,  127,  0.5), rgba(127,  127,  127,  0.5) 35%, rgba(0,  0,  0,  0.7)); 
-    background: -o-radial-gradient(rgba(127,  127,  127,  0.5), rgba(127,  127,  127,  0.5) 35%, rgba(0,  0,  0,  0.7)); 
-    background: -ms-radial-gradient(rgba(127,  127,  127,  0.5), rgba(127,  127,  127,  0.5) 35%, rgba(0,  0,  0,  0.7)); 
-    z-index: 5999; 
-}
-.noie-tip {
-    position: fixed; 
+.browser {
     width: 100%; 
-    height: 100%; 
-    top: 0; 
-    left: 0; 
-    overflow: auto;
 }
-.tip-wrap {
-    width: 480px; 
-    top: 50%; 
-    left: 50%; 
-    margin-left: -240px; 
-    margin-top: -160px; 
-    background: white; 
-    z-index: 6000; 
-    position: fixed;  
-}
-.tip-wrap p {
+.browser tr td {
+    width: 25%; 
     text-align: center; 
 }
-.tip-wrap p a {
-    color: #3999CC; 
+.browser td a {
+    display: block; 
+    width: 85px;
+    padding: 70px 0 0 0;
+    background: url(/account/static/img/browsers.jpg) no-repeat center 0;
+    color: black;
+    text-align: center;
+    margin: 0 auto; 
     text-decoration: none; 
-    margin: 0 10px; 
+    font-size: 12px; 
+}
+.browser td a:hover {
+    text-decoration: underline; 
+}
+.browser td a.ie {
+    background-position: center -270px;
+}
+.browser td a.fx {
+    background-position: center -90px;
+}
+.browser td a.sf {
+    background-position: center -180px;
+}
+.browser td a.b360 {
+    background-position: center -374px;
+}
+.browser td a.mt {
+    background-position: center -472px;
+}
+.browser td a.qq {
+    background-position: center -572px;
+}
+.browser td a.sg {
+    background-position: center -677px;
 }
 </style>
-<div class="dui-mask" style="width:100%; height: 100%; position: fixed; top: 0; left: 0;">
-</div>
-<div class="noie-tip" class="display: block; z-index: 6000; ">
-    <div class="tip-wrap" style="padding: 10px">
-        <h2 align="center">您的浏览器太老啦！</h2>
-        <h5 align="center" style="font-weight: normal">请更新您的浏览器或启用浏览器高速模式</h5>
-        <h5 style="font-weight: normal; padding: 0 10px; ">或者使用以下的浏览器：</h5>
-        <p>
-            <a href="http://windows.microsoft.com/zh-CN/internet-explorer/products/ie/home">IE9</a>
-            <a href="http://www.mozilla.com/firefox/">Firefox</a>
-            <a href="http://www.google.cn/chrome/">Google Chrome</a>
-            <a href="http://www.apple.com.cn/safari/">Safari</a>
-        </p>
-    </div>
-</div>
 {% endblock %}

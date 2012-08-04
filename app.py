@@ -21,8 +21,9 @@ from sheep.api.statics import static_files
 from sheep.api.sessions import SessionMiddleware, \
     FilesystemSessionStore
 
+import flask
 from flaskext.csrf import csrf
-from flask import Flask, render_template, \
+from flask import Flask, \
         request, url_for, g, redirect
 
 app = Flask(__name__)
@@ -65,6 +66,12 @@ def check_ua(method):
                 return render_template("noie.html")
         return method(*args, **kwargs) 
     return wrapper
+
+def render_template(template_name, *args, **kwargs):
+    ua = UserAgent(request.headers.get('User-Agent'))
+    if ua.platform.lower() in ["android", "iphone"]:
+        return flask.render_template("mobile/" + template_name, *args, **kwargs)
+    return flask.render_template(template_name, *args, **kwargs)
 
 @app.route('/')
 @check_ua
