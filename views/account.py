@@ -87,6 +87,7 @@ def bind():
         _bind_oauth(oauth, g.session['user_id'])
     return redirect(url_for('index'))
 
+@csrf_exempt
 @account.route('/register', methods=['POST','GET'])
 def register():
     if get_current_user():
@@ -136,6 +137,7 @@ def login():
     redirect_url = request.args.get('redirect', None)
     return redirect(redirect_url or url_for('index'))
 
+@csrf_exempt
 @account.route('/logout')
 def logout():
     account_logout()
