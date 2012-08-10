@@ -2,18 +2,36 @@
 
 {%block content %}
 {% if not send %}
-<form method="post" action="/account/forget">
-  <label for="email">邮箱:</label>
-  <input type="text" size="30" tabindex='1' value="" id="email" name="email">
-  <input type="hidden" value="{{ csrf_token() }}" name="_csrf_token">
-  <input type="submit" value="确定" name="allow" />
-  <input type="submit" value="取消" name="cancel" />
+<form action="/account/forget" method="POST">
+    <legend>重设密码</legend>
+    {% if error %}
+    <div class="forget-msg error">
+        <p>{{ error }}</p>
+    </div>
+    {% endif %}
+    <div class="control-group">
+        <div class="control-label">
+            <label>邮箱</label>
+        </div>
+        <div class="control">
+            <input name="email" type="text" />
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+            <label>&nbsp; </label>
+        </div>
+        <div class="control submit-form">
+            <button type="submit">重设密码</button>
+        </div>
+    </div>
 </form>
-{% if error %}
-<span>{{ error }}</span>
-{% endif %}
 {% else %}
-<span>请查看邮箱</span>
-<a href="/">back</a>
+<form>
+    <legend>重设密码</legend>
+    <div class="forget-msg">
+        <p>请到您的邮箱查阅邮件，从邮件重设你的密码。</p>
+    </div>
+</form>
 {% endif %}
 {% endblock %}
