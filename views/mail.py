@@ -93,6 +93,7 @@ def view(mail_id):
         Mail.mark_as_read(mail)
         backend.delete('mail:unread:%d' % user.id)
         backend.delete('mail:inbox:%d' % user.id)
+        g.unread_mail_count = get_unread_mail_count(g.current_user.id)
 
     mobj = mail_obj()
     mobj.id = mail_id

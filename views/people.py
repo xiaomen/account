@@ -12,12 +12,9 @@ people = Blueprint('people', __name__)
 
 @people.route('/<username>')
 def show_people(username):
-    current_user = get_current_user()
     visit_user = get_user(username)
     if not visit_user:
         raise abort(404)
     return render_template('people.html', \
-            current_user = current_user, \
-            visit_user = visit_user, \
-            setting_url = url_for('account.setting'))
+            visit_user = visit_user)
 

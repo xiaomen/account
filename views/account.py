@@ -182,6 +182,7 @@ def setting():
     db.session.commit()
     #clear cache
     clear_user_cache(user)
+    g.current_user = get_current_user()
     return render_template('setting.html', error='update ok', user=user)
 
 def clear_user_cache(user):
