@@ -3,8 +3,7 @@
 
 import logging
 from models.account import db, User
-from utils import get_current_user, \
-        get_user_by_email, get_user
+from utils import get_user_by_email, get_user
 from flaskext.csrf import csrf_exempt
 from flask import g, request, jsonify, Blueprint
 from .account import account_logout, account_login, \
@@ -18,10 +17,6 @@ api = Blueprint('api', __name__)
 @csrf_exempt
 @api.route('/register', methods=['POST'])
 def register():
-    user = get_current_user()
-    if user:
-        return jsonify(status='logged in', id=user.id, \
-                email=user.email, name=user.name)
     data = request.json
     password = data.get('password', None)
     email = data.get('email', None)
@@ -41,10 +36,6 @@ def register():
 @csrf_exempt
 @api.route('/login', methods=['POST'])
 def api_login():
-    user = get_current_user()
-    if user:
-        return jsonify(status='logged in', id=user.id, \
-                email=user.email, name=user.name)
     data = request.json
     password = data.get('password', None)
     email = data.get('email', None)

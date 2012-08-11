@@ -62,4 +62,4 @@ def before_request():
     g.session = request.environ['xiaomen.session']
     g.current_user = get_current_user()
     if g.current_user:
-        g.unread_mail_count = get_unread_mail_count(g.current_user.id)
+        g.unread_mail_count = lambda: get_unread_mail_count(g.current_user.id)
