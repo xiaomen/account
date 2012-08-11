@@ -1,0 +1,33 @@
+{% extends "mobile/layout.html" %}
+
+{% block content %}
+<form action="{{ login_url }}" method="POST">
+    {% if login_info %}
+    <div class="error-msg">
+        <p>{{ login_info }}</p>
+    </div>
+    {% endif %}
+    {% if error %}
+    <div class="error-msg">
+        <p>{{ error }}</p>
+    </div>
+    {% endif %}
+    <label>邮箱:</label>
+    <div class="control">
+        <input name="email" type="TEXT" />
+    </div>
+    <label>密码:</label>
+    <div class="control">
+        <input name="password" type="PASSWORD" />
+    </div>
+    <label>昵称:</label>
+    <div class="control">
+        <input name="name" type="TEXT" />
+    </div>
+    <div class="control-action">
+        <button class="submit-btn">注册</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block subtitle %}注册{% endblock %}

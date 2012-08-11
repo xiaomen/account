@@ -1,0 +1,24 @@
+{% extends "mobile/layout.html" %}
+
+{% block content %}
+{% if not send %}
+<form action="{{ login_url }}" method="POST">
+    {% if error %}
+    <div class="error-msg">
+        <p>{{ error }}</p>
+    </div>
+    {% endif %}
+    <label>邮箱:</label>
+    <div class="control">
+        <input name="email" type="TEXT" />
+    </div>
+    <div class="control-action">
+        <button class="submit-btn">重设密码</button>
+    </div>
+</form>
+{% else %}
+<p style="text-align: center; margin: 20px 0; ">请到您的邮箱查阅邮件，从邮件重设你的密码。</p>
+{% endif %} 
+{% endblock %}
+
+{% block subtitle %}重设密码{% endblock %}
