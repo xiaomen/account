@@ -2,7 +2,7 @@
 
 {% block content %}
 {% if not send %}
-<form action="/account/forget" method="POST">
+<form action="{{ url_for('account.forget') }}" method="POST">
     <legend>重设密码</legend>
     {% if error %}
     <div class="forget-msg error">

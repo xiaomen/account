@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 
 {%block content %}
-<form action="/account/register" method="post">
+<form action="{{ url_for('account.register') }}" method="post">
     <legend>欢迎加入校门口</legend>
     {% if login_info %}
     <div class="forget-msg">
