@@ -25,3 +25,75 @@ a {
     color: #3999CC; 
     text-decoration: none; 
 }
+
+label {
+    font-size: 1.3em; 
+    font-weight: bold; 
+    margin: 4px 0; 
+    display: block; 
+}
+
+form {
+    margin: 20px 0; 
+}
+
+form input {
+    border: none; 
+    outline: none; 
+    background: none; 
+    width: 100%; 
+    border: 1px solid #3999CC; 
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 10px; 
+    font-size: 1.5em; 
+}
+
+.control {
+    padding-right: 21px; 
+}
+
+.submit-btn {
+    background: none; 
+    outline: none; 
+    border: none; 
+    background-color: #3999CC; 
+    color: white; 
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+    -webkit-appearance: none;
+    height: 38px; 
+    width: 120px; 
+    font-weight: bold; 
+}
+
+.control-action {
+    margin-top: 30px; 
+}
+
+.register-btn {
+    float: right; 
+    width: 140px; 
+    display: -webkit-box; 
+    background: #777; 
+    color: white; 
+    height: 38px; 
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+    -webkit-appearance: none;
+    font-weight: bold;
+}
+
+.register-btn:visited {
+    color: white; 
+}
+
+.error-msg {
+    background: #FFEBE8;
+    border: 1px solid #DD3C10;
+    padding: .5em;
+    margin: 1em .5em;
+    line-height: 1.6em; 
+    padding: .5em .8em;
+}
