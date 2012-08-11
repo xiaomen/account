@@ -9,15 +9,15 @@
         </li>
         <li>
             <label for="domain">短域名:</label>
-            {% if not user.domain %}
+            {% if not g.current_user.domain %}
             <input type="text" size="10" tabindex='2' value="" id="domain" name="domain">
             {% else %}
-            <span>{{ user.domain }}</span>
+            <span>{{ g.current_user.domain }}</span>
             {% endif %}
         </li>
         <li>
             <label for="name">昵称:</label>
-            <input type="text" size="20" tabindex='3' value="{{ user.name }}" id="name" name="name">
+            <input type="text" size="20" tabindex='3' value="{{ g.current_user.name }}" id="name" name="name">
         </li>
         <li>
             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">

@@ -41,8 +41,7 @@ def index():
 
 @mail.route('/inbox')
 def inbox():
-    user = get_current_user()
-    if not user:
+    if not g.current_user:
         return redirect(url_for('account.login'))
 
     mails = get_mail_inbox_all(user.id)
@@ -52,8 +51,7 @@ def inbox():
 
 @mail.route('/outbox')
 def outbox():
-    user = get_current_user()
-    if not user:
+    if not g.current_user:
         return redirect(url_for('account.login'))
 
     mails = get_mail_outbox_all(user.id)
@@ -63,6 +61,9 @@ def outbox():
 
 @mail.route('/view/<mail_id>')
 def view(mail_id):
+    if not g.current_user:
+        return redirect(url_for('account.login'))
+
     box = request.headers.get('Referer', '')
     box = urlparse(box)
 
@@ -77,10 +78,6 @@ def view(mail_id):
     if not box:
         return redirect(url_for('mail.index'))
 
-    user = get_current_user()
-    if not user:
-        return redirect(url_for('account.login'))
-
     mail = get_mail(mail_id)
     #TODO ugly
     if not mail:
@@ -93,7 +90,6 @@ def view(mail_id):
         Mail.mark_as_read(mail)
         backend.delete('mail:unread:%d' % user.id)
         backend.delete('mail:inbox:%d' % user.id)
-        g.unread_mail_count = get_unread_mail_count(g.current_user.id)
 
     mobj = mail_obj()
     mobj.id = mail_id
@@ -111,8 +107,7 @@ def view(mail_id):
 
 @mail.route('/delete/<box>/<mail_id>')
 def delete(box, mail_id):
-    user = get_current_user()
-    if not user:
+    if not g.current_user:
         return redirect(url_for('account.login'))
 
     mail = get_mail(mail_id)
@@ -131,8 +126,7 @@ def delete(box, mail_id):
 
 @mail.route('/write', methods=['GET', 'POST'])
 def write():
-    user = get_current_user()
-    if not user:
+    if not g.current_user:
         return redirect(url_for('account.login'))
 
     if request.method == 'GET':

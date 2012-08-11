@@ -19,7 +19,7 @@ account = Blueprint('account', __name__)
 @account.route('/forget', methods=['GET', 'POST'])
 @check_ua
 def forget():
-    if get_current_user() or \
+    if g.current_user or \
             (request.form and 'cancel' in request.form):
         return redirect(url_for('index'))
     if request.method == 'GET':
@@ -47,7 +47,7 @@ def forget():
 @check_ua
 def reset(stub=None):
     forget = get_forget_by_stub(stub=stub)
-    if get_current_user():
+    if g.current_user:
         if forget:
             _delete_forget(forget)
             db.session.commit()
@@ -84,8 +84,7 @@ def bind():
         return render_template('bind.html')
     oauth = session.pop('from_oauth', None)
     allow = 'allow' in request.form
-    user = get_current_user()
-    if user and oauth and allow:
+    if g.current_user and oauth and allow:
         _bind_oauth(oauth, g.session['user_id'])
     return redirect(url_for('index'))
 
@@ -93,7 +92,7 @@ def bind():
 @account.route('/register', methods=['POST','GET'])
 @check_ua
 def register():
-    if get_current_user():
+    if g.current_user:
         return redirect(url_for('index'))
     if request.method == 'GET':
         return render_template('register.html')
@@ -118,7 +117,7 @@ def register():
 @account.route('/login', methods=['POST', 'GET'])
 @check_ua
 def login():
-    if get_current_user():
+    if g.current_user:
         return redirect(url_for('index'))
     login_url = url_for('account.login', **request.args)
     if request.method == 'GET':
@@ -151,13 +150,13 @@ def logout():
 @account.route('/setting', methods=['POST', 'GET'])
 @check_ua
 def setting():
-    user = get_current_user()
+    user = g.current_user
     if not user:
         return redirect(url_for('account.login'))
 
     if request.method == 'GET':
-        return render_template('setting.html', \
-                user=user)
+        return render_template('setting.html')
+
     username = request.form.get('name', None)
     password = request.form.get('password', None)
     domain = request.form.get('domain', None)
@@ -165,25 +164,25 @@ def setting():
     if username != user.name:
         status = check_username(username)
         if status:
-            return render_template('setting.html', error=status[1], user=user)
+            return render_template('setting.html', error=status[1])
         _change_username(user, username)
 
     if domain:
         for status in [check_domain(domain), check_domain_exists(domain)]:
             if status:
-                return render_template('setting.html', error=status[1], user=user)
+                return render_template('setting.html', error=status[1])
         _set_domain(user, domain)
 
     if password:
         status = check_password(password)
         if status:
-            return render_template('setting.html', error=status[1], user=user)
+            return render_template('setting.html', error=status[1])
         _change_password(user, password)
     db.session.commit()
     #clear cache
     clear_user_cache(user)
     g.current_user = get_current_user()
-    return render_template('setting.html', error='update ok', user=user)
+    return render_template('setting.html', error='update ok')
 
 def clear_user_cache(user):
     keys = ['account:%s' % key for key in [str(user.id), user.domain, user.email]]

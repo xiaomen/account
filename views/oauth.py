@@ -4,8 +4,7 @@
 import urllib
 import logging
 from .account import account_login
-from utils import get_current_user, \
-        get_user, get_oauth_by
+from utils import get_user, get_oauth_by
 from models.account import db, OAuth
 from flask import Blueprint, g, session, \
         request, redirect, url_for
@@ -26,8 +25,7 @@ class Base_OAuth_Login(object):
         self.token_str = token_str
 
     def get_token(self):
-        user = get_current_user()
-        if user:
+        if g.current_user:
             oauth_info = get_oauth_by(oauth_type=self.name, uid=g.session['user_id'])
             if not oauth_info:
                 return
@@ -35,8 +33,7 @@ class Base_OAuth_Login(object):
 
     def login(self):
         next_url = url_for('account.register')
-        user = get_current_user()
-        if user:
+        if g.current_user:
             oauth_info = get_oauth_by(oauth_type=self.name, uid=g.session['user_id'])
             if oauth_info:
                 return redirect(request.referrer or url_for('index'))
@@ -66,7 +63,7 @@ class Base_OAuth_Login(object):
 
         old_token = oauth.oauth_token
         oauth.oauth_token = token
-        if not get_current_user() and oauth.uid:
+        if not g.current_user and oauth.uid:
             #need profile!
             user = get_user(oauth.uid)
             if user:
