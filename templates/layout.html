@@ -15,11 +15,17 @@
 <div class="wrapper">
     <div class="nav">
         {% if not current_user %}
-        <span><a href="{{ login_url }}">登录</a></span>
+        <span><a href="{{ url_for('account.login') }}">登录</a></span>
         <span class="sep"></span>
-        <span><a href="/account/register">注册</a></span>
+        <span><a href="{{ url_for('account.register') }}">注册</a></span>
         {% else %}
-        <span><a href="{{ my_url }}">{{ user.name }}</a></span>
+        <span>
+            {% if current_user.domain %}
+            <a href="{{ url_for('people.show_people', username=current_user.domain) }}">
+            {% else %}
+            <a href="{{ url_for('people.show_people', username=current_user.id)}}">
+            {% endif %}{{ current_user.name }}</a>
+        </span>
         <span class="sep"></span>
         <span><a href="/mail/">邮件</a>{% if unread_mail_count > 0 %}[{{unread_mail_count}}]{% endif %}</span>
         <span class="sep"></span>
