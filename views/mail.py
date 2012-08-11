@@ -44,7 +44,7 @@ def inbox():
     if not g.current_user:
         return redirect(url_for('account.login'))
 
-    mails = get_mail_inbox_all(user.id)
+    mails = get_mail_inbox_all(g.current_user.id)
     mails = gen_maillist(mails, 'from_uid')
 
     return render_template('inbox.html', mails = mails)
@@ -83,13 +83,13 @@ def view(mail_id):
     if not mail:
         raise abort(404)
 
-    if not check_mail_access(user.id, mail):
+    if not check_mail_access(g.current_user.id, mail):
         return redirect(url_for('mail.index'))
 
-    if not mail.is_read and mail.to_uid == user.id:
+    if not mail.is_read and mail.to_uid == g.current_user.id:
         Mail.mark_as_read(mail)
-        backend.delete('mail:unread:%d' % user.id)
-        backend.delete('mail:inbox:%d' % user.id)
+        backend.delete('mail:unread:%d' % g.current_user.id)
+        backend.delete('mail:inbox:%d' % g.current_user.id)
 
     mobj = mail_obj()
     mobj.id = mail_id
@@ -112,15 +112,15 @@ def delete(box, mail_id):
 
     mail = get_mail(mail_id)
     if not mail or box not in ['inbox', 'outbox'] or \
-            not check_mail_access(user.id, mail):
+            not check_mail_access(g.current_user.id, mail):
         return redirect(url_for('mail.index'))
 
     if box == 'inbox':
         Mail.delete_inbox(mail)
-        backend.delete('mail:inbox:%d' % user.id)
+        backend.delete('mail:inbox:%d' % g.current_user.id)
     elif box == 'outbox':
         Mail.delete_outbox(mail)
-        backend.delete('mail:outbox:%d' % user.id)
+        backend.delete('mail:outbox:%d' % g.current_user.id)
 
     return redirect(url_for('mail.index'))
 
@@ -136,7 +136,7 @@ def write():
         content = ''
         if reply_mid:
             mail = get_mail(reply_mid)
-            if user.id != mail.to_uid:
+            if g.current_user.id != mail.to_uid:
                 return redirect(url_for('mail.index'))
             to_uid = mail.from_uid
             title = reply_mail_title(mail.title)
@@ -157,7 +157,7 @@ def write():
         return render_template('write.html', who=who, \
                 title=title, content=content, error=error)
 
-    Mail.create(from_uid = user.id,
+    Mail.create(from_uid = g.current_user.id,
                 to_uid = who.id,
                 title = title,
                 content = content)
@@ -165,7 +165,7 @@ def write():
     #clean cache
     backend.delete('mail:inbox:%d' % who.id)
     backend.delete('mail:unread:%d' % who.id)
-    backend.delete('mail:outbox:%d' % user.id)
+    backend.delete('mail:outbox:%d' % g.current_user.id)
 
     return redirect(url_for('mail.index'))
 
