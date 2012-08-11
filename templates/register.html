@@ -2,15 +2,20 @@
 
 {%block content %}
 <form action="/account/register" method="post">
-    <legend>完善用户信息</legend>
+    <legend>欢迎加入校门口</legend>
     {% if login_info %}
-    <div class="login-info">
+    <div class="forget-msg">
         <p>{{ login_info }}</p>
+    </div>
+    {% endif %}
+    {% if error %}
+    <div class="forget-msg error">
+        <p>{{ error }}</p>
     </div>
     {% endif %}
     <div class="control-group">
         <div class="control-label">
-            <label>Email</label>
+            <label>邮箱</label>
         </div>
         <div class="control">
             <input name="email" type="text" />
@@ -37,11 +42,8 @@
             <label>&nbsp; </label>
         </div>
         <div class="control submit-form">
-            <button type="submit">提交</button>
+            <button type="submit">注册</button>
         </div>
     </div>
 </form>
-{% if error %}
-<span>{{ error }}</span>
-{% endif %}
 {% endblock %}

@@ -1,15 +1,16 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<form action="{{ login_url }}" method="POST" class="login-form">
+<form action="{{ login_url }}" method="POST">
+    <legend>欢迎回到校门口</legend>
     {% if login_info %}
-    <div class="login-info">
+    <div class="forget-msg">
         <p>{{ login_info }}</p>
     </div>
     {% endif %}
     <div class="control-group">
         <div class="control-label">
-            <label>Email</label>
+            <label>邮箱</label>
         </div>
         <div class="control">
             <input name="email" type="text" />

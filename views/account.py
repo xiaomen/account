@@ -9,8 +9,7 @@ from datetime import datetime
 from sheep.api.cache import backend
 from models.account import db, User, Forget, create_token
 from flask import Blueprint, g, session, jsonify, \
-        redirect, request, url_for, render_template, \
-        abort
+        redirect, request, url_for, abort
 from flaskext.csrf import csrf_exempt
 
 logger = logging.getLogger(__name__)
@@ -18,6 +17,7 @@ logger = logging.getLogger(__name__)
 account = Blueprint('account', __name__)
 
 @account.route('/forget', methods=['GET', 'POST'])
+@check_ua
 def forget():
     if get_current_user() or \
             (request.form and 'cancel' in request.form):
@@ -44,6 +44,7 @@ def forget():
     return render_template('forget.html', send=1)
 
 @account.route('/reset/<stub>', methods=['GET', 'POST'])
+@check_ua
 def reset(stub=None):
     forget = get_forget_by_stub(stub=stub)
     if get_current_user():
@@ -77,6 +78,7 @@ def reset(stub=None):
     return render_template('reset.html', ok=1)
 
 @account.route('/bind', methods=['GET', 'POST'])
+@check_ua
 def bind():
     if request.method == 'GET':
         return render_template('bind.html')
@@ -89,6 +91,7 @@ def bind():
 
 @csrf_exempt
 @account.route('/register', methods=['POST','GET'])
+@check_ua
 def register():
     if get_current_user():
         return redirect(url_for('index'))
@@ -113,6 +116,7 @@ def register():
 
 @csrf_exempt
 @account.route('/login', methods=['POST', 'GET'])
+@check_ua
 def login():
     if get_current_user():
         return redirect(url_for('index'))
@@ -139,11 +143,13 @@ def login():
 
 @csrf_exempt
 @account.route('/logout')
+@check_ua
 def logout():
     account_logout()
     return redirect(request.referrer or url_for('index'))
 
 @account.route('/setting', methods=['POST', 'GET'])
+@check_ua
 def setting():
     user = get_current_user()
     if not user:

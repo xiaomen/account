@@ -16,6 +16,7 @@ def show_people(username):
     visit_user = get_user(username)
     if not visit_user:
         raise abort(404)
+    print current_user
     return render_template('people.html', \
             current_user = current_user, \
             visit_user = visit_user, \
