@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 
 {%block content %}
-<form action="/account/setting" method="post">
+<form action="{{ url_for('account.setting') }}" method="post">
     <ul>
         <li>
             <label for="password">密码:</label>
