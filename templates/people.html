@@ -11,9 +11,9 @@
         <p><span>Name {{ visit_user.name }}</span></p>
         <p><span>E-mail {{ visit_user.email }}</span></p>
         <p><span><a href="/mail/write?to={{ visit_user.id }}">发邮件</a></span></p>
-        {% if current_user.id == visit_user.id %}
-        <p><a href="{{ setting_url }}">设置</a></p>
-        <p><a href="/account/logout">登出</a></p>
+        {% if g.current_user and g.current_user.id == visit_user.id %}
+        <p><a href="{{ url_for('account.setting') }}">设置</a></p>
+        <p><a href="{{ url_for('account.logout') }}">登出</a></p>
         {% endif %}
     </div>
 {% endblock %}
