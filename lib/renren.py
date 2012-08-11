@@ -13,11 +13,9 @@ def make_sig(data):
     s.sort()
     s = ''.join(s)
     s += config.RENREN_APP_SECRET
-    print s
     m = hashlib.md5()
     m.update(s)
     ret = m.hexdigest()
-    print ret
     return ret
 
 class RenrenOAuth(BasicOAuth):

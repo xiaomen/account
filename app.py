@@ -28,6 +28,7 @@ app = Flask(__name__)
 app.debug = config.DEBUG
 app.secret_key = config.SECRET_KEY
 app.jinja_env.filters['s_files'] = static_files
+app.jinja_env.filters['get_unread_mail_count'] = get_unread_mail_count
 
 app.config.update(
     SQLALCHEMY_DATABASE_URI = config.DATABASE_URI,
@@ -56,18 +57,10 @@ app.wsgi_app = SessionMiddleware(app.wsgi_app, \
 @check_ua
 def index():
     user = get_current_user()
-    print dir(user)
     if not user:
         return render_template('index.html', login_url=url_for('account.login'))
-    if user.domain:
-        username = user.domain
-    else:
-        username = user.id
 
-    return render_template('index.html', login=1, \
-            user = user,
-            unread_mail_count = get_unread_mail_count(user.id),
-            my_url = url_for('people.show_people', username=username))
+    return render_template('index.html', current_user = user)
 
 @app.before_request
 def before_request():
