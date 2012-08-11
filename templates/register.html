@@ -4,8 +4,13 @@
 <form action="/account/register" method="post">
     <legend>欢迎加入校门口</legend>
     {% if login_info %}
-    <div class="login-info">
+    <div class="forget-msg">
         <p>{{ login_info }}</p>
+    </div>
+    {% endif %}
+    {% if error %}
+    <div class="forget-msg error">
+        <p>{{ error }}</p>
     </div>
     {% endif %}
     <div class="control-group">
@@ -41,7 +46,4 @@
         </div>
     </div>
 </form>
-{% if error %}
-<span>{{ error }}</span>
-{% endif %}
 {% endblock %}

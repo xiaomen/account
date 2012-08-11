@@ -14,8 +14,10 @@
 <body>
 <div class="wrapper">
     <div class="nav">
-        {% if not login %}
+        {% if not current_user %}
         <span><a href="{{ login_url }}">登录</a></span>
+        <span class="sep"></span>
+        <span><a href="/account/register">注册</a></span>
         {% else %}
         <span><a href="{{ my_url }}">{{ user.name }}</a></span>
         <span class="sep"></span>

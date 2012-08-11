@@ -56,6 +56,7 @@ app.wsgi_app = SessionMiddleware(app.wsgi_app, \
 @check_ua
 def index():
     user = get_current_user()
+    print dir(user)
     if not user:
         return render_template('index.html', login_url=url_for('account.login'))
     if user.domain:

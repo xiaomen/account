@@ -13,9 +13,11 @@
 <div class="topbar">
     <div class="useraera">
         <ul class="nav">
-            {% if login %}
+            {% if current_user %}
             <li><a href="{{ my_url }}">{{ user.name }}</a></li>
             {% else %}
+            <li><a href="/account/login">登录</a></li>
+            <li><a href="/account/register">注册</a></li>
             {% endif %}
         </ul>
     </div>
@@ -30,7 +32,7 @@
 <div class="header">
     <div class="header-wrap">
         <div class="subtitle">
-            <h2>首页</h2>
+            <h2>{% block subtitle %}首页{% endblock %}</h2>
         </div>
         <div class="logo">
             <img src="{{ '/static/img/mobile.logo.jpg' | s_files }}" />
