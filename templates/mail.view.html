@@ -1,24 +1,46 @@
 {% extends "index.html" %}
 
 {%block content %}
-<table>
-    <tr>
-        <td>发件人：</td>
-        <td><a href="/people/{{ mail.from_uid_url }}">{{ mail.from_uid }}</a></td>
-    </tr>
-    <tr>
-        <td>标题：</td>
-        <td>{{ mail.title }}</td>
-    </tr>
-    <tr>
-        <td>内容：</td>
-        <td>{{ mail.content }}</td>
-    </tr>
-<table>
-{% if reply %}
-<p><a href="/mail/write?reply={{ mail.id }}">回复</a></p>
-{% endif %}
-<p><a href="/mail/delete/{{ mail.delete }}">删除</a></p>
-<p><a href="/mail/">收件箱</a></p>
-<p><a href="/mail/outbox">发件箱</a></p>
+<div class="mail-nav">
+    <span><a href="/mail">收件箱</a></span>
+    <span class="sep"></span>
+    <span><a href="/mail/outbox">发件箱</a></span>
+</div>
+<form class="mail">
+    <div class="control-group">
+        <div class="control-label">
+            <label>来自:</label>
+        </div>
+        <div class="control">
+            <span><a href="/people/{{ mail.from_uid_url }}">{{ mail.from_uid }}</a></span>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+            <label>标题:</label>
+        </div>
+        <div class="control">
+            <span><b>{{ mail.title }}</b></span>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+            <label>正文:</label>
+        </div>
+        <div class="control">
+            {{ mail.content | replace('<', '&lt;') | replace('>', '&gt;') | replace('\n', '<br />') | safe }}
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+            <label>&nbsp;</label>
+        </div>
+        <div class="control submit-form">
+            {% if reply %}
+            <a href="/mail/write?reply={{ mail.id }}" class="btn">回复</a>
+            {% endif %}
+            <a href="/mail/delete/{{ mail.delete }}" class="btn">删除</a>
+        </div>
+    </div>
+</form>
 {% endblock %}

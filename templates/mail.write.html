@@ -1,24 +1,40 @@
 {% extends "index.html" %}
 
 {%block content %}
-<form method="post" action="/mail/write">
-  <ul>
-    <li>
-        <label for="to_uid">收件人: {{ who.name }}</label>
-        <input type="hidden" name="to_uid" value="{{ who.id }}"/>
-    </li>
-    <li>
-        <label for="title">标题</label>
-        <input type="text" name="title" value="{{ title }}" size="45"/>
-    </li>
-    <li>
-        <label for="content">内容</label>
-        <textarea name="content" rows="5" cols="10">{{ content }}</textarea>
-    </li>
-    <li>
-        <button type="submit">发送</button>
-    </li>
-  </ul>
+<form method="post" action="/mail/write" class="write">
+    <div class="control-group">
+        <div class="control-label">
+            <label for="to_uid">收件人</label>
+        </div>
+        <div class="control">
+            <span>{{ who.name }}</span>
+            <input type="hidden" name="to_uid" value="{{ who.id }}"/>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+            <label for="title">标题</label>
+        </div>
+        <div class="control">
+            <input type="TEXT" name="title" value="{{ title }}">
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+            <label>内容</label>
+        </div>
+        <div class="control">
+            <textarea name="content">{{ content }}</textarea>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+            <label>&nbsp;</label>
+        </div>
+        <div class="control submit-form">
+            <button type="submit">发送</button>
+        </div>
+    </div>
   <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
 </form>
 {% if error %}
