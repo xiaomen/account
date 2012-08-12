@@ -37,7 +37,7 @@ form {
     margin: 20px 0; 
 }
 
-form input {
+form input , form textarea {
     border: none; 
     outline: none; 
     background: none; 
@@ -105,4 +105,96 @@ form input {
 
 .user-info p {
     line-height: 30px; 
+}
+
+.maillist {
+    margin: 0; 
+    padding: 0; 
+    border-top: 1px solid #3999CC; 
+}
+
+.maillist li {
+    list-style: none; 
+    border-bottom: 1px solid #3999CC; 
+}
+
+.maillist a {
+    color: black; 
+}
+
+.maillist .mail {
+    padding: 10px 5px; 
+    padding-left: 30px; 
+}
+
+.maillist .mail .mail-title {
+    display: block; 
+    font-size: 1.2em; 
+    color: #666; 
+}
+
+.maillist .mail .r {
+    float: right; 
+    letter-spacing: 0.25em; 
+}
+
+.maillist .mail.unread .mail-title {
+    color: #000; 
+    font-weight: bold; 
+}
+
+.maillist .mail .mail-author {
+    color: #777; 
+    margin: 5px 0; 
+    display: block; 
+}
+
+.mail-nav {
+    text-align: right; 
+    margin: 10px 0; 
+}
+
+.mail-nav a {
+    display: inline-block; 
+    padding: 10px 20px; 
+    background-color: #3999CC; 
+    color: white; 
+    margin-left: 20px; 
+}
+
+.mail-nav a.current {
+    background-color: #CCC; 
+}
+
+.pagination {
+    margin: 20px 0; 
+}
+
+.pagination a {
+    padding: 10px 20px; 
+    color: white; 
+    background-color: #3999CC; 
+    display: inline-block; 
+}
+
+.pagination .next {
+    float: right; 
+}
+
+.mail-info .mail-title {
+    padding: 10px 0; 
+    background: #F7F7F7; 
+    border-top: 1px solid #3999CC; 
+    border-bottom: 1px solid #3999CC; 
+    padding-left: 20px; 
+}
+
+.mail-info .mail-content {
+    padding: 10px 20px; 
+    border-bottom: 1px solid #3999CC; 
+}
+
+input[readonly] {
+    color: #666; 
+    background: #F3F3F3; 
 }

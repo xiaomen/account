@@ -1,0 +1,21 @@
+{% extends "mobile/layout.html" %}
+
+{% block content %}
+<div class="mail-nav">
+    <span><a href="/mail">收件箱</a></span>
+    <span><a href="/mail/outbox">发件箱</a></span>
+</div>
+<div class="mail-info">
+    <div class="mail-title">
+        <h2>{{ mail.title }}</h2>
+        <span>来自: <a href="/people/{{ mail.from_uid_url }}">{{ mail.from_uid }}</a></span>
+    </div>
+    <div class="mail-content">
+        {{ mail.content | replace('<', '&lt;') | replace('>', '&gt;') | replace('\n', '<br />') | safe }}
+    </div>
+</div>
+<div class="mail-nav">
+    <span><a href="/mail/write?reply={{ mail.id }}">回复</a></span>
+    <span><a href="/mail/delete/{{ mail.delete }}">删除</a></span>
+</div>
+{% endblock %}

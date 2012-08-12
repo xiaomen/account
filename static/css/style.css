@@ -106,6 +106,10 @@ legend {
     color: #3999CC;
 }
 
+.mailbox a:hover {
+    text-decoration: underline; 
+}
+
 .mail-nav {
     text-align: right; 
     margin-bottom: 20px; 

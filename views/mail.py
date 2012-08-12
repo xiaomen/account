@@ -11,7 +11,7 @@ from urlparse import urlparse, parse_qs
 from utils import *
 from models.mail import *
 from sheep.api.cache import backend
-from flask import render_template, redirect, \
+from flask import redirect, \
     request, url_for, g, Blueprint, abort
 
 logger = logging.getLogger(__name__)
