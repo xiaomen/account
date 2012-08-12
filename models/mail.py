@@ -6,6 +6,7 @@
 
 from datetime import datetime
 
+from sqlalchemy.sql.expression import desc
 from flaskext.sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -63,3 +64,13 @@ class Mail(db.Model):
         mail.is_show = show[:-1] + '0'
         db.session.add(mail)
         db.session.commit()
+
+    @staticmethod
+    def get_inbox_page(uid, page, per_page):
+        page_obj = Mail.query.filter(Mail.to_uid==uid).order_by(desc(Mail.time)).paginate(page, per_page=per_page)
+        return page_obj
+
+    @staticmethod
+    def get_outbox_page(uid, page, per_page):
+        page_obj = Mail.query.filter(Mail.from_uid==uid).order_by(desc(Mail.time)).paginate(page, per_page=per_page)
+        return page_obj

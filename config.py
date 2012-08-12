@@ -29,6 +29,8 @@ SMTP_PASSWORD = 'xiaomenkou!@#$%^()'
 
 FORGET_STUB_EXPIRE = 30*60
 
+PAGE_NUM = 5
+
 try:
     from local_config import *
 except:
