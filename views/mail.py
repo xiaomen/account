@@ -6,34 +6,32 @@
 
 import re
 import logging
-from urlparse import urlparse
+from urlparse import urlparse, parse_qs
 
 from utils import *
 from models.mail import *
 from sheep.api.cache import backend
-from flask import redirect, render_template, \
+from flask import render_template, redirect, \
     request, url_for, g, Blueprint, abort
 
 logger = logging.getLogger(__name__)
 
 mail = Blueprint('mail', __name__)
 
-class mail_obj: pass
-
 def gen_maillist(mails, key, pos=0):
-    mail_list = []
-    for mail in mails:
+    if not mails:
+        return
+    for mail in mails.items:
         from_user = get_user(getattr(mail, key))
         if not from_user or not int(mail.is_show[pos]):
             continue
-        m = mail_obj()
+        m = Obj()
         setattr(m, key, from_user.name)
         setattr(m, key+'_url', from_user.domain or from_user.id)
         m.id = mail.id
         m.title = mail.title
         m.is_read = mail.is_read
-        mail_list.append(m)
-    return mail_list
+        yield m
 
 @mail.route('/')
 def index():
@@ -42,26 +40,49 @@ def index():
 @mail.route('/inbox')
 @login_required(next='account.login')
 def inbox():
-    mails = get_mail_inbox_all(g.current_user.id)
-    mails = gen_maillist(mails, 'from_uid')
-    mails.reverse()
+    page = request.args.get('p', '1')
+    if not page.isdigit():
+        raise abort(404)
 
-    return render_template('mail.inbox.html', mails = mails)
+    list_page = get_inbox_mail(g.current_user.id, page)
+
+    #check modify
+    total_mail_num = get_inbox_count(g.current_user.id)
+    if total_mail_num != list_page.total:
+        backend.delete('mail:inbox:%d:%d' % (g.current_user.id, int(page)))
+        list_page = get_inbox_mail(g.current_user.id, page)
+
+    mails = gen_maillist(list_page, 'from_uid')
+
+    return render_template('mail.inbox.html', mails = mails, \
+            list_page = list_page)
 
 @mail.route('/outbox')
 @login_required(next='account.login')
 def outbox():
-    mails = get_mail_outbox_all(g.current_user.id)
-    mails = gen_maillist(mails, 'to_uid', -1)
-    mails.reverse()
+    page = request.args.get('p', '1')
+    if not page.isdigit():
+        raise abort(404)
 
-    return render_template('mail.outbox.html', mails = mails)
+    list_page = get_outbox_mail(g.current_user.id, page)
+
+    #check modify
+    total_mail_num = get_outbox_count(g.current_user.id)
+    if total_mail_num != list_page.total:
+        backend.delete('mail:outbox:%d:%d' % (g.current_user.id, int(page)))
+        list_page = get_outbox_mail(g.current_user.id, page)
+
+    mails = gen_maillist(list_page, 'to_uid', -1)
+
+    return render_template('mail.outbox.html', mails = mails, \
+            list_page = list_page)
 
 @mail.route('/view/<mail_id>')
 @login_required(next='account.login')
 def view(mail_id):
     box = request.headers.get('Referer', '')
     box = urlparse(box)
+    query = parse_qs(box.query)
 
     if url_for('mail.index') == box.path or \
             url_for('mail.inbox') == box.path:
@@ -79,15 +100,20 @@ def view(mail_id):
     if not mail:
         raise abort(404)
 
-    if not check_mail_access(g.current_user.id, mail):
+    if not check_mail_access(user.id, mail):
         return redirect(url_for('mail.index'))
 
     if not mail.is_read and mail.to_uid == g.current_user.id:
+        page = query.get('p', [])
+        if not page:
+            page = 1
+        else:
+            page = int(page[0])
         Mail.mark_as_read(mail)
         backend.delete('mail:unread:%d' % g.current_user.id)
-        backend.delete('mail:inbox:%d' % g.current_user.id)
+        backend.delete('mail:inbox:%d:%d' % (g.current_user.id, page))
 
-    mobj = mail_obj()
+    mobj = Obj()
     mobj.id = mail_id
     mobj.delete = '%s/%s' %(box, str(mail_id))
     from_user = get_user(mail.from_uid)
@@ -111,10 +137,12 @@ def delete(box, mail_id):
 
     if box == 'inbox':
         Mail.delete_inbox(mail)
-        backend.delete('mail:inbox:%d' % g.current_user.id)
+        backend.delete('mail:inbox:%d:1' % g.current_user.id)
+        backend.delete('mail:inbox:count:%d' % g.current_user.id)
     elif box == 'outbox':
         Mail.delete_outbox(mail)
-        backend.delete('mail:outbox:%d' % g.current_user.id)
+        backend.delete('mail:outbox:%d:1' % g.current_user.id)
+        backend.delete('mail:outbox:count:%d' % g.current_user.id)
 
     return redirect(url_for('mail.index'))
 
@@ -142,8 +170,8 @@ def write():
     to_uid = request.form.get('to_uid')
     title = request.form.get('title')
     content = request.form.get('content')
-
     who = get_user(to_uid)
+
     error = check_mail(who, title, content)
     if error is not None:
         return render_template('mail.write.html', who=who, \
@@ -155,9 +183,12 @@ def write():
                 content = content)
 
     #clean cache
-    backend.delete('mail:inbox:%d' % who.id)
+    backend.delete('mail:outbox:%d:1' % g.current_user.id)
+    backend.delete('mail:outbox:count:%d' % g.current_user.id)
+
+    backend.delete('mail:inbox:%d:1' % who.id)
+    backend.delete('mail:inbox:count:%d' % who.id)
     backend.delete('mail:unread:%d' % who.id)
-    backend.delete('mail:outbox:%d' % g.current_user.id)
 
     return redirect(url_for('mail.index'))
 

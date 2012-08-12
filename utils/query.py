@@ -4,7 +4,10 @@
 from flask import g
 from sheep.api.cache import cache
 from validators import check_domain
+from helper import gen_list_page_obj
+from werkzeug.exceptions import NotFound
 
+from config import PAGE_NUM
 from models.mail import Mail
 from models.account import User, Forget, OAuth
 
@@ -36,20 +39,47 @@ def get_forget_by_stub(stub):
 def get_unread_mail_count(to_uid):
     return get_mail_by(to_uid=to_uid, is_read=0).count()
 
-@cache('mail:inbox:{uid}', 300)
-def get_mail_inbox_all(uid):
-    return get_mail_by(to_uid=uid).all()
+@cache('mail:inbox:count:{to_uid}', 300)
+def get_inbox_count(to_uid):
+    return get_mail_by(to_uid=to_uid).count()
 
-@cache('mail:outbox:{uid}', 300)
-def get_mail_outbox_all(uid):
-    return get_mail_by(from_uid=uid).all()
+@cache('mail:outbox:count:{from_uid}', 300)
+def get_outbox_count(from_uid):
+    return get_mail_by(from_uid=from_uid).count()
+
+@cache('mail:inbox:{uid}:{page}', 300)
+def get_inbox_mail(uid, page):
+    try:
+        page = int(page)
+        uid = int(uid)
+        page_obj = Mail.get_inbox_page(uid, page, per_page=PAGE_NUM)
+        list_page = gen_list_page_obj(page_obj)
+        return list_page
+    except NotFound, e:
+        raise e
+    except Exception, e:
+        print e
+        return None
+
+@cache('mail:outbox:{uid}:{page}', 300)
+def get_outbox_mail(uid, page):
+    try:
+        page = int(page)
+        uid = int(uid)
+        page_obj = Mail.get_outbox_page(uid, page, per_page=PAGE_NUM)
+        list_page = gen_list_page_obj(page_obj)
+        return list_page
+    except NotFound, e:
+        raise e
+    except Exception, e:
+        return None
 
 @cache('mail:view:{mid}', 300)
 def get_mail(mid):
     try:
         mid = int(mid)
         return Mail.query.get(mid)
-    except:
+    except Exception, e:
         return None
 
 def get_mail_by(**kw):
