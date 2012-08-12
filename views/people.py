@@ -4,7 +4,7 @@
 import logging
 from utils import *
 from flask import g, request, url_for, \
-        render_template, abort, Blueprint
+        abort, Blueprint
 
 logger = logging.getLogger(__name__)
 

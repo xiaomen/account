@@ -1,0 +1,13 @@
+{% extends "mobile/layout.html" %}
+
+{% block content %}
+<div class="user-info">
+    <h2>{{ visit_user.name }}</h2>
+    <p>Email: {{ visit_user.email }}</p>
+    <p><a href="/mail/write?to={{ visit_user.id }}">发邮件</a></p>
+    {% if g.current_user and g.current_user.id == visit_user.id %}
+    <p><a href="{{ url_for('account.setting') }}">设置</a></p>
+    <p><a href="{{ url_for('account.logout') }}">登出</a></p>
+    {% endif %}
+</div>
+{% endblock %}

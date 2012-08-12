@@ -11,7 +11,7 @@ from urlparse import urlparse
 from utils import *
 from models.mail import *
 from sheep.api.cache import backend
-from flask import render_template, redirect, \
+from flask import redirect, \
     request, url_for, g, Blueprint, abort
 
 logger = logging.getLogger(__name__)
@@ -46,6 +46,7 @@ def inbox():
 
     mails = get_mail_inbox_all(g.current_user.id)
     mails = gen_maillist(mails, 'from_uid')
+    mails.reverse()
 
     return render_template('inbox.html', mails = mails)
 
@@ -54,8 +55,9 @@ def outbox():
     if not g.current_user:
         return redirect(url_for('account.login'))
 
-    mails = get_mail_outbox_all(user.id)
+    mails = get_mail_outbox_all(g.current_user.id)
     mails = gen_maillist(mails, 'to_uid', -1)
+    mails.reverse()
 
     return render_template('outbox.html', mails = mails)
 
