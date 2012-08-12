@@ -207,3 +207,48 @@ form legend {
 .control span {
     line-height: 30px; 
 }
+
+.pagination-wrap {
+    text-align: center; 
+    margin: 20px 0; 
+}
+
+.pagination {
+    display: inline-block; 
+    *display: inline;
+    *zoom: 1;
+    margin: 0; 
+    padding: 0; 
+}
+
+.pagination li {
+    display: inline; 
+    margin: 0; 
+    padding: 0; 
+    list-style: none; 
+}
+
+.pagination li a {
+    color: #3B99CD; 
+    text-decoration: none; 
+    width: 20px; 
+    height: 20px; 
+    display: inline-block; 
+}
+
+.pagination li.disabled a {
+    color: #CCC; 
+}
+
+.pagination li.active a {
+    background: #3999cc; 
+    color: white; 
+}
+
+.pagination li:hover a {
+    text-decoration: underline; 
+} 
+
+.sep30 {
+    height: 30px; 
+}
