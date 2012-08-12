@@ -147,7 +147,7 @@ def logout():
 
 @account.route('/setting', methods=['POST', 'GET'])
 @check_ua
-@login_required
+@login_required()
 def setting():
     user = g.current_user
     if request.method == 'GET':
