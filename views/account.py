@@ -88,8 +88,8 @@ def bind():
         _bind_oauth(oauth, g.session['user_id'])
     return redirect(url_for('index'))
 
-@account.route('/register', methods=['POST','GET'])
 @csrf_exempt
+@account.route('/register', methods=['POST','GET'])
 @check_ua
 @login_required(need=False)
 def register():
@@ -112,8 +112,8 @@ def register():
         _bind_oauth(oauth, user.id)
     return redirect(url_for('index'))
 
-@account.route('/login', methods=['POST', 'GET'])
 @csrf_exempt
+@account.route('/login', methods=['POST', 'GET'])
 @check_ua
 @login_required(need=False)
 def login():
@@ -138,8 +138,8 @@ def login():
     redirect_url = request.args.get('redirect', None)
     return redirect(redirect_url or url_for('index'))
 
-@account.route('/logout')
 @csrf_exempt
+@account.route('/logout')
 @check_ua
 def logout():
     account_logout()
