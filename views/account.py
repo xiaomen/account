@@ -18,9 +18,9 @@ account = Blueprint('account', __name__)
 
 @account.route('/forget', methods=['GET', 'POST'])
 @check_ua
+@login_required(need=False)
 def forget():
-    if g.current_user or \
-            (request.form and 'cancel' in request.form):
+    if request.form and 'cancel' in request.form:
         return redirect(url_for('index'))
     if request.method == 'GET':
         return render_template('account.forget.html')
@@ -91,9 +91,8 @@ def bind():
 @csrf_exempt
 @account.route('/register', methods=['POST','GET'])
 @check_ua
+@login_required(need=False)
 def register():
-    if g.current_user:
-        return redirect(url_for('index'))
     if request.method == 'GET':
         return render_template('account.register.html')
     username = request.form.get('name', None)
@@ -116,9 +115,8 @@ def register():
 @csrf_exempt
 @account.route('/login', methods=['POST', 'GET'])
 @check_ua
+@login_required(need=False)
 def login():
-    if g.current_user:
-        return redirect(url_for('index'))
     login_url = url_for('account.login', **request.args)
     if request.method == 'GET':
         return render_template('account.login.html', login_url=login_url)
@@ -149,11 +147,9 @@ def logout():
 
 @account.route('/setting', methods=['POST', 'GET'])
 @check_ua
+@login_required
 def setting():
     user = g.current_user
-    if not user:
-        return redirect(url_for('account.login'))
-
     if request.method == 'GET':
         return render_template('account.setting.html')
 
