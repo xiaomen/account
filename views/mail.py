@@ -40,32 +40,26 @@ def index():
     return inbox()
 
 @mail.route('/inbox')
+@login_required(next='account.login')
 def inbox():
-    if not g.current_user:
-        return redirect(url_for('account.login'))
-
     mails = get_mail_inbox_all(g.current_user.id)
     mails = gen_maillist(mails, 'from_uid')
     mails.reverse()
 
-    return render_template('inbox.html', mails = mails)
+    return render_template('mail.inbox.html', mails = mails)
 
 @mail.route('/outbox')
+@login_required(next='account.login')
 def outbox():
-    if not g.current_user:
-        return redirect(url_for('account.login'))
-
     mails = get_mail_outbox_all(g.current_user.id)
     mails = gen_maillist(mails, 'to_uid', -1)
     mails.reverse()
 
-    return render_template('outbox.html', mails = mails)
+    return render_template('mail.outbox.html', mails = mails)
 
 @mail.route('/view/<mail_id>')
+@login_required(next='account.login')
 def view(mail_id):
-    if not g.current_user:
-        return redirect(url_for('account.login'))
-
     box = request.headers.get('Referer', '')
     box = urlparse(box)
 
@@ -103,15 +97,13 @@ def view(mail_id):
     mobj.content = mail.content
 
     if box == 'inbox':
-        return render_template('view.html', mail = mobj, reply=1)
+        return render_template('mail.view.html', mail = mobj, reply=1)
     else:
-        return render_template('view.html', mail = mobj)
+        return render_template('mail.view.html', mail = mobj)
 
 @mail.route('/delete/<box>/<mail_id>')
+@login_required(next='account.login')
 def delete(box, mail_id):
-    if not g.current_user:
-        return redirect(url_for('account.login'))
-
     mail = get_mail(mail_id)
     if not mail or box not in ['inbox', 'outbox'] or \
             not check_mail_access(g.current_user.id, mail):
@@ -127,10 +119,8 @@ def delete(box, mail_id):
     return redirect(url_for('mail.index'))
 
 @mail.route('/write', methods=['GET', 'POST'])
+@login_required(next='account.login')
 def write():
-    if not g.current_user:
-        return redirect(url_for('account.login'))
-
     if request.method == 'GET':
         to_uid = request.args.get('to')
         reply_mid = request.args.get('reply')
@@ -146,7 +136,7 @@ def write():
         who = get_user(to_uid)
         if not to_uid or not who:
             return redirect(url_for('mail.index'))
-        return render_template('write.html', who=who, \
+        return render_template('mail.write.html', who=who, \
                 title=title, content=content)
 
     to_uid = request.form.get('to_uid')
@@ -156,7 +146,7 @@ def write():
     who = get_user(to_uid)
     error = check_mail(who, title, content)
     if error is not None:
-        return render_template('write.html', who=who, \
+        return render_template('mail.write.html', who=who, \
                 title=title, content=content, error=error)
 
     Mail.create(from_uid = g.current_user.id,
@@ -180,5 +170,4 @@ def reply_mail_title(title):
     num = int(m.group('num')) + 1
     title = title.replace('Re(%s)' % m.group('num'), 'Re(%d)' % num, 1)
     return title
-
 
