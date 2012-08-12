@@ -4,5 +4,6 @@
 from ua import *
 from mail import *
 from query import *
+from account import *
 from redistore import *
 from validators import *
