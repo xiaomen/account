@@ -100,7 +100,7 @@ def view(mail_id):
     if not mail:
         raise abort(404)
 
-    if not check_mail_access(user.id, mail):
+    if not check_mail_access(g.current_user.id, mail):
         return redirect(url_for('mail.index'))
 
     if not mail.is_read and mail.to_uid == g.current_user.id:
