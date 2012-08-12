@@ -14,8 +14,8 @@ logger = logging.getLogger(__name__)
 
 api = Blueprint('api', __name__)
 
-@csrf_exempt
 @api.route('/register', methods=['POST'])
+@csrf_exempt
 def register():
     data = request.json
     password = data.get('password', None)
@@ -33,8 +33,8 @@ def register():
     return jsonify(status='register ok and logged in', id=user.id, \
             email=user.email, name=user.name)
 
-@csrf_exempt
 @api.route('/login', methods=['POST'])
+@csrf_exempt
 def api_login():
     data = request.json
     password = data.get('password', None)
