@@ -127,12 +127,15 @@
     float: left;
     width: 120px;
     text-align: right;
-    margin-right: 40px;
 }
 
 .control-label label {
     font-size: 18px;
     vertical-align: top;
+}
+
+.control {
+    margin-left: 110px; 
 }
 
 .control input {
@@ -151,15 +154,12 @@
     font-size: 18px;
 }
 
-.submit-form button {
+.submit-form button, .submit-form a.btn {
     border: none; 
     outline: none; 
     padding: 0; 
     margin: 0; 
     background-color: transparent; 
-}
-
-.submit-form button {
     font-size: 16px; 
     text-decoration: none; 
     color: white; 
@@ -198,4 +198,12 @@ form legend {
     font-size: 24px; 
     margin-left: 30px; 
     font-weight: bold; 
+}
+
+.unread {
+    color: white; 
+}
+
+.control span {
+    line-height: 30px; 
 }

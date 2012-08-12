@@ -88,3 +88,55 @@ legend {
 .error {
     color: red; 
 }
+
+.mailbox {
+    width: 100%; 
+    border-top: 1px solid #CCC; 
+}
+
+.mailbox th, .mailbox td {
+    height: 40px; 
+    line-height: 40px; 
+    border-bottom: 1px dashed #DDD; 
+    text-align: left; 
+}
+
+.mailbox a {
+    text-decoration: none; 
+    color: #3999CC;
+}
+
+.mail-nav {
+    text-align: right; 
+    margin-bottom: 20px; 
+    padding-right: 40px; 
+}
+
+.mail-nav .sep {
+    margin: 0 10px; 
+}
+
+.mail-nav .sep:after {
+    content: "|";     
+}
+
+.mail-nav a {
+    text-decoration: none; 
+    color: #3999CC; 
+}
+
+.mail-nav a.current {
+    color: #333; 
+}
+
+.write {
+    padding-right: 50px; 
+}
+
+.write .control input, .write .control textarea {
+    width: 100%; 
+}
+
+.write .control textarea {
+    border: 1px solid #CCC; 
+}

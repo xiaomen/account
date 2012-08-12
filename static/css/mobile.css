@@ -97,3 +97,12 @@ form input {
     line-height: 1.6em; 
     padding: .5em .8em;
 }
+
+.user-info {
+    margin: 20px 0; 
+    padding: 0 10px; 
+}
+
+.user-info p {
+    line-height: 30px; 
+}
