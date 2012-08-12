@@ -20,12 +20,13 @@ CREATE TABLE `mail` (
   `content` text,
   `is_read` int(11) DEFAULT NULL,
   `time` datetime DEFAULT NULL,
-  `is_show` char(3) DEFAULT NULL,
+  `inbox` int(11) DEFAULT NULL,
+  `outbox` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `ix_mail_from_uid` (`from_uid`),
   KEY `ix_mail_is_read` (`is_read`),
+  KEY `ix_mail_from_uid` (`from_uid`),
   KEY `ix_mail_to_uid` (`to_uid`)
-) ENGINE=InnoDB4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
