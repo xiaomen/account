@@ -3,7 +3,8 @@
 
 import logging
 from models.account import db, User
-from utils import get_user_by_email, get_user
+from utils import get_user_by_email, get_user,\
+        get_unread_mail_count
 from flaskext.csrf import csrf_exempt
 from flask import g, request, jsonify, Blueprint
 from .account import account_logout, account_login, \
@@ -57,6 +58,11 @@ def api_login():
 def api_logout():
     account_logout()
     return jsonify(status='ok')
+
+@api.route('/unread/<int:id>')
+def api_unread(id):
+    num = get_unread_mail_count(int(id))
+    return jsonify(count=num)
 
 @api.route('/people/<username>')
 def api_people(username):
