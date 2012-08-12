@@ -58,8 +58,8 @@ def get_inbox_mail(uid, page):
     except NotFound, e:
         raise e
     except Exception, e:
-        print e
-        return None
+        import traceback
+        traceback.print_exc()
 
 @cache('mail:outbox:{uid}:{page}', 300)
 def get_outbox_mail(uid, page):
