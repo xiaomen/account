@@ -252,3 +252,7 @@ form legend {
 .sep30 {
     height: 30px; 
 }
+
+.emailat:after {
+    content:"@"; 
+}
