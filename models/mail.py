@@ -24,7 +24,8 @@ class Mail(db.Model):
     content = db.Column(db.Text)
     is_read = db.Column(db.Integer, default=False, index=True)
     time = db.Column(db.DateTime, default=datetime.now)
-    is_show = db.Column(db.CHAR(3), default='1|1')
+    inbox = db.Column(db.Integer, default=1)
+    outbox = db.Column(db.Integer, default=1)
 
     def __init__(self, from_uid, to_uid, title, content, is_read, *args, **kwargs):
         self.from_uid = from_uid
@@ -53,24 +54,22 @@ class Mail(db.Model):
 
     @staticmethod
     def delete_inbox(mail):
-        show = mail.is_show
-        mail.is_show = '0' + show[-2:]
+        mail.inbox = 0
         db.session.add(mail)
         db.session.commit()
 
     @staticmethod
     def delete_outbox(mail):
-        show = mail.is_show
-        mail.is_show = show[:-1] + '0'
+        mail.outbox = 0
         db.session.add(mail)
         db.session.commit()
 
     @staticmethod
     def get_inbox_page(uid, page, per_page):
-        page_obj = Mail.query.filter(Mail.to_uid==uid).order_by(desc(Mail.time)).paginate(page, per_page=per_page)
+        page_obj = Mail.query.filter(Mail.to_uid==uid).filter(Mail.inbox==1).order_by(desc(Mail.time)).paginate(page, per_page=per_page)
         return page_obj
 
     @staticmethod
     def get_outbox_page(uid, page, per_page):
-        page_obj = Mail.query.filter(Mail.from_uid==uid).order_by(desc(Mail.time)).paginate(page, per_page=per_page)
+        page_obj = Mail.query.filter(Mail.from_uid==uid).filter(Mail.outbox==1).order_by(desc(Mail.time)).paginate(page, per_page=per_page)
         return page_obj

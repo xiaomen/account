@@ -23,7 +23,7 @@ def gen_maillist(mails, key, pos=0):
         return
     for mail in mails.items:
         from_user = get_user(getattr(mail, key))
-        if not from_user or not int(mail.is_show[pos]):
+        if not from_user:
             continue
         m = Obj()
         setattr(m, key, from_user.name)
@@ -72,7 +72,7 @@ def outbox():
         backend.delete('mail:outbox:%d:%d' % (g.current_user.id, int(page)))
         list_page = get_outbox_mail(g.current_user.id, page)
 
-    mails = gen_maillist(list_page, 'to_uid', -1)
+    mails = gen_maillist(list_page, 'to_uid')
 
     return render_template('mail.outbox.html', mails = mails, \
             list_page = list_page)
@@ -127,7 +127,7 @@ def view(mail_id):
     else:
         return render_template('mail.view.html', mail = mobj)
 
-@mail.route('/delete/<box>/<mail_id>')
+@mail.route('/delete/<box>/<int:mail_id>')
 @login_required(next='account.login')
 def delete(box, mail_id):
     mail = get_mail(mail_id)
