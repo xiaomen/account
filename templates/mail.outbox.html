@@ -1,10 +1,15 @@
 {% extends "index.html" %}
 
 {%block content %}
-<table>
+<div class="mail-nav">
+    <span><a href="/mail">收件箱</a></span>
+    <span class="sep"></span>
+    <span><a href="/mail/outbox" class="current">发件箱</a></span>
+</div>
+<table class="mailbox">
     <tr>
-        <td>收件人</td>
-        <td>标题</td>
+        <th style="width:30%">收件人</th>
+        <th>标题</th>
     </tr>
     {% for mail in mails %}
     <tr>
@@ -12,7 +17,5 @@
         <td><a href="/mail/view/{{ mail.id }}">{{ mail.title }}</a></td>
     </tr>
     {% endfor %}
-<table>
-<p><a href="/mail/">收件箱</a></p>
-<p><a href="/mail/outbox">发件箱</a></p>
+</table>
 {% endblock %}
