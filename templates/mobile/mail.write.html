@@ -1,0 +1,28 @@
+{% extends "mobile/layout.html" %}
+
+{% block content %}
+<form action="{{ login_url }}" method="POST">
+    {% if login_info %}
+    <div class="error-msg">
+        <p>{{ login_info }}</p>
+    </div>
+    {% endif %}
+    <label>收件人:</label>
+    <div class="control">
+        <input name="receiver" type="TEXT" value="{{ who.name }}" disabled readonly />
+        <input type="hidden" name="to_uid" value="{{ who.id }}"/>
+    </div>
+    <label>标题:</label>
+    <div class="control">
+        <input type="TEXT" name="title" value="{{ title }}">
+    </div>
+    <label>内容:</label>
+    <div class="control">
+        <textarea name="content">{{ content }}</textarea>
+    </div>
+    <div class="control-action">
+        <button class="submit-btn">发送</button>
+    </div>
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+</form>
+{% endblock %}

@@ -1,6 +1,9 @@
 {% extends "index.html" %}
 
 {%block content %}
+{% if error %}
+<div class="forget-msg">{{ error }}</div>
+{% endif %}
 <form method="post" action="/mail/write" class="write">
     <div class="control-group">
         <div class="control-label">
@@ -37,7 +40,4 @@
     </div>
   <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
 </form>
-{% if error %}
-<span>{{ error }}</span>
-{% endif %}
 {% endblock %}
