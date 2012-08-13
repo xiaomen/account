@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 mail = Blueprint('mail', __name__)
 
-def gen_maillist(mails, key, pos=0):
+def gen_maillist(mails, key):
     if not mails:
         return
     for mail in mails.items:
@@ -26,9 +26,8 @@ def gen_maillist(mails, key, pos=0):
         if not from_user:
             continue
         m = Obj()
-        setattr(m, key, from_user.name)
-        setattr(m, key+'_url', from_user.domain or from_user.id)
         m.id = mail.id
+        m.user = from_user
         m.title = mail.title
         m.is_read = mail.is_read
         yield m

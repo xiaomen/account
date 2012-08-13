@@ -7,6 +7,10 @@
         <p>{{ error }}</p>
     </div>
     {% endif %}
+    <label for="name">昵称</label>
+    <div class="control">
+        <input type="text" tabindex="3" value="{{ g.current_user.name }}" id="name" name="name" />
+    </div>
     <label for="password">密码</label>
     <div class="control">
         <input type="password" tabindex="1" value="" id="password" name="password" />
@@ -18,10 +22,6 @@
         {% else %}
         <input type="text" tabindex="2" value="{{ g.current_user.domain }}" id="domain" name="domain" readonly disabled />
         {% endif %}
-    </div>
-    <label for="name">昵称</label>
-    <div class="control">
-        <input type="text" tabindex="3" value="{{ g.current_user.name }}" id="name" name="name" />
     </div>
     <div class="control-action">
         <button class="submit-btn">更新</button>

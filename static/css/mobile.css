@@ -1,6 +1,5 @@
 .wrap {
     width: 100%; 
-    padding: 0 20px; 
 }
 
 .img {
@@ -54,35 +53,21 @@ form input , form textarea {
     padding-right: 21px; 
 }
 
-.submit-btn {
-    background: none; 
-    outline: none; 
-    border: none; 
-    background-color: #3999CC; 
-    color: white; 
-    -webkit-box-align: center;
-    -webkit-box-pack: center;
-    -webkit-appearance: none;
-    height: 38px; 
-    width: 120px; 
-    font-weight: bold; 
-}
-
 .control-action {
     margin-top: 30px; 
 }
 
-.register-btn {
-    float: right; 
-    width: 140px; 
-    display: -webkit-box; 
-    background: #777; 
+.control-action button, .control-action a.btn {
+    border: none; 
+    outline: none; 
+    background: #3999CC; 
+    padding: 15px 30px; 
     color: white; 
-    height: 38px; 
-    -webkit-box-align: center;
-    -webkit-box-pack: center;
-    -webkit-appearance: none;
-    font-weight: bold;
+}
+
+.control-action .register-btn {
+    float: right; 
+    background-color: #777 !important; 
 }
 
 .register-btn:visited {
