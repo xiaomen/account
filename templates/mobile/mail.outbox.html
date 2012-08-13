@@ -1,0 +1,20 @@
+{% extends "mobile/layout.html" %}
+{% from "macros.html" import render_mobile_pagination %}
+
+{% block content %}
+<div class="mail-nav">
+    <span><a href="/mail">收件箱</a></span>
+    <span><a href="/mail/outbox" class="current">发件箱</a></span>
+</div>
+<ul class="maillist">
+    {% for mail in mails %}
+    <a href="/mail/view/{{ mail.id }}">
+        <li class="mail">
+            <span class="mail-title">{{ mail.title }}</span>
+            <span class="mail-author">发至: {{ mail.to_uid }}</span>
+        </li>
+    </a>
+    {% endfor %}
+</ul>
+{{ render_mobile_pagination(list_page, url_for('mail.inbox')) }}
+{% endblock %}

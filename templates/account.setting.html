@@ -1,32 +1,46 @@
 {% extends "index.html" %}
 
-{%block content %}
-<form action="{{ url_for('account.setting') }}" method="post">
-    <ul>
-        <li>
-            <label for="password">密码:</label>
-            <input type="password" size="20" tabindex='1' value="" id="password" name="password">
-        </li>
-        <li>
-            <label for="domain">短域名:</label>
+{% block content %}
+{% if error %}
+<div class="forget-msg">{{ error }}</div>
+{% endif %}
+<form method="post" action="{{ url_for('account.setting') }}" class="write">
+    <div class="control-group">
+        <div class="control-label">
+            <label for="password">密码</label>
+        </div>
+        <div class="control">
+            <input type="password" tabindex="1" value="" id="password" name="password" />
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+            <label for="domain">短域名</label>
+        </div>
+        <div class="control">
             {% if not g.current_user.domain %}
-            <input type="text" size="10" tabindex='2' value="" id="domain" name="domain">
+            <input type="text" tabindex="2" value="" id="domain" name="domain" />
             {% else %}
             <span>{{ g.current_user.domain }}</span>
             {% endif %}
-        </li>
-        <li>
-            <label for="name">昵称:</label>
-            <input type="text" size="20" tabindex='3' value="{{ g.current_user.name }}" id="name" name="name">
-        </li>
-        <li>
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-            <button type="submit" tabindex='4'>更新</button>
-            <a href="/">back</a>
-        </li>
-    </ul>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+            <label for="name">昵称</label>
+        </div>
+        <div class="control">
+            <input type="text" tabindex="3" value="{{ g.current_user.name }}" id="name" name="name" />
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+            <label>&nbsp;</label>
+        </div>
+        <div class="control submit-form">
+            <button type="submit">更新</button>
+        </div>
+    </div>
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
 </form>
-{% if error %}
-<span>{{ error }}</span>
-{% endif %}
 {% endblock %}

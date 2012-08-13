@@ -1,0 +1,33 @@
+{% extends "mobile/layout.html" %}
+
+{% block content %}
+<form method="post" action="{{ url_for('account.setting') }}">
+    {% if error %}
+    <div class="error-msg">
+        <p>{{ error }}</p>
+    </div>
+    {% endif %}
+    <label for="password">密码</label>
+    <div class="control">
+        <input type="password" tabindex="1" value="" id="password" name="password" />
+    </div>
+    <label for="domain">短域名</label>
+    <div class="control">
+        {% if not g.current_user.domain %}
+        <input type="text" tabindex="2" value="" id="domain" name="domain" />
+        {% else %}
+        <input type="text" tabindex="2" value="{{ g.current_user.domain }}" id="domain" name="domain" readonly disabled />
+        {% endif %}
+    </div>
+    <label for="name">昵称</label>
+    <div class="control">
+        <input type="text" tabindex="3" value="{{ g.current_user.name }}" id="name" name="name" />
+    </div>
+    <div class="control-action">
+        <button class="submit-btn">更新</button>
+    </div>
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+</form>
+{% endblock %}
+
+{% block subtitle %}设置{% endblock %}

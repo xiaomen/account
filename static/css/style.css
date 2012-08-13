@@ -1,4 +1,3 @@
-
 .slide {
     width: 700px; 
     height: 400px; 
@@ -104,6 +103,10 @@ legend {
 .mailbox a {
     text-decoration: none; 
     color: #3999CC;
+}
+
+.mailbox a:hover {
+    text-decoration: underline; 
 }
 
 .mail-nav {
