@@ -14,7 +14,7 @@
             <span class="r">未读</span>
             {% endif %}
             <span class="mail-title">{{ mail.title }}</span>
-            <span class="mail-author">来自: {{ mail.from_uid }}</span>
+            <span class="mail-author">来自: {{ mail.user.name }}</span>
         </li>
     </a>
     {% endfor %}
