@@ -14,8 +14,8 @@
     </tr>
     {% for mail in mails %}
     <tr>
-        <td><a href="/people/{{ mail.from_uid_url }}">{{ mail.from_uid }}</a></td>
-        <td>{% if not mail.is_read %}<span class="new">&gt;&nbsp;</span>{% endif %}<a href="/mail/view/{{ mail.id }}">{{ mail.title }}</a></td>
+        <td><a href="{{ url_for('people.show_people', username=mail.user.domain or mail.user.id) }}">{{ mail.user.name }}</a></td>
+        <td>{% if not mail.is_read %}<span class="new">&gt;&nbsp;</span>{% endif %}<a href="{{ url_for('mail.view', mail_id=mail.id) }}">{{ mail.title }}</a></td>
     </tr>
     {% endfor %}
 </table>
