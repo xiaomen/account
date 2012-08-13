@@ -7,6 +7,14 @@
 <form method="post" action="{{ url_for('account.setting') }}" class="write">
     <div class="control-group">
         <div class="control-label">
+            <label for="name">昵称</label>
+        </div>
+        <div class="control">
+            <input type="text" tabindex="3" value="{{ g.current_user.name }}" id="name" name="name" />
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
             <label for="password">密码</label>
         </div>
         <div class="control">
@@ -23,14 +31,6 @@
             {% else %}
             <span>{{ g.current_user.domain }}</span>
             {% endif %}
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-            <label for="name">昵称</label>
-        </div>
-        <div class="control">
-            <input type="text" tabindex="3" value="{{ g.current_user.name }}" id="name" name="name" />
         </div>
     </div>
     <div class="control-group">
