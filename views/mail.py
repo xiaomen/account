@@ -34,6 +34,7 @@ def gen_maillist(mails, key, pos=0):
         yield m
 
 @mail.route('/')
+@login_required(next='account.login')
 def index():
     return inbox()
 
