@@ -6,7 +6,7 @@ import config
 import logging
 from utils import *
 from datetime import datetime
-from sheep.api.cache import backend
+from sheep.api.cache import backend, cross_cache
 from models.account import db, User, Forget, create_token
 from flask import Blueprint, g, session, jsonify, \
         redirect, request, url_for, abort
@@ -183,6 +183,7 @@ def setting():
 def clear_user_cache(user):
     keys = ['account:%s' % key for key in [str(user.id), user.domain, user.email]]
     backend.delete_many(*keys)
+    cross_cache.delete('open:account:info:{0}'.format(user.id))
 
 def _set_domain(user, domain):
     user.domain = domain
