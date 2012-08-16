@@ -1,18 +1,20 @@
 {% extends "mobile/layout.html" %}
 
 {% block content %}
-<div class="wrap">
-    <div class="img">
-        <a href="http://library.xiaomen.co">
-            <img src="/static/img/library.jpg" />
-            <div class="site-title">图书馆</div>
-        </a>
-    </div>
-    <div class="img">
-        <a href="http://selfstudy.xiaomen.co">
-            <img src="/static/img/selfstudy.jpg" />
-            <div class="site-title">自习室</div>
-        </a>
-    </div>
-</div>
+<ul class="app-list">
+    <a href="http://library.xiaomen.co/">
+        <li class="app library">
+            <div class="bgimg"></div>
+            <div class="arrow"></div>
+            <span class="app-name">图书馆</span>
+        </li>
+    </a>
+    <a href="http://selfstudy.xiaomen.co/">
+        <li class="app selfstudy">
+            <div class="bgimg"></div>
+            <div class="arrow"></div>
+            <span class="app-name">自习室</span>
+        </li>
+    </a>
+</ul>
 {% endblock %}
