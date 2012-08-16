@@ -24,6 +24,6 @@ def check_ua(method):
 
 def render_template(template_name, *args, **kwargs):
     ua = UserAgent(request.headers.get('User-Agent'))
-    if not (ua.platform and ua.platform.lower() in ["android", "iphone"]):
+    if ua.platform and ua.platform.lower() in ["android", "iphone"]:
         return flask.render_template("mobile/" + template_name, *args, **kwargs)
     return flask.render_template(template_name, *args, **kwargs)
