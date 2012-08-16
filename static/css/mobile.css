@@ -230,12 +230,7 @@ input[readonly] {
     height: 100%; 
     background-size: cover; 
     background-position: left center; 
-    opacity: 0.3; 
     z-index: 5; 
-}
-
-.app-list .app:hover .bgimg {
-    opacity: 0.7;
 }
 
 .app-list .app.library .bgimg {
