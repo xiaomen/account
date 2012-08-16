@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: utils/ua.py
 # CREATED: 04:14:53 10/08/2012
-# MODIFIED: 04:15:57 10/08/2012
+# MODIFIED: 22:29:58 16/08/2012
 
 import flask
 from flask import request
@@ -23,7 +23,10 @@ def check_ua(method):
     return wrapper
 
 def render_template(template_name, *args, **kwargs):
-    ua = UserAgent(request.headers.get('User-Agent'))
+    ua_string = request.headers.get('User-Agent')
+    if not ua_string:
+        return flask.render_template("mobile/" + template_name, *args, **kwargs) 
+    ua = UserAgent(ua_string)
     if ua.platform and ua.platform.lower() in ["android", "iphone"]:
         return flask.render_template("mobile/" + template_name, *args, **kwargs)
     return flask.render_template(template_name, *args, **kwargs)
