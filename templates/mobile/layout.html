@@ -19,8 +19,8 @@
             {% else %}
             <li><a href="{{ url_for('people.show_people', username=g.current_user.id)}}">{{ g.current_user.name }}</a></li>
             {% endif %}
-            <li><a href="/mail/">邮件{% if g.unread_mail_count() > 0 %}({{g.unread_mail_count()}}){% endif %}</a></li>
-            <li><a href="/account/logout">登出</a></li>
+            <li><a href="{{ url_for('mail.index') }}">邮件{% if g.unread_mail_count() > 0 %}({{g.unread_mail_count()}}){% endif %}</a></li>
+            <li><a href="{{ url_for('account.logout') }}">登出</a></li>
             {% else %}
             <li><a href="{{ url_for('account.login') }}">登录</a></li>
             <li><a href="{{ url_for('account.register') }}">注册</a></li>

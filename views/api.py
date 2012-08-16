@@ -62,12 +62,12 @@ def api_logout():
 @api.route('/unread/<int:id>')
 def api_unread(id):
     num = get_unread_mail_count(int(id))
-    return jsonify(count=num)
+    return jsonify(status='ok', count=num)
 
 @api.route('/people/<username>')
 def api_people(username):
     people = get_user(username)
     if people:
-        return jsonify(status='ok', name=people.name, uid=people.id)
+        return jsonify(status='ok', name=people.name, uid=people.id, domain=people.domain)
     return jsonify(status='not found')
 
