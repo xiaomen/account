@@ -10,7 +10,7 @@ from urlparse import urlparse, parse_qs
 
 from utils import *
 from models.mail import *
-from sheep.api.cache import backend
+from sheep.api.cache import backend, cross_cache
 from flask import redirect, \
     request, url_for, g, Blueprint, abort
 
@@ -33,6 +33,7 @@ def gen_maillist(mails, key):
         yield m
 
 @mail.route('/')
+@login_required(next='account.login')
 def index():
     return inbox()
 
@@ -184,10 +185,10 @@ def write():
     #clean cache
     backend.delete('mail:outbox:%d:1' % g.current_user.id)
     backend.delete('mail:outbox:count:%d' % g.current_user.id)
-
     backend.delete('mail:inbox:%d:1' % who.id)
     backend.delete('mail:inbox:count:%d' % who.id)
     backend.delete('mail:unread:%d' % who.id)
+    cross_cache.delete('open:mail:unread:{0}'.format(who.id))
 
     return redirect(url_for('mail.index'))
 
