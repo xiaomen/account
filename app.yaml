@@ -9,3 +9,9 @@ handlers:
 
 - url: /.*
   wsgi_app: app:app
+
+daemons:
+- name: testdaemon1
+  num_instances: 1
+  script: testdaemon1.py --verbose -u test
+  mem_limit: 64M
