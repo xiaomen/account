@@ -4,11 +4,11 @@
 import logging
 import datetime, time
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 def main():
     while 1:
-        logging.info(datetime.datetime.now())
+        logger.info(datetime.datetime.now())
         time.sleep(5)
 
 if __name__ == '__main__':
