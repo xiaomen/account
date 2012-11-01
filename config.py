@@ -31,6 +31,8 @@ FORGET_STUB_EXPIRE = 30*60
 
 PAGE_NUM = 5
 
+FORGET_EMAIL_TITLE = '[校门口]取回密码'
+
 try:
     from local_config import *
 except:

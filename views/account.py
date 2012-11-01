@@ -9,6 +9,7 @@ from sheep.api.cache import backend, cross_cache
 from models.account import db, User, Forget, create_token
 from flask import Blueprint, g, session, \
         redirect, request, url_for, abort
+from flask import render_template as origin_render
 from flaskext.csrf import csrf_exempt
 
 logger = logging.getLogger(__name__)
@@ -33,8 +34,8 @@ def forget():
         stub = create_token(20)
         try:
             send_email(user.email, \
-                'Xiaomen.co Account Service',
-                r'''http://account.xiaomen.co/account/reset/%s click this''' % stub)
+                config.FORGET_EMAIL_TITLE,
+                origin_render('email.html', user, stub))
         except:
             logger.exception("send mail failed")
 

@@ -28,4 +28,12 @@ def send_email(to_add, subject, html, from_add=config.SMTP_USER):
     smtp.quit()
 
 if __name__ == '__main__':
-    send_email('ilskdw@126.com', '校门口账号服务', '<p>你好，世界</p>')
+    from jinja2 import Environment, FileSystemLoader
+    env = Environment(loader=FileSystemLoader('/Users/CMGS/Documents/Workplace/experiment/account/templates/'))
+    class O(object):pass
+    o = O()
+    o.name = 'CMGS'
+    stub = '1234567'
+    template = env.get_template("email.html")
+    send_email('ilskdw@126.com', config.FORGET_EMAIL_TITLE, template.render(user=o, stub=stub))
+
