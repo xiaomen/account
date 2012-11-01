@@ -1,14 +1,13 @@
 #!/usr/local/bin/python2.7
 #coding:utf-8
 
-import json
 import config
 import logging
 from utils import *
 from datetime import datetime
 from sheep.api.cache import backend, cross_cache
 from models.account import db, User, Forget, create_token
-from flask import Blueprint, g, session, jsonify, \
+from flask import Blueprint, g, session, \
         redirect, request, url_for, abort
 from flaskext.csrf import csrf_exempt
 

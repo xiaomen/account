@@ -54,7 +54,7 @@ class Base_OAuth_Login(object):
                 or not resp.get(self.token_str, None):
             return redirect(next_url)
         #safe escape
-        uid = resp.get(self.uid_str, None)
+        #uid = resp.get(self.uid_str, None)
         token = resp.get(self.token_str, None)
 
         oauth = get_oauth_by(oauth_uid=resp[self.uid_str])
