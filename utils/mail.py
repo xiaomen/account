@@ -17,7 +17,7 @@ def send_email(to_add, subject, html, from_add=config.SMTP_USER):
 
     msg_alternative = email.MIMEMultipart.MIMEMultipart('alternative')
     msg_root.attach(msg_alternative)
-    msg_html = email.MIMEText.MIMEText(html, 'html', 'utf-8')
+    msg_html = email.MIMEText.MIMEText(html.encode('utf8'), 'html', 'utf-8')
     msg_alternative.attach(msg_html)
 
     smtp = smtplib.SMTP()

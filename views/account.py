@@ -35,7 +35,7 @@ def forget():
         try:
             send_email(user.email, \
                 config.FORGET_EMAIL_TITLE,
-                origin_render('email.html', user, stub))
+                origin_render('email.html', user=user, stub=stub))
         except:
             logger.exception("send mail failed")
 
