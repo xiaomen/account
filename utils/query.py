@@ -80,7 +80,7 @@ def get_mail(mid):
     try:
         mid = int(mid)
         return Mail.query.get(mid)
-    except Exception, e:
+    except Exception:
         return None
 
 def get_mail_by(**kw):

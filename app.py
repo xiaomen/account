@@ -1,8 +1,6 @@
 #!/usr/bin/python
 # encoding: UTF-8
 
-import os
-import time
 import config
 import logging
 
@@ -19,10 +17,8 @@ from sheep.api.statics import static_files
 from sheep.api.sessions import SessionMiddleware, \
     FilesystemSessionStore
 
-import flask
 from flaskext.csrf import csrf
-from flask import Flask, \
-        request, url_for, g, redirect
+from flask import Flask, request, g
 
 app = Flask(__name__)
 app.debug = config.DEBUG

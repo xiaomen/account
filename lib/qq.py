@@ -3,12 +3,12 @@
 
 __all__ = ['qq']
 
-import os
 import json
 import config
 import urllib2
 import logging
 from base import BasicOAuth
+from flaskext.oauth import OAuthException
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +26,7 @@ class QQOAuth(BasicOAuth):
             content = json.loads(content[content.find('(')+1:content.find(')')].strip())
             data.update(content)
             return data
-        except Exception, e:
+        except Exception:
             logger.exception('oauth2_response_error')
             return None
 

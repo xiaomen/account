@@ -13,7 +13,7 @@ def send_email(to_add, subject, html, from_add=config.SMTP_USER):
     msg_root['Subject'] = subject
     msg_root['From'] = from_add
     msg_root['To'] = to_add
-    msg_root.preamble = 'Xiaomen.co account service'
+    msg_root.preamble = '校门口账号服务'
 
     msg_alternative = email.MIMEMultipart.MIMEMultipart('alternative')
     msg_root.attach(msg_alternative)
@@ -28,4 +28,4 @@ def send_email(to_add, subject, html, from_add=config.SMTP_USER):
     smtp.quit()
 
 if __name__ == '__main__':
-    send_email('ilskdw@126.com', 'xiaomenco account service', '<p>hello world</p>')
+    send_email('ilskdw@126.com', '校门口账号服务', '<p>你好，世界</p>')
