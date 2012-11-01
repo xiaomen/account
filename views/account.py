@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 account = Blueprint('account', __name__)
 
+@csrf_exempt
 @account.route('/forget', methods=['GET', 'POST'])
 @check_ua
 @login_required(need=False)
