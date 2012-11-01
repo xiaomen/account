@@ -24,7 +24,7 @@ SESSION_KEY = 'xid'
 SESSION_COOKIE_DOMAIN = '.xiaomen.co'
 
 SMTP_SERVER = 'smtp.qq.com'
-SMTP_USER = '1925601625@qq.com'
+SMTP_USER = 'service@xiaomen.co'
 SMTP_PASSWORD = 'xiaomenkou!@#$%^'
 
 FORGET_STUB_EXPIRE = 30*60
