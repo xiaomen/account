@@ -58,7 +58,7 @@ def reset(stub=None):
         raise abort(404)
 
     if request.method == 'GET':
-        if (datetime.now()  - forget.created).total_seconds() > config.FORGET_STUB_EXPIRE:
+        if (datetime.now()  - forget.created).seconds > config.FORGET_STUB_EXPIRE:
             _delete_forget(forget)
             db.session.commit()
             return render_template('account.reset.html', hidden=1, \
