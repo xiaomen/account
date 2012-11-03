@@ -1,6 +1,8 @@
 #!/usr/local/bin/python2.7
 #coding:utf-8
 
+# TODO init Flask environment
+import app
 import logging
 from utils import get_user, get_unread_mail_count
 
