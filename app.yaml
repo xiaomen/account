@@ -13,5 +13,7 @@ handlers:
 services:
 - name: service.test
   handler: add
-- name: test1
-  handler: test1
+  handler: add2
+- name: service.api
+  handler: people
+  handler: unread
