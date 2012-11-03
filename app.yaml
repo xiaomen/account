@@ -11,7 +11,7 @@ handlers:
   wsgi_app: app:app
 
 services:
-- name: test
+- name: service.test
   handler: test
 - name: test1
   handler: test1
