@@ -12,6 +12,6 @@ handlers:
 
 services:
 - name: service.test
-  handler: test
+  handler: add
 - name: test1
   handler: test1
