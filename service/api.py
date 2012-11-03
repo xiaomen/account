@@ -9,7 +9,7 @@ from utils import get_user, get_unread_mail_count
 logger = logging.getLogger(__name__)
 
 def unread(uid):
-    num = get_unread_mail_count(int(id))
+    num = get_unread_mail_count(int(uid))
     return num
 
 def people(uid):
