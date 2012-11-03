@@ -18,7 +18,7 @@ def get_user(username):
         if username <= 0:
             return None
         return User.query.get(username)
-    except:
+    except ValueError:
         if check_domain(username):
             return None
         return get_user_by_domain(domain=username)
