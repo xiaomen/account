@@ -8,12 +8,12 @@ from utils import get_user, get_unread_mail_count
 
 logger = logging.getLogger(__name__)
 
-def unread(id):
+def unread(uid):
     num = get_unread_mail_count(int(id))
     return num
 
-def people(username):
-    people = get_user(username)
+def people(uid):
+    people = get_user(uid)
     if people:
         return dict(name=people.name, uid=people.id, domain=people.domain)
     return
