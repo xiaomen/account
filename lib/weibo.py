@@ -3,7 +3,6 @@
 
 __all__ = ['weibo']
 
-import os
 import config
 from base import BasicOAuth
 

@@ -15,4 +15,3 @@ services:
   handler: test
 - name: test1
   handler: test1
-
