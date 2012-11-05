@@ -188,7 +188,7 @@ def write():
     backend.delete('mail:inbox:%d:1' % who.id)
     backend.delete('mail:inbox:count:%d' % who.id)
     backend.delete('mail:unread:%d' % who.id)
-    cross_cache.delete('open:mail:unread:{0}'.format(who.id))
+    cross_cache.delete('open:account:unread:{0}'.format(who.id))
 
     return redirect(url_for('mail.index'))
 
