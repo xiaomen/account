@@ -7,7 +7,7 @@
 from datetime import datetime
 
 from sqlalchemy.sql.expression import desc
-from flaskext.sqlalchemy import SQLAlchemy
+from flask.ext.sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 def init_mail_db(app):
