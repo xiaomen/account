@@ -28,6 +28,7 @@ app = Flask(__name__)
 app.debug = config.DEBUG
 app.secret_key = config.SECRET_KEY
 app.jinja_env.filters['s_files'] = static_files
+app.jinja_env.filters['avatar'] = lambda username: '/static/img/default.png'
 
 app.config.update(
     SQLALCHEMY_DATABASE_URI = config.DATABASE_URI,

@@ -27,7 +27,6 @@ a {
 
 label {
     font-size: 1.3em; 
-    font-weight: bold; 
     margin: 4px 0; 
     display: block; 
 }
@@ -51,6 +50,10 @@ form input , form textarea {
 
 .control {
     padding-right: 21px; 
+}
+
+.control-label {
+    margin-top: 20px;
 }
 
 .control-action {
@@ -88,8 +91,35 @@ form input , form textarea {
     padding: 0 10px; 
 }
 
-.user-info p {
-    line-height: 30px; 
+.user-info .avatar {
+    float: left; 
+}
+
+.user-info .info {
+    float: left; 
+    margin-left: 20px; 
+}
+
+.user-info .info .username {
+    font-size: 26px;  
+    font-weight: bold; 
+    display: block; 
+    margin-bottom: 20px; 
+}
+
+.user-info .info .email {
+    background: url('/static/img/email.png') no-repeat 0 3px; 
+    padding-left: 20px; 
+}
+
+.user-info .info .action {
+    margin-top: 10px; 
+}
+
+.user-info .info .action a {
+    background-color: #3999CC;
+    padding: 7px 15px; 
+    color: white; 
 }
 
 .maillist {
