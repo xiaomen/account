@@ -139,7 +139,15 @@ form input , form textarea {
 
 .maillist .mail {
     padding: 10px 5px; 
-    padding-left: 30px; 
+}
+
+.maillist .mail .avatar {
+    float: left; 
+}
+
+.maillist .mail .mail-summary {
+    float: left; 
+    margin-left: 10px; 
 }
 
 .maillist .mail .mail-title {
@@ -151,6 +159,10 @@ form input , form textarea {
 .maillist .mail .r {
     float: right; 
     letter-spacing: 0.25em; 
+}
+
+.maillist .mail.unread {
+    background-color: #E2EFF7;  
 }
 
 .maillist .mail.unread .mail-title {
