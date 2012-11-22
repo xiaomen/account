@@ -34,7 +34,7 @@ def check_username(username):
         return False, 'need username'
     if not isinstance(username, unicode):
         username = unicode(username, 'utf-8')
-    if not re.search(ur'^[\u4e00-\u9fa5\w]{3,20}$', username, re.I):
+    if not re.search(ur'^[\u4e00-\u9fa5\w]{1,20}$', username, re.I):
         return False, 'username invail'
 
 def check_email(email):

@@ -110,8 +110,8 @@ def view(mail_id):
         else:
             page = int(page[0])
         Mail.mark_as_read(mail)
-        backend.delete('mail:unread:%d' % g.current_user.id)
         backend.delete('mail:inbox:%d:%d' % (g.current_user.id, page))
+        clean_unread_cache(g.current_user.id)
 
     mobj = Obj()
     mobj.id = mail_id
@@ -187,10 +187,12 @@ def write():
     backend.delete('mail:outbox:count:%d' % g.current_user.id)
     backend.delete('mail:inbox:%d:1' % who.id)
     backend.delete('mail:inbox:count:%d' % who.id)
-    backend.delete('mail:unread:%d' % who.id)
-    cross_cache.delete('open:mail:unread:{0}'.format(who.id))
-
+    clean_unread_cache(who.id)
     return redirect(url_for('mail.index'))
+
+def clean_unread_cache(uid):
+    backend.delete('mail:unread:{0}'.format(uid))
+    cross_cache.delete('open:account:unread:{0}'.format(uid))
 
 def reply_mail_title(title):
     if not isinstance(title, unicode):

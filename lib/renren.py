@@ -3,7 +3,6 @@
 
 __all__ = ['renren']
 
-import os
 import config
 import hashlib
 from base import BasicOAuth, OAuthResponse, encode_request_data

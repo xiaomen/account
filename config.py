@@ -24,12 +24,14 @@ SESSION_KEY = 'xid'
 SESSION_COOKIE_DOMAIN = '.xiaomen.co'
 
 SMTP_SERVER = 'smtp.qq.com'
-SMTP_USER = '1925601625@qq.com'
-SMTP_PASSWORD = 'xiaomenkou!@#$%^()'
+SMTP_USER = 'service@xiaomen.co'
+SMTP_PASSWORD = 'xiaomenkou!@#$%^'
 
 FORGET_STUB_EXPIRE = 30*60
 
 PAGE_NUM = 5
+
+FORGET_EMAIL_TITLE = '[校门口]取回密码'
 
 try:
     from local_config import *

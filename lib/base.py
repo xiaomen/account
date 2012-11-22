@@ -6,7 +6,7 @@ import json
 import base64
 import logging
 from flaskext.oauth import *
-from flask import g, redirect, session, request
+from flask import redirect, session, request
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +58,7 @@ class BasicOAuth(OAuthRemoteApp):
             if resp['status'] != '200':
                 raise OAuthException('Invalid response from ' + self.name, data)
             return data
-        except Exception, e:
+        except Exception:
             logger.exception('oauth2_response_error')
             return None
 

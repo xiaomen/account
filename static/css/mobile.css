@@ -271,3 +271,7 @@ input[readonly] {
 .app-list .app.selfstudy .bgimg {
     background-image: url('/account/static/img/selfstudy.jpg'); 
 }
+
+.app-list .app.job .bgimg {
+    background-image: url('/account/static/img/job.jpg'); 
+}

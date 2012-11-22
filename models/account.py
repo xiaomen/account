@@ -7,7 +7,7 @@ __all__ = ['db', 'OAuth', 'User', 'Forget', \
 import hashlib
 from random import choice
 from datetime import datetime
-from flaskext.sqlalchemy import SQLAlchemy
+from flask.ext.sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 def init_account_db(app):

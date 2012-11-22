@@ -3,8 +3,8 @@
 
 __all__ = ['douban']
 
-import os
 import config
+from flaskext.oauth import add_query
 from base import BasicOAuth, OAuthResponse, encode_request_data
 
 class DoubanOAuth(BasicOAuth):

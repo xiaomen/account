@@ -6,7 +6,7 @@ from models.account import db, User
 from utils import get_user_by_email, get_user,\
         get_unread_mail_count
 from flaskext.csrf import csrf_exempt
-from flask import g, request, jsonify, Blueprint
+from flask import request, jsonify, Blueprint
 from .account import account_logout, account_login, \
         check_login_info, check_register_info, \
         clear_user_cache

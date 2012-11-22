@@ -3,8 +3,7 @@
 
 import logging
 from utils import *
-from flask import g, request, url_for, \
-        abort, Blueprint
+from flask import abort, Blueprint
 
 logger = logging.getLogger(__name__)
 

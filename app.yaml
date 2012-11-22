@@ -9,3 +9,11 @@ handlers:
 
 - url: /.*
   wsgi_app: app:app
+
+services:
+- name: service.test
+  handler: add
+  handler: add2
+- name: service.api
+  handler: people
+  handler: unread
