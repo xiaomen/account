@@ -13,7 +13,8 @@ from views.oauth import oauth
 from views.people import people
 from views.account import account
 
-from sheep.api.statics import static_files
+from sheep.api.statics import static_files, \
+        upload_files
 from sheep.api.sessions import SessionMiddleware, \
     FilesystemSessionStore
 
@@ -24,6 +25,7 @@ app = Flask(__name__)
 app.debug = config.DEBUG
 app.secret_key = config.SECRET_KEY
 app.jinja_env.filters['s_files'] = static_files
+app.jinja_env.filters['u_files'] = upload_files
 
 app.config.update(
     SQLALCHEMY_DATABASE_URI = config.DATABASE_URI,

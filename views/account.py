@@ -155,7 +155,7 @@ def logout():
 def avatar():
     user = g.current_user
     if request.method == 'GET':
-        return render_template('account.avatar.html')
+        return render_template('account.avatar.html', path='/'+user.avatar)
     upload_avatar = request.files['file']
     if not upload_avatar or not allowed_file(upload_avatar.filename):
         #TODO use template
@@ -169,6 +169,7 @@ def avatar():
         f.seek(0)
         uploader.writeFile(filename, f.file)
     _set_avatar(user, filename)
+    clear_user_cache(user)
     return 'OK'
 
 @account.route('/setting', methods=['POST', 'GET'])
