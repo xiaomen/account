@@ -33,10 +33,6 @@ PAGE_NUM = 5
 
 FORGET_EMAIL_TITLE = '[校门口]取回密码'
 
-UPLOAD_USER = 'cooper'
-UPLOAD_BUCKET = 'upload_img'
-UPLOAD_PASSWORD = 'Sheep4us'
-
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 try:

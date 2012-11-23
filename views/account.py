@@ -160,8 +160,7 @@ def avatar():
     if not upload_avatar or not allowed_file(upload_avatar.filename):
         #TODO use template
         return 'error'
-    uploader = get_uploader(config.UPLOAD_BUCKET, \
-            config.UPLOAD_USER, config.UPLOAD_PASSWORD)
+    uploader = get_uploader()
     suffix = get_file_suffix(upload_avatar.filename)
     with tempfile.NamedTemporaryFile() as f:
         copyfileobj(upload_avatar.stream, f)
