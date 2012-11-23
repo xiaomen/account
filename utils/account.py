@@ -2,7 +2,12 @@
 #coding:utf-8
 
 from functools import wraps
+from config import ALLOWED_EXTENSIONS
 from flask import g, url_for, redirect, request
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 def login_required(next=None, need=True, *args, **kwargs):
     def _login_required(f):

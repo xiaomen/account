@@ -3,8 +3,11 @@
 
 import config
 import logging
+import tempfile
 from utils import *
 from datetime import datetime
+from shutil import copyfileobj
+from sheep.api.files import get_uploader
 from sheep.api.cache import backend, cross_cache
 from models.account import db, User, Forget, create_token
 from flask import Blueprint, g, session, \
@@ -145,6 +148,26 @@ def login():
 def logout():
     account_logout()
     return redirect(request.referrer or url_for('index'))
+
+@account.route('/avatar', methods=['POST', 'GET'])
+@check_ua
+@login_required('account.login', redirect='/account/avatar')
+def avatar():
+    user = g.current_user
+    if request.method == 'GET':
+        return render_template('account.avatar.html')
+    upload_avatar = request.files['file']
+    if not upload_avatar or not allowed_file(upload_avatar.filename):
+        #TODO use template
+        return 'error'
+    uploader = get_uploader(config.UPLOAD_BUCKET, \
+            config.UPLOAD_USER, config.UPLOAD_PASSWORD)
+    with tempfile.NamedTemporaryFile() as f:
+        copyfileobj(upload_avatar.stream, f)
+        f.flush()
+        f.seek(0)
+        uploader.writeFile(str(user.id), f.file)
+    return 'OK'
 
 @account.route('/setting', methods=['POST', 'GET'])
 @check_ua
