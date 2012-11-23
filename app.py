@@ -33,6 +33,7 @@ app.config.update(
     SQLALCHEMY_POOL_TIMEOUT = 10,
     SQLALCHEMY_POOL_RECYCLE = 3600,
     SESSION_COOKIE_DOMAIN = config.SESSION_COOKIE_DOMAIN,
+    MAX_CONTENT_LENGTH = config.MAX_CONTENT_LENGTH,
 )
 
 oauth.register_blueprints(app)
