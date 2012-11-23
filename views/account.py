@@ -162,11 +162,13 @@ def avatar():
         return 'error'
     uploader = get_uploader()
     suffix = get_file_suffix(upload_avatar.filename)
+    filename = '.'.join([str(user.id), suffix])
     with tempfile.NamedTemporaryFile() as f:
         copyfileobj(upload_avatar.stream, f)
         f.flush()
         f.seek(0)
-        uploader.writeFile('.'.join([str(user.id), suffix]), f.file)
+        uploader.writeFile(filename, f.file)
+    _set_avatar(user, filename)
     return 'OK'
 
 @account.route('/setting', methods=['POST', 'GET'])
@@ -208,6 +210,11 @@ def clear_user_cache(user):
     keys = ['account:%s' % key for key in [str(user.id), user.domain, user.email]]
     backend.delete_many(*keys)
     cross_cache.delete('open:account:info:{0}'.format(user.id))
+
+def _set_avatar(user, filename):
+    user.avatar = filename
+    db.session.add(user)
+    db.session.commit()
 
 def _set_domain(user, domain):
     user.domain = domain
