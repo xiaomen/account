@@ -5,3 +5,4 @@ permdir
 dev.yaml
 syncdb_dumps.bak
 local_config.py
+test.py
