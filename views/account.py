@@ -162,11 +162,12 @@ def avatar():
         return 'error'
     uploader = get_uploader(config.UPLOAD_BUCKET, \
             config.UPLOAD_USER, config.UPLOAD_PASSWORD)
+    suffix = get_file_suffix(upload_avatar.filename)
     with tempfile.NamedTemporaryFile() as f:
         copyfileobj(upload_avatar.stream, f)
         f.flush()
         f.seek(0)
-        uploader.writeFile(str(user.id), f.file)
+        uploader.writeFile('.'.join([str(user.id), suffix]), f.file)
     return 'OK'
 
 @account.route('/setting', methods=['POST', 'GET'])
