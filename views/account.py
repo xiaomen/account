@@ -6,7 +6,6 @@ import logging
 import tempfile
 from utils import *
 from datetime import datetime
-from shutil import copyfileobj
 from sheep.api.files import get_uploader
 from sheep.api.cache import backend, cross_cache
 from models.account import db, User, Forget, create_token
@@ -163,11 +162,7 @@ def avatar():
     uploader = get_uploader()
     suffix = get_file_suffix(upload_avatar.filename)
     filename = '.'.join([str(user.id), suffix])
-    with tempfile.NamedTemporaryFile() as f:
-        copyfileobj(upload_avatar.stream, f)
-        f.flush()
-        f.seek(0)
-        uploader.writeFile(filename, f.file)
+    uploader.writeFile(filename, upload_avatar.stream)
     _set_avatar(user, filename)
     clear_user_cache(user)
     return 'OK'
