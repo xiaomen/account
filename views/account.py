@@ -160,9 +160,11 @@ def avatar():
         #TODO use template
         return 'error'
     uploader = get_uploader()
-    suffix = get_file_suffix(upload_avatar.filename)
-    filename = '.'.join([str(user.id), suffix])
-    uploader.writeFile(filename, upload_avatar.stream)
+    filename, stream, error = process_file(user, upload_avatar)
+    if error:
+        #TODO use template
+        return 'error'
+    uploader.writeFile(filename, stream)
     _set_avatar(user, filename)
     clear_user_cache(user)
     return 'OK'

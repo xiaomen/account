@@ -1,7 +1,9 @@
 #!/usr/local/bin/python2.7
 #coding:utf-8
 
+from PIL import Image
 from functools import wraps
+from cStringIO import StringIO
 from config import ALLOWED_EXTENSIONS
 from flask import g, url_for, redirect, request
 
@@ -9,8 +11,19 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-def get_file_suffix(filename):
-    return filename.rsplit('.', 1)[1]
+def process_file(user, upload_file):
+    suffix = upload_file.filename.rsplit('.', 1)[1]
+    filename = 'u%d.jpg' % user.id
+    if suffix in ['jpg', 'jpeg']:
+        return filename, upload_file.stream, None
+    elif suffix == 'png':
+        new_stream = StringIO()
+        image = Image.open(upload_file.stream)
+        image.convert('RGB')
+        image.save(new_stream, 'jpeg')
+        new_stream.getvalue()
+        new_stream.seek(0)
+        return filename, new_stream, None
 
 def login_required(next=None, need=True, *args, **kwargs):
     def _login_required(f):
