@@ -13,8 +13,14 @@
             {% if not mail.is_read %}
             <span class="r">未读</span>
             {% endif %}
-            <span class="mail-title">{{ mail.title }}</span>
-            <span class="mail-author">来自: {{ mail.user.name }}</span>
+            <div class="avatar">
+                <img src="{{ mail.user.name | avatar }}" width="60px" height="60px" />
+            </div>
+            <div class="mail-summary">
+               <span class="mail-title">{{ mail.title }}</span>
+               <span class="mail-author">来自: {{ mail.user.name }}</span>
+           </div>
+           <div class="clearfix"></div>
         </li>
     </a>
     {% endfor %}
