@@ -16,14 +16,16 @@ def process_file(user, upload_file):
     filename = 'u%d.jpg' % user.id
     if suffix in ['jpg', 'jpeg']:
         return filename, upload_file.stream, None
-    elif suffix == 'png':
+    elif suffix == 'png' or suffix == 'gif':
         new_stream = StringIO()
         image = Image.open(upload_file.stream)
-        image.convert('RGB')
+        if image.mode != 'RGB':
+            image = image.convert('RGB')
         image.save(new_stream, 'jpeg')
         new_stream.getvalue()
         new_stream.seek(0)
         return filename, new_stream, None
+    return None, None, 'invalid' % upload_file.filename
 
 def login_required(next=None, need=True, *args, **kwargs):
     def _login_required(f):
