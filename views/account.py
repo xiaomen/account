@@ -153,21 +153,21 @@ def logout():
 @login_required('account.login', redirect='/account/avatar')
 def avatar():
     user = g.current_user
+    if user.avatar == None:
+        _set_avatar(user, '')
     if request.method == 'GET':
-        return render_template('account.avatar.html', path='/'+user.avatar)
+        return render_template('account.avatar.html', path = '/' + user.avatar)
     upload_avatar = request.files['file']
     if not upload_avatar:
-        #TODO use template
-        return 'error'
+        return render_template('account.avatar.html', path = '/' + user.avatar, error = 'Please select avatar file')
     uploader = get_uploader()
     filename, stream, error = process_file(user, upload_avatar)
     if error:
-        #TODO use template
-        return error
+        return render_template('account.avatar.html', path = '/' + user.avatar, error = error)
     uploader.writeFile(filename, stream)
     _set_avatar(user, filename)
     clear_user_cache(user)
-    return 'OK'
+    return redirect(url_for('account.avatar'))
 
 @account.route('/setting', methods=['POST', 'GET'])
 @check_ua
