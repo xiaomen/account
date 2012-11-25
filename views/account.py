@@ -156,14 +156,14 @@ def avatar():
     if request.method == 'GET':
         return render_template('account.avatar.html', path='/'+user.avatar)
     upload_avatar = request.files['file']
-    if not upload_avatar or not allowed_file(upload_avatar.filename):
+    if not upload_avatar:
         #TODO use template
         return 'error'
     uploader = get_uploader()
     filename, stream, error = process_file(user, upload_avatar)
     if error:
         #TODO use template
-        return 'error'
+        return error
     uploader.writeFile(filename, stream)
     _set_avatar(user, filename)
     clear_user_cache(user)

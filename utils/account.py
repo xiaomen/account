@@ -1,31 +1,39 @@
 #!/usr/local/bin/python2.7
 #coding:utf-8
 
+import logging
 from PIL import Image
 from functools import wraps
 from cStringIO import StringIO
 from config import ALLOWED_EXTENSIONS
 from flask import g, url_for, redirect, request
 
+logger = logging.getLogger(__name__)
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 def process_file(user, upload_file):
+    if not allowed_file(upload_file.filename):
+        return None, None, 'invalid %s' % upload_file.filename
     suffix = upload_file.filename.rsplit('.', 1)[1]
     filename = 'u%d.jpg' % user.id
-    if suffix in ['jpg', 'jpeg']:
-        return filename, upload_file.stream, None
-    elif suffix == 'png' or suffix == 'gif':
-        new_stream = StringIO()
-        image = Image.open(upload_file.stream)
-        if image.mode != 'RGB':
-            image = image.convert('RGB')
-        image.save(new_stream, 'jpeg')
-        new_stream.getvalue()
-        new_stream.seek(0)
-        return filename, new_stream, None
-    return None, None, 'invalid' % upload_file.filename
+    stream = upload_file.stream
+    error = None
+    if suffix == 'png' or suffix == 'gif':
+        try:
+            stream = StringIO()
+            image = Image.open(upload_file.stream)
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
+            image.save(stream, 'jpeg')
+            stream.getvalue()
+            stream.seek(0)
+        except Exception, e:
+            logger.exception('convert error')
+            error = str(e)
+    return filename, stream, error
 
 def login_required(next=None, need=True, *args, **kwargs):
     def _login_required(f):
