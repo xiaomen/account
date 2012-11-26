@@ -311,3 +311,9 @@ input[readonly] {
     font-size: 1em; 
     margin-top: 28px; 
 }
+
+.ok-msg {
+    border: 1px solid #067206;
+    background: #BCD6AB;
+    padding: 5px 10px; 
+}

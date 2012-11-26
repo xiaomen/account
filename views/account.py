@@ -168,7 +168,7 @@ def avatar():
     uploader.writeFile(filename, stream)
     _set_avatar(user, filename)
     clear_user_cache(user)
-    return redirect(url_for('account.avatar'))
+    return redirect(url_for('account.avatar', ok = 1))
 
 @account.route('/setting', methods=['POST', 'GET'])
 @check_ua

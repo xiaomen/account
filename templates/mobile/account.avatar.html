@@ -8,6 +8,11 @@
         <p>{{ error }}</p>
     </div>
     {% endif %}
+    {% if ok %}
+    <div class="ok-msg">
+        <p>更新成功！</p>
+    </div>
+    {% endif %}
     <form enctype="multipart/form-data" action="" method="POST">
         <div class="now-avatar">
             <img src="{{ path }}" width="100px" height="100px" />
