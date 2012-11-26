@@ -4,7 +4,7 @@
 }
 
 body {
-    font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
+    font: 13px/22px 'Helvetica Neue',Helvetica,Arial,Sans-serif;
     font-size: 13px; 
 }
 
@@ -90,4 +90,9 @@ ul.nav li:last-child:after {
 
 .content-wrap {
     margin: 0 20px; 
+}
+
+.clearfix {
+    clear: both; 
+    zoom: 0; 
 }

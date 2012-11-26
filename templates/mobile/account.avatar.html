@@ -1,0 +1,33 @@
+{% extends "mobile/layout.html" %}
+
+{% block content %}
+<h2 class="avatar-title">上传头像</h2>
+<div class="upload-form">
+    {% if error %}
+    <div class="error-msg">
+        <p>{{ error }}</p>
+    </div>
+    {% endif %}
+    {% if ok %}
+    <div class="ok-msg">
+        <p>更新成功！</p>
+    </div>
+    {% endif %}
+    <form enctype="multipart/form-data" action="" method="POST">
+        <div class="now-avatar">
+            <img src="{{ path | u_files }}" width="100px" height="100px" />
+        </div>
+        <div class="upload">
+            <label>选择头像</label>
+            <div class="control">
+                <input name="file" type="FILE" class="input-file" accept="image/*" />
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+        <div class="control-action">
+            <button class="submit-btn" type="submit">上传</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
