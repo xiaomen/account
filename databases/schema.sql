@@ -47,11 +47,11 @@ CREATE TABLE `users` (
   `name` char(16) NOT NULL,
   `passwd` char(50) NOT NULL,
   `email` varchar(200) NOT NULL,
-  `avatar` varchar(255) DEFAULT NULL,
+  `avatar` varchar(255) NOT NULL,
   `token` char(16) DEFAULT NULL,
   `domain` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `domain` (`domain`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
