@@ -156,7 +156,8 @@ def avatar():
     if user.avatar == None:
         _set_avatar(user, '')
     if request.method == 'GET':
-        return render_template('account.avatar.html', path = '/' + user.avatar)
+        ok = request.args.get('ok', None)
+        return render_template('account.avatar.html', path = '/' + user.avatar, ok = ok)
     upload_avatar = request.files['file']
     if not upload_avatar:
         return render_template('account.avatar.html', path = '/' + user.avatar, error = 'Please select avatar file')
