@@ -15,7 +15,7 @@
     {% endif %}
     <form enctype="multipart/form-data" action="" method="POST">
         <div class="now-avatar">
-            <img src="{{ path }}" width="100px" height="100px" />
+            <img src="{{ path | u_files }}" width="100px" height="100px" />
         </div>
         <div class="upload">
             <label>选择头像</label>
