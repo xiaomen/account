@@ -153,8 +153,6 @@ def logout():
 @login_required('account.login', redirect='/account/avatar')
 def avatar():
     user = g.current_user
-    if user.avatar == None:
-        _set_avatar(user, '')
     if request.method == 'GET':
         ok = request.args.get('ok', None)
         return render_template('account.avatar.html', path = '/' + user.avatar, ok = ok)
