@@ -25,6 +25,7 @@
     </div>
     <div class="control-action">
         <button class="submit-btn">更新</button>
+        <a href="{{ url_for('account.avatar') }}" class="btn register-btn">修改头像</a>
     </div>
     <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
 </form>
