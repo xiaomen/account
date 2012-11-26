@@ -26,7 +26,7 @@ class User(db.Model):
     name = db.Column(db.CHAR(16), nullable=False)
     passwd = db.Column(db.CHAR(50), nullable=False)
     email = db.Column(db.String(200), nullable=False, unique=True)
-    avatar = db.Column(db.String(255), nullable=False, default='default.jpg')
+    avatar = db.Column(db.String(255), nullable=False, default='default.png')
     token = db.Column(db.CHAR(16))
     domain = db.Column(db.String(10), unique=True)
 
