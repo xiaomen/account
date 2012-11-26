@@ -27,7 +27,6 @@ a {
 
 label {
     font-size: 1.3em; 
-    font-weight: bold; 
     margin: 4px 0; 
     display: block; 
 }
@@ -51,6 +50,10 @@ form input , form textarea {
 
 .control {
     padding-right: 21px; 
+}
+
+.control-label {
+    margin-top: 20px;
 }
 
 .control-action {
@@ -88,8 +91,35 @@ form input , form textarea {
     padding: 0 10px; 
 }
 
-.user-info p {
-    line-height: 30px; 
+.user-info .avatar {
+    float: left; 
+}
+
+.user-info .info {
+    float: left; 
+    margin-left: 20px; 
+}
+
+.user-info .info .username {
+    font-size: 26px;  
+    font-weight: bold; 
+    display: block; 
+    margin-bottom: 20px; 
+}
+
+.user-info .info .email {
+    background: url('/static/img/email.png') no-repeat 0 3px; 
+    padding-left: 20px; 
+}
+
+.user-info .info .action {
+    margin-top: 10px; 
+}
+
+.user-info .info .action a {
+    background-color: #3999CC;
+    padding: 7px 15px; 
+    color: white; 
 }
 
 .maillist {
@@ -109,7 +139,15 @@ form input , form textarea {
 
 .maillist .mail {
     padding: 10px 5px; 
-    padding-left: 30px; 
+}
+
+.maillist .mail .avatar {
+    float: left; 
+}
+
+.maillist .mail .mail-summary {
+    float: left; 
+    margin-left: 10px; 
 }
 
 .maillist .mail .mail-title {
@@ -121,6 +159,10 @@ form input , form textarea {
 .maillist .mail .r {
     float: right; 
     letter-spacing: 0.25em; 
+}
+
+.maillist .mail.unread {
+    background-color: #E2EFF7;  
 }
 
 .maillist .mail.unread .mail-title {
@@ -244,4 +286,34 @@ input[readonly] {
 
 .app-list .app.job .bgimg {
     background-image: url('/account/static/img/job.jpg'); 
+}
+
+.avatar-title {
+    color: #3999CC; 
+    padding: 0; 
+    padding-bottom: 10px; 
+    margin: 20px 10px; 
+    border-bottom: 1px solid #3999CC; 
+    font-weight: normal; 
+}
+
+.upload-form {
+    margin: 0 10px; 
+}
+
+.upload-form .now-avatar {
+    float: right; 
+}
+
+.upload-form .upload .input-file {
+    width: auto; 
+    display: block; 
+    font-size: 1em; 
+    margin-top: 28px; 
+}
+
+.ok-msg {
+    border: 1px solid #067206;
+    background: #BCD6AB;
+    padding: 5px 10px; 
 }
