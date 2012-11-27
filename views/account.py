@@ -159,11 +159,11 @@ def avatar():
         return render_template('account.avatar.html', path=path, ok=ok)
     upload_avatar = request.files['file']
     if not upload_avatar:
-        return render_template('account.avatar.html', path = '/' + user.avatar, error = 'Please select avatar file')
+        return render_template('account.avatar.html', path = path, error = 'Please select avatar file')
     uploader = get_uploader()
     filename, stream, error = process_file(user, upload_avatar)
     if error:
-        return render_template('account.avatar.html', path = '/' + user.avatar, error = error)
+        return render_template('account.avatar.html', path = path, error = error)
     uploader.writeFile(filename, stream)
     _set_avatar(user, filename)
     clear_user_cache(user)
