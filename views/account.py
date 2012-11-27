@@ -153,7 +153,11 @@ def logout():
 @login_required('account.login', redirect='/account/avatar')
 def avatar():
     user = g.current_user
-    path = '/' + user.avatar or 'default.png'
+    path = '/'
+    if user.avatar:
+        path += user.avatar
+    else:
+        path += 'default.png'
     if request.method == 'GET':
         ok = request.args.get('ok', None)
         return render_template('account.avatar.html', path=path, ok=ok)
