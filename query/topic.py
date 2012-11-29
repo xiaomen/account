@@ -12,3 +12,4 @@ def get_user_topics(uid, page):
     page_obj = page_obj.order_by(desc(Topic.last_time))
     page_obj = page_obj.paginate(page, per_page=PAGE_NUM)
     return page_obj
+

@@ -5,7 +5,7 @@ import config
 import logging
 
 from models import init_db
-from utils.query import get_current_user
+from query.account import get_current_user
 from utils.ua import check_ua, render_template
 
 from views.api import api

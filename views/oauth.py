@@ -4,7 +4,7 @@
 import urllib
 import logging
 from .account import account_login
-from utils import get_user, get_oauth_by
+from query.account import get_user, get_oauth_by
 from models.account import db, OAuth
 from flask import Blueprint, g, session, \
         request, redirect, url_for

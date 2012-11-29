@@ -2,7 +2,8 @@
 #coding:utf-8
 
 import logging
-from utils import *
+from query.account import get_user
+from utils.ua import render_template
 from flask import abort, Blueprint
 
 logger = logging.getLogger(__name__)
