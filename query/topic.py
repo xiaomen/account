@@ -13,3 +13,5 @@ def get_user_topics(uid, page):
     page_obj = page_obj.paginate(page, per_page=PAGE_NUM)
     return page_obj
 
+def get_reply(tid):
+    return Reply.query.get(tid)
