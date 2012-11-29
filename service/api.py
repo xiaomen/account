@@ -4,7 +4,8 @@
 # TODO init Flask environment
 import app
 import logging
-from utils import get_user, get_unread_mail_count
+from query.account import get_user
+from query.mail import get_unread_mail_count
 
 logger = logging.getLogger(__name__)
 

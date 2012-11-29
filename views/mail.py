@@ -8,8 +8,15 @@ import re
 import logging
 from urlparse import urlparse, parse_qs
 
-from utils import *
-from models.mail import *
+from utils.validators import check_mail_access, \
+        check_mail
+from utils.ua import render_template
+from utils.helper import Obj
+from utils.account import login_required
+from query.mail import get_inbox_mail, get_inbox_count, \
+        get_outbox_mail, get_outbox_count, get_mail
+from query.account import get_user
+from models.mail import Mail
 from sheep.api.cache import backend, cross_cache
 from flask import redirect, \
     request, url_for, g, Blueprint, abort

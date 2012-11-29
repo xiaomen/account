@@ -2,7 +2,7 @@
 #coding:utf-8
 
 from sheep.api.cache import cache
-from helper import gen_list_page_obj
+from utils.helper import gen_list_page_obj
 from werkzeug.exceptions import NotFound
 
 from config import PAGE_NUM

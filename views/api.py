@@ -4,7 +4,7 @@
 import logging
 from models.account import db, User
 from query.account import get_user, get_user_by_email
-from utils.query import get_unread_mail_count
+from query.mail import get_unread_mail_count
 from flaskext.csrf import csrf_exempt
 from flask import request, jsonify, Blueprint
 from .account import account_logout, account_login, \
