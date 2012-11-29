@@ -4,12 +4,13 @@
 import config
 import logging
 
-from utils import *
-from models import *
+from models import init_db
+from utils.query import get_current_user
+from utils.ua import check_ua, render_template
 
 from views.api import api
-from views.mail import mail
 from views.oauth import oauth
+from views.topic import topic
 from views.people import people
 from views.account import account
 
@@ -26,7 +27,6 @@ app.debug = config.DEBUG
 app.secret_key = config.SECRET_KEY
 app.jinja_env.filters['s_files'] = static_files
 app.jinja_env.filters['u_files'] = upload_files
-app.jinja_env.filters['avatar'] = lambda username: '/static/img/default.png'
 
 app.config.update(
     SQLALCHEMY_DATABASE_URI = config.DATABASE_URI,
@@ -40,8 +40,9 @@ app.config.update(
 oauth.register_blueprints(app)
 app.register_blueprint(account, url_prefix='/account')
 app.register_blueprint(people, url_prefix='/people')
-app.register_blueprint(mail, url_prefix='/mail')
+app.register_blueprint(topic, url_prefix='/mail')
 app.register_blueprint(api, url_prefix='/api')
+
 
 logger = logging.getLogger(__name__)
 
@@ -61,6 +62,7 @@ def index():
 def before_request():
     g.session = request.environ['xiaomen.session']
     g.current_user = get_current_user()
+    #TODO remove
     if g.current_user:
-        g.unread_mail_count = lambda: get_unread_mail_count(g.current_user.id)
+        g.unread_mail_count = lambda: 0
 
