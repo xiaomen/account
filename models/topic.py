@@ -1,11 +1,11 @@
 #!/usr/local/bin/python2.7
 #coding:utf-8
 
-import datetime
+from datetime import datetime
 from flask.ext.sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
-def init_mail_db(app):
+def init_topic_db(app):
     db.init_app(app)
     db.app = app
     db.create_all()
@@ -18,8 +18,7 @@ class Topic(db.Model):
     to_uid = db.Column(db.Integer, index=True, nullable=False)
     last_rid = db.Column(db.Integer, index=True, nullable=False)
     reply_count = db.Column(db.Integer, index=True, nullable=False, default=0)
-    unread_count = db.Column(db.Integer, index=True, nullable=False, default=0)
-    last_time = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())
+    last_time = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
     def __init__(self, title, from_uid, to_uid, last_rid, **kwargs):
         self.title = title
@@ -34,14 +33,34 @@ class Topic(db.Model):
         topic = Topic(from_uid=from_uid,
                     to_uid = to_uid,
                     title = title,
-                    last_rid = last_rid,
-                    unread_count = 1)
+                    last_rid = last_rid)
         db.session.add(topic)
         db.session.commit()
 
     def add_reply(self, reply):
         self.last_rid = reply.id
         self.reply_count = self.reply_count + 1
-        self.unread_count = self.unread_count + 1
-        self.last_time = datetime.datetime.now()
+        self.last_time = datetime.now()
+        db.session.add(self)
+        db.session.commit()
+
+class Reply(db.Model):
+    __tablename__ = 'reply'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    tid = db.Column(db.Integer, index=True, nullable=False)
+    content = db.Column(db.Text)
+    time = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    who = db.Column(db.Integer, nullable=False, default=0)
+
+    def __init__(self, tid, content, who):
+        self.tid = tid
+        self.content = content
+        self.who = who
+        self.time = datetime.now()
+
+    @staticmethod
+    def create(tid, content, who):
+        reply = Reply(tid=tid, content=content, who=who)
+        db.session.add(reply)
+        db.session.commit()
 
