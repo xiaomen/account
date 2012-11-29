@@ -51,6 +51,8 @@ class Reply(db.Model):
     content = db.Column(db.Text)
     time = db.Column(db.DateTime, nullable=False, default=datetime.now)
     who = db.Column(db.Integer, nullable=False, default=0)
+    sender = db.Column(db.Integer, nullable=False, default=1)
+    receiver = db.Column(db.Integer, nullable=False, default=1)
 
     def __init__(self, tid, content, who):
         self.tid = tid
@@ -62,5 +64,15 @@ class Reply(db.Model):
     def create(tid, content, who):
         reply = Reply(tid=tid, content=content, who=who)
         db.session.add(reply)
+        db.session.commit()
+
+    def detele_for_sender(self):
+        self.sender = 0
+        db.session.add(self)
+        db.session.commit()
+
+    def detele_for_receiver(self):
+        self.receiver = 0
+        db.session.add(self)
         db.session.commit()
 
