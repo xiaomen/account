@@ -42,6 +42,11 @@ def view(topic_id, page=1):
         output = o + output
     return output
 
+def delete_reply(topic_id, reply_id):
+    topic = get_topic(topic_id)
+    t = 'from' if topic.from_uid == g.current_user.id else 'to'
+
+
 def format_reply_list(items):
     for item in items:
         reply = Obj()
