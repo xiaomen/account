@@ -66,6 +66,7 @@ form input , form textarea {
     background: #3999CC; 
     padding: 15px 30px; 
     color: white; 
+    line-height: 18px; 
 }
 
 .control-action .register-btn {

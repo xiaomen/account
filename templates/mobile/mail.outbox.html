@@ -10,8 +10,14 @@
     {% for mail in mails %}
     <a href="/mail/view/{{ mail.id }}">
         <li class="mail">
-            <span class="mail-title">{{ mail.title }}</span>
-            <span class="mail-author">发至: {{ mail.user.name }}</span>
+            <div class="avatar">
+                <img src="{{ ('/' + mail.user.avatar) | u_files }}" width="60px" height="60px" />
+            </div>
+            <div class="mail-summary">
+                <span class="mail-title">{{ mail.title }}</span>
+                <span class="mail-author">发至: {{ mail.user.name }}</span>
+            </div>
+            <div class="clearfix"></div>
         </li>
     </a>
     {% endfor %}
