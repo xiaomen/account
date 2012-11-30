@@ -46,12 +46,12 @@ def view(topic_id, page=1):
     return output
 
 @csrf_exempt
-@topic.route('/create/', methods=['GET', 'POST'])
+@topic.route('/create/<int:uid>/', methods=['GET', 'POST'])
 @check_ua
 @login_required(next='account.login')
-def topic_create():
+def topic_create(uid):
     if request.method == 'GET':
-        return render_template('topic.create.html')
+        return render_template('topic.create.html', uid=uid)
 
     to_uid = request.form.get('to_uid')
     title = request.form.get('title')
@@ -64,12 +64,12 @@ def topic_create():
     return 'ok'
 
 @csrf_exempt
-@topic.route('/reply/', methods=['GET', 'POST'])
+@topic.route('/reply/<int:tid>/', methods=['GET', 'POST'])
 @check_ua
 @login_required(next='account.login')
-def reply_create():
+def reply_create(tid):
     if request.method == 'GET':
-        return render_template('topic.reply.html')
+        return render_template('topic.reply.html', tid=tid)
 
     tid = request.form.get('tid')
     content = request.form.get('content')
