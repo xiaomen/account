@@ -8,9 +8,11 @@ send a reply, delete topic.reply_count cache, refresh topic list
 
 import logging
 from flask import Blueprint, g, request
+from flaskext.csrf import csrf_exempt
 
 from utils.helper import Obj
 from utils.account import login_required
+from utils.ua import check_ua, render_template
 
 from query.topic import get_user_topics, get_reply, \
         get_topic, get_user_replies, delete_reply, \
@@ -43,11 +45,13 @@ def view(topic_id, page=1):
         output = o + output
     return output
 
+@csrf_exempt
 @topic.route('/create/', methods=['GET', 'POST'])
+@check_ua
 @login_required(next='account.login')
 def topic_create():
     if request.method == 'GET':
-        return '我也没时间做界面啊'
+        return render_template('topic.create.html')
 
     to_uid = request.form.get('to_uid')
     title = request.form.get('title')
@@ -59,11 +63,13 @@ def topic_create():
     create_topic(g.current_user.id, to_uid, title, content)
     return 'ok'
 
+@csrf_exempt
 @topic.route('/reply/', methods=['GET', 'POST'])
+@check_ua
 @login_required(next='account.login')
 def reply_create():
     if request.method == 'GET':
-        return '我也没时间做界面啊'
+        return render_template('topic.reply.html')
 
     tid = request.form.get('tid')
     content = request.form.get('content')

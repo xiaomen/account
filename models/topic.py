@@ -88,6 +88,7 @@ class Reply(db.Model):
         reply = Reply(tid=tid, content=content, who=who)
         db.session.add(reply)
         db.session.commit()
+        return reply
 
     def from_delete(self):
         self.from_show = 0

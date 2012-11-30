@@ -1,0 +1,9 @@
+<!doctype html>
+<title>Create new topic</title>
+<form method="post" action="/topic/create/">
+    <input type="hidden" name="to_uid" value="2"/>
+    <input type="TEXT" name="title" value="">
+    <textarea name="content"></textarea>
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+    <input type=submit value=create>
+</form>
