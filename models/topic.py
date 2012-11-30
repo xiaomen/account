@@ -46,6 +46,16 @@ class Topic(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def from_delete(self):
+        self.from_show = 0
+        db.session.add(self)
+        db.session.commit()
+
+    def to_delete(self):
+        self.delete_show = 0
+        db.session.add(self)
+        db.session.commit()
+
 class Reply(db.Model):
     __tablename__ = 'reply'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -74,7 +84,7 @@ class Reply(db.Model):
         db.session.commit()
 
     def to_delete(self):
-        self.delete_show = 0
+        self.to_show = 0
         db.session.add(self)
         db.session.commit()
 

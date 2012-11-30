@@ -22,15 +22,18 @@ def get_user_topics(uid, page):
 
 def get_user_replies(tid, page, t='from'):
     page_obj = Reply.query.filter(Reply.tid==tid)
-    # means sender's reply
-    if t == 'from':
-        page_obj = page_obj.filter(Reply.from_show==1)
-    else:
-        page_obj = page_obj.filter(Reply.to_show==1)
-    page_obj = page_obj.filter()
+    page_obj = page_obj.filter(getattr(Reply, '%s_show' % t)==1)
     page_obj = page_obj.order_by(desc(Reply.time))
     page_obj = page_obj.paginate(page, per_page=PAGE_NUM)
     return page_obj
+
+def delete_reply(rid, t='from'):
+    reply = get_reply(rid)
+    getattr(reply, '%s_delete' % t)()
+
+def delete_topic(tid, t='from'):
+    topic = get_topic(tid)
+    getattr(topic, '%s_delete' % t)()
 
 def get_topic(tid):
     return Topic.query.get(tid)

@@ -13,7 +13,8 @@ from utils.helper import Obj
 from utils.account import login_required
 
 from query.topic import get_user_topics, get_reply, \
-        get_topic, get_user_replies
+        get_topic, get_user_replies, delete_reply, \
+        delete_topic
 from query.account import get_user
 
 logger = logging.getLogger(__name__)
@@ -42,10 +43,17 @@ def view(topic_id, page=1):
         output = o + output
     return output
 
-def delete_reply(topic_id, reply_id):
+def reply_delete(topic_id, reply_id):
     topic = get_topic(topic_id)
     t = 'from' if topic.from_uid == g.current_user.id else 'to'
+    delete_reply(reply_id, t)
+    return 'ok'
 
+def topic_delete(topic_id):
+    topic = get_topic(topic_id)
+    t = 'from' if topic.from_uid == g.current_user.id else 'to'
+    delete_topic(topic_id, t)
+    return 'ok'
 
 def format_reply_list(items):
     for item in items:
