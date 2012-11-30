@@ -16,9 +16,11 @@ class Topic(db.Model):
     title = db.Column(db.String(45), nullable=False)
     from_uid = db.Column(db.Integer, index=True, nullable=False)
     to_uid = db.Column(db.Integer, index=True, nullable=False)
-    last_rid = db.Column(db.Integer, index=True, nullable=False)
-    reply_count = db.Column(db.Integer, index=True, nullable=False, default=0)
+    last_rid = db.Column(db.Integer, nullable=False)
+    reply_count = db.Column(db.Integer, nullable=False, default=0)
     last_time = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    from_show = db.Column(db.Integer, nullable=False, default=1)
+    to_show = db.Column(db.Integer, nullable=False, default=1)
 
     def __init__(self, title, from_uid, to_uid, last_rid, **kwargs):
         self.title = title
@@ -50,9 +52,9 @@ class Reply(db.Model):
     tid = db.Column(db.Integer, index=True, nullable=False)
     content = db.Column(db.Text)
     time = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    who = db.Column(db.Integer, nullable=False, default=0)
-    sender = db.Column(db.Integer, nullable=False, default=1)
-    receiver = db.Column(db.Integer, nullable=False, default=1)
+    who = db.Column(db.Integer, nullable=False)
+    from_show = db.Column(db.Integer, nullable=False, default=1)
+    to_show = db.Column(db.Integer, nullable=False, default=1)
 
     def __init__(self, tid, content, who):
         self.tid = tid
@@ -66,13 +68,13 @@ class Reply(db.Model):
         db.session.add(reply)
         db.session.commit()
 
-    def detele_for_sender(self):
-        self.sender = 0
+    def from_delete(self):
+        self.from_show = 0
         db.session.add(self)
         db.session.commit()
 
-    def detele_for_receiver(self):
-        self.receiver = 0
+    def to_delete(self):
+        self.delete_show = 0
         db.session.add(self)
         db.session.commit()
 

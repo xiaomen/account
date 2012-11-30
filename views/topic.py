@@ -10,20 +10,48 @@ import logging
 from flask import Blueprint, g
 
 from utils.helper import Obj
-from models.topic import Topic, Reply
-from query.topic import get_user_topics, get_reply
+from utils.account import login_required
+
+from query.topic import get_user_topics, get_reply, \
+        get_topic, get_user_replies
 from query.account import get_user
 
 logger = logging.getLogger(__name__)
 topic = Blueprint('topic', __name__)
 
 @topic.route('/')
-def test():
-    list_page = get_user_topics(1, 1)
+@topic.route('/<int:page>')
+@login_required(next='account.login')
+def index(page=1):
+    list_page = get_user_topics(1, page)
     output = ''
     for topic in format_topic_list(list_page.items):
         output += '%s %s %s<br />' % (topic.title, topic.user.name, topic.last_reply.content)
     return output
+
+@topic.route('/view/<int:topic_id>/')
+@topic.route('/view/<int:topic_id>/<int:page>/')
+@login_required(next='account.login')
+def view(topic_id, page=1):
+    topic = get_topic(topic_id)
+    t = 'from' if topic.from_uid == g.current_user.id else 'to'
+    list_page = get_user_replies(topic_id, page, t)
+    output = ''
+    for reply in format_reply_list(list_page.items):
+        o = '%s %s %s<br />' % (reply.user.name, reply.time, reply.content)
+        output = o + output
+    return output
+
+def format_reply_list(items):
+    for item in items:
+        reply = Obj()
+        if item.who != g.current_user.id:
+            reply.user = get_user(item.who)
+        else:
+            reply.user = g.current_user
+        reply.content = item.content
+        reply.time = item.time
+        yield reply
 
 def format_topic_list(items):
     for item in items:
