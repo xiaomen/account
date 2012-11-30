@@ -55,6 +55,18 @@ class Topic(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def activate(self):
+        f = False
+        if self.from_show == 0:
+            self.from_show == 1
+            f = True
+        if self.to_show == 0:
+            self.to_show == 1
+            f = True
+        if f:
+            db.session.add(self)
+            db.session.commit()
+
 class Reply(db.Model):
     __tablename__ = 'reply'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)

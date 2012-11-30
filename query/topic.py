@@ -35,6 +35,7 @@ def create_topic(uid, to_uid, title, content):
 def create_reply(uid, topic, content):
     reply = Reply.create(topic.id, content, uid)
     topic.add_reply(reply)
+    topic.activate()
     return reply
 
 def delete_reply(rid, t='from'):
