@@ -16,28 +16,27 @@ class Topic(db.Model):
     title = db.Column(db.String(45), nullable=False)
     from_uid = db.Column(db.Integer, index=True, nullable=False)
     to_uid = db.Column(db.Integer, index=True, nullable=False)
-    last_rid = db.Column(db.Integer, nullable=False)
+    last_rid = db.Column(db.Integer, nullable=False, default=0)
     reply_count = db.Column(db.Integer, nullable=False, default=0)
     last_time = db.Column(db.DateTime, nullable=False, default=datetime.now)
     from_show = db.Column(db.Integer, nullable=False, default=1)
     to_show = db.Column(db.Integer, nullable=False, default=1)
 
-    def __init__(self, title, from_uid, to_uid, last_rid, **kwargs):
+    def __init__(self, title, from_uid, to_uid, **kwargs):
         self.title = title
         self.from_uid = from_uid
         self.to_uid = to_uid
-        self.last_rid = last_rid
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
 
     @staticmethod
-    def create(from_uid, to_uid, title, last_rid):
+    def create(from_uid, to_uid, title):
         topic = Topic(from_uid=from_uid,
-                    to_uid = to_uid,
-                    title = title,
-                    last_rid = last_rid)
+                      to_uid = to_uid,
+                      title = title)
         db.session.add(topic)
         db.session.commit()
+        return topic
 
     def add_reply(self, reply):
         self.last_rid = reply.id

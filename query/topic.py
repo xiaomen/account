@@ -27,6 +27,16 @@ def get_user_replies(tid, page, t='from'):
     page_obj = page_obj.paginate(page, per_page=PAGE_NUM)
     return page_obj
 
+def create_topic(uid, to_uid, title, content):
+    topic = Topic.create(uid, to_uid, title)
+    create_reply(uid, topic, content)
+    return topic
+
+def create_reply(uid, topic, content):
+    reply = Reply.create(topic.id, content, uid)
+    topic.add_reply(reply)
+    return reply
+
 def delete_reply(rid, t='from'):
     reply = get_reply(rid)
     getattr(reply, '%s_delete' % t)()

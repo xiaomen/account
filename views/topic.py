@@ -7,14 +7,14 @@ send a reply, delete topic.reply_count cache, refresh topic list
 '''
 
 import logging
-from flask import Blueprint, g
+from flask import Blueprint, g, request
 
 from utils.helper import Obj
 from utils.account import login_required
 
 from query.topic import get_user_topics, get_reply, \
         get_topic, get_user_replies, delete_reply, \
-        delete_topic
+        delete_topic, create_topic, create_reply
 from query.account import get_user
 
 logger = logging.getLogger(__name__)
@@ -42,6 +42,36 @@ def view(topic_id, page=1):
         o = '%s %s %s<br />' % (reply.user.name, reply.time, reply.content)
         output = o + output
     return output
+
+@topic.route('/create/', methods=['GET', 'POST'])
+@login_required(next='account.login')
+def topic_create():
+    if request.method == 'GET':
+        return '我也没时间做界面啊'
+
+    to_uid = request.form.get('to_uid')
+    title = request.form.get('title')
+    content = request.form.get('content')
+    who = get_user(to_uid)
+
+    if not who:
+        return '丫的你坑我呢'
+    create_topic(g.current_user.id, to_uid, title, content)
+    return 'ok'
+
+@topic.route('/reply/', methods=['GET', 'POST'])
+@login_required(next='account.login')
+def reply_create():
+    if request.method == 'GET':
+        return '我也没时间做界面啊'
+
+    tid = request.form.get('tid')
+    content = request.form.get('content')
+    topic = get_topic(tid)
+    if not topic:
+        return '丫的你坑我呢'
+    create_reply(g.current_user.id, topic, content)
+    return 'ok'
 
 def reply_delete(topic_id, reply_id):
     topic = get_topic(topic_id)
