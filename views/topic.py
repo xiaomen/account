@@ -51,7 +51,12 @@ def view(tid, page=1):
 @login_required(next='account.login')
 def create_topic(uid):
     if request.method == 'GET':
-        return render_template('topic.create.html', uid=uid)
+        who = get_user(uid)
+        
+        if not who:
+            abort(404)
+
+        return render_template('topic.create.html', uid=uid, who=who)
 
     to_uid = request.form.get('to_uid')
     title = request.form.get('title')

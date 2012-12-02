@@ -397,3 +397,14 @@ input[readonly] {
 .back-btn .btn {
     float: right; 
 }
+
+.title {
+    margin: 10px; 
+    padding: 10px 5px; 
+    border-bottom: 1px solid #3999CC; 
+    color: #3999CC; 
+}
+
+.create-topic {
+    margin: 0 10px; 
+}
