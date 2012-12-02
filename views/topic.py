@@ -104,7 +104,7 @@ def format_topic_list(items):
             #TODO have to log
             continue
         topic = Obj()
-        item.user = get_user(item.contact)
+        topic.user = get_user(item.contact)
         topic.last_reply = get_reply(t.last_rid)
         topic.title = t.title
         yield topic
