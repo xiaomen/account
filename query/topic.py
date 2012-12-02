@@ -40,10 +40,7 @@ def mark_read(uid, tid):
     mailr.read()
     return True
 
-def delete_topic(uid, tid):
-    mailr = get_mailr_by(uid=uid, tid=tid)
-    if not mailr:
-        return
+def delete_topic(mailr):
     mailr.delete()
 
 def get_mailrs(uid, tid):

@@ -17,7 +17,8 @@ from utils.ua import check_ua, render_template
 
 from query.topic import get_user_topics, get_reply, \
         get_topic, get_user_replies, delete_topic, \
-        make_topic, make_reply, mark_read, get_mailrs
+        make_topic, make_reply, mark_read, \
+        get_mailrs, get_mailr_by
 from query.account import get_user
 
 logger = logging.getLogger(__name__)
@@ -70,7 +71,7 @@ def create_topic(uid):
 @login_required(next='account.login')
 def create_reply(tid):
     if request.method == 'GET':
-        return render_template('topic.reply.html', tid=tid)
+        return redirect(url_for('topic.view', tid=tid))
 
     tid = request.form.get('tid')
     content = request.form.get('content')
@@ -81,12 +82,15 @@ def create_reply(tid):
     make_reply(sender, receiver, topic, content)
     return redirect(url_for('topic.view', tid=tid))
 
+@topic.route('/delete/<int:tid>/')
+@check_ua
+@login_required(next='account.login')
 def topic_delete(tid):
-    topic = get_topic(tid)
-    if not topic:
-        return 'failed'
-    delete_topic(g.current_user.id, topic.id)
-    return 'ok'
+    mailr = get_mailr_by(uid=g.current_user.id, \
+            tid=tid)
+    if mailr:
+        delete_topic(mailr)
+    return redirect(url_for('topic.index'))
 
 def format_reply_list(items):
     for item in items:
