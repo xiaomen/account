@@ -28,19 +28,17 @@ def get_user_replies(tid, page):
 
 def make_topic(uid, to_uid, title, content):
     #TODO clean cache!!!
-    create_topic(uid, to_uid, title, content)
+    return create_topic(uid, to_uid, title, content)
 
-def make_reply(uid, topic, content):
-    sender, receiver = get_mailrs(uid, topic.id)
-    if not sender or not receiver:
-        return False
+def make_reply(sender, receiver, topic, content):
     return create_reply(sender, receiver, topic, content)
 
 def mark_read(uid, tid):
     mailr = get_mailr_by(uid=uid, tid=tid)
     if not mailr:
-        return
+        return False
     mailr.read()
+    return True
 
 def delete_topic(uid, tid):
     mailr = get_mailr_by(uid=uid, tid=tid)

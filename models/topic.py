@@ -51,11 +51,10 @@ class Mailr(db.Model):
         db.session.commit()
 
     def read(self):
-        if not self.has_new:
-            return
-        self.has_new = 0
-        db.session.add(self)
-        db.session.commit()
+        if self.has_new:
+            self.has_new = 0
+            db.session.add(self)
+            db.session.commit()
 
 class Topic(db.Model):
     __tablename__ = 'topic'

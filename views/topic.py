@@ -17,7 +17,7 @@ from utils.ua import check_ua, render_template
 
 from query.topic import get_user_topics, get_reply, \
         get_topic, get_user_replies, delete_topic, \
-        make_topic, make_reply, mark_read
+        make_topic, make_reply, mark_read, get_mailrs
 from query.account import get_user
 
 logger = logging.getLogger(__name__)
@@ -59,6 +59,7 @@ def create_topic(uid):
 
     if not who:
         #TODO return error code
+        # check other params
         return render_template('topic.create.html', uid=uid)
     make_topic(g.current_user.id, to_uid, title, content)
     return redirect(url_for('topic.index'))
@@ -74,8 +75,10 @@ def create_reply(tid):
     tid = request.form.get('tid')
     content = request.form.get('content')
     topic = get_topic(tid)
-    if topic:
-        make_reply(g.current_user.id, topic, content)
+    sender, receiver = get_mailrs(g.current_user.id, topic.id)
+    if not topic or not sender or not receiver:
+        return redirect(url_for('topic.index'))
+    make_reply(sender, receiver, topic, content)
     return redirect(url_for('topic.view', tid=tid))
 
 def topic_delete(tid):

@@ -1,5 +1,5 @@
 <!doctype html>
-<title>topic.title</title>
+<title>{{ topic.title }}</title>
 {% for reply in replies %}
     <p>
     {{ reply.user.name }} {{ reply.time }} {{ reply.content }}
@@ -11,5 +11,5 @@
     <textarea name="content"></textarea>
     <br />
     <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-    <input type=submit value=create>
+    <input type=submit value=reply>
 </form>
