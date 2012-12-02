@@ -37,8 +37,9 @@ def index(page=1):
 @login_required(next='account.login')
 def view(topic_id, page=1):
     topic = get_topic(topic_id)
-    t = 'from' if topic.from_uid == g.current_user.id else 'to'
-    list_page = get_user_replies(topic_id, page, t)
+    if not topic:
+        return '你玩我呢！？'
+    list_page = get_user_replies(topic_id, page)
     output = ''
     for reply in format_reply_list(list_page.items):
         o = '%s %s %s<br />' % (reply.user.name, reply.time, reply.content)
