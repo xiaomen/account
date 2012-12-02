@@ -29,7 +29,10 @@ def index(page=1):
     list_page = get_user_topics(g.current_user.id, page)
     output = ''
     for topic in format_topic_list(list_page.items):
-        output += '%s %s %s<br />' % (topic.title, topic.user.name, topic.last_reply.content)
+        output += '%s %s %s' % (topic.title, topic.user.name, topic.last_reply.content)
+        if topic.has_new:
+            output += 'new'
+        output += '<br />'
     return output
 
 @topic.route('/view/<int:topic_id>/')
@@ -108,5 +111,6 @@ def format_topic_list(items):
         topic.user = get_user(item.contact)
         topic.last_reply = get_reply(t.last_rid)
         topic.title = t.title
+        topic.has_new = item.has_new
         yield topic
 

@@ -41,12 +41,15 @@ def delete_topic(uid, tid):
     mailr.delete()
 
 def get_mailrs(uid):
-    sender = get_mailr_by_uid(uid).first()
-    receiver = get_mailr_by_uid(sender.contact).first()
+    sender = get_mailr_by_uid(uid)
+    receiver = get_mailr_by_uid(sender.contact)
     return sender, receiver
 
+def topic_notify(uid):
+    return Mailr.query.filter(and_(Mailr.uid==uid, Mailr.has_new==1)).first()
+
 def get_mailr_by_uid(uid):
-    return Mailr.query.filter(Mailr.uid==uid)
+    return Mailr.query.filter(Mailr.uid==uid).first()
 
 def get_topic(tid):
     return Topic.query.get(tid)
