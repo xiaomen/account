@@ -31,7 +31,7 @@ def index(page=1):
     msg = request.args.get('msg', None)
     list_page = get_user_topics(g.current_user.id, page)
     return render_template('topic.index.html', msg=msg, \
-            topics=format_topic_list(list_page.items))
+            topics=format_topic_list(list_page.items), list_page=list_page)
 
 @topic.route('/view/<int:tid>/')
 @topic.route('/view/<int:tid>/<int:page>/')
