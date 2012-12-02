@@ -15,8 +15,8 @@ from utils.account import login_required
 from utils.ua import check_ua, render_template
 
 from query.topic import get_user_topics, get_reply, \
-        get_topic, get_user_replies, delete_reply, \
-        delete_topic, create_topic, create_reply
+        get_topic, get_user_replies, delete_topic, \
+        make_topic, make_reply
 from query.account import get_user
 
 logger = logging.getLogger(__name__)
@@ -26,7 +26,7 @@ topic = Blueprint('topic', __name__)
 @topic.route('/<int:page>')
 @login_required(next='account.login')
 def index(page=1):
-    list_page = get_user_topics(1, page)
+    list_page = get_user_topics(g.current_user.id, page)
     output = ''
     for topic in format_topic_list(list_page.items):
         output += '%s %s %s<br />' % (topic.title, topic.user.name, topic.last_reply.content)
@@ -60,7 +60,7 @@ def topic_create(uid):
 
     if not who:
         return '丫的你坑我呢'
-    create_topic(g.current_user.id, to_uid, title, content)
+    make_topic(g.current_user.id, to_uid, title, content)
     return 'ok'
 
 @csrf_exempt
@@ -76,19 +76,14 @@ def reply_create(tid):
     topic = get_topic(tid)
     if not topic:
         return '丫的你坑我呢'
-    create_reply(g.current_user.id, topic, content)
-    return 'ok'
-
-def reply_delete(topic_id, reply_id):
-    topic = get_topic(topic_id)
-    t = 'from' if topic.from_uid == g.current_user.id else 'to'
-    delete_reply(reply_id, t)
+    make_reply(g.current_user.id, topic, content)
     return 'ok'
 
 def topic_delete(topic_id):
     topic = get_topic(topic_id)
-    t = 'from' if topic.from_uid == g.current_user.id else 'to'
-    delete_topic(topic_id, t)
+    if not topic:
+        return 'failed'
+    delete_topic(g.current_user.id, topic.id)
     return 'ok'
 
 def format_reply_list(items):
@@ -104,14 +99,13 @@ def format_reply_list(items):
 
 def format_topic_list(items):
     for item in items:
+        t = get_topic(item.tid)
+        if not t:
+            #TODO have to log
+            continue
         topic = Obj()
-        if item.from_uid != g.current_user.id:
-            #means someone open topic with me
-            topic.user = get_user(item.from_uid)
-        else:
-            #means I open topic with other
-            topic.user = get_user(item.to_uid)
-        topic.last_reply = get_reply(item.last_rid)
-        topic.title = item.title
+        item.user = get_user(item.contact)
+        topic.last_reply = get_reply(t.last_rid)
+        topic.title = t.title
         yield topic
 

@@ -8,43 +8,45 @@
 同理适用于reply，先从topic表中查到reply_count再分页。
 '''
 
-from sqlalchemy import and_, or_
+from sqlalchemy import and_
 from sqlalchemy.sql.expression import desc
 
 from config import PAGE_NUM
-from models.topic import Topic, Reply
+from models.topic import Topic, Reply, Mailr, create_topic, create_reply
 
 def get_user_topics(uid, page):
-    page_obj = Topic.query.filter(or_(and_(Topic.from_uid==uid, Topic.from_show==1), and_(Topic.to_uid==uid, Topic.to_show==1)))
-    page_obj = page_obj.order_by(desc(Topic.last_time))
+    page_obj = Mailr.query.filter(and_(Mailr.uid==uid, Mailr.has_delete==0))
+    page_obj = page_obj.order_by(desc(Mailr.last_time))
     page_obj = page_obj.paginate(page, per_page=PAGE_NUM)
     return page_obj
 
-def get_user_replies(tid, page, t='from'):
+def get_user_replies(tid, page):
     page_obj = Reply.query.filter(Reply.tid==tid)
-    page_obj = page_obj.filter(getattr(Reply, '%s_show' % t)==1)
     page_obj = page_obj.order_by(desc(Reply.time))
     page_obj = page_obj.paginate(page, per_page=PAGE_NUM)
     return page_obj
 
-def create_topic(uid, to_uid, title, content):
-    topic = Topic.create(uid, to_uid, title)
-    create_reply(uid, topic, content)
-    return topic
+def make_topic(uid, to_uid, title, content):
+    #TODO clean cache!!!
+    create_topic(uid, to_uid, title, content)
 
-def create_reply(uid, topic, content):
-    reply = Reply.create(topic.id, content, uid)
-    topic.add_reply(reply)
-    topic.activate()
-    return reply
+def make_reply(uid, topic, content):
+    sender, receiver = get_mailrs(uid)
+    create_reply(sender, receiver, topic, content)
 
-def delete_reply(rid, t='from'):
-    reply = get_reply(rid)
-    getattr(reply, '%s_delete' % t)()
+def delete_topic(uid, tid):
+    mailr = Mailr.query.filter(and_(Mailr.uid==uid, Mailr.tid==tid)).first()
+    if not mailr:
+        pass
+    mailr.delete()
 
-def delete_topic(tid, t='from'):
-    topic = get_topic(tid)
-    getattr(topic, '%s_delete' % t)()
+def get_mailrs(uid):
+    sender = get_mailr_by_uid(uid)
+    receiver = get_mailr_by_uid(sender.contact)
+    return sender, receiver
+
+def get_mailr_by_uid(uid):
+    return Mailr.query.filter(Mailr.uid==uid)
 
 def get_topic(tid):
     return Topic.query.get(tid)

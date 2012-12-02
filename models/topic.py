@@ -10,30 +10,57 @@ def init_topic_db(app):
     db.app = app
     db.create_all()
 
-class Topic(db.Model):
-    __tablename__ = 'topic'
+class Mailr(db.Model):
+    __tablename__ = 'mailr'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    title = db.Column(db.String(45), nullable=False)
-    from_uid = db.Column(db.Integer, index=True, nullable=False)
-    to_uid = db.Column(db.Integer, index=True, nullable=False)
-    last_rid = db.Column(db.Integer, nullable=False, default=0)
-    reply_count = db.Column(db.Integer, nullable=False, default=0)
+    uid = db.Column(db.Integer, index=True, nullable=False)
+    tid = db.Column(db.Integer, index=True, nullable=False)
+    contact = db.Column(db.Integer, nullable=False)
     last_time = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    from_show = db.Column(db.Integer, nullable=False, default=1)
-    to_show = db.Column(db.Integer, nullable=False, default=1)
+    has_new = db.Column(db.Integer, nullable=False, default=0)
+    has_delete = db.Column(db.Integer, nullable=False, default=0)
 
-    def __init__(self, title, from_uid, to_uid, **kwargs):
-        self.title = title
-        self.from_uid = from_uid
-        self.to_uid = to_uid
+    def __init__(self, uid, tid, **kwargs):
+        self.uid = uid
+        self.tid = tid
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
 
     @staticmethod
-    def create(from_uid, to_uid, title):
-        topic = Topic(from_uid=from_uid,
-                      to_uid = to_uid,
-                      title = title)
+    def create(uid, tid, last_time, contact):
+        mailr = Mailr(uid = uid,
+                      tid = tid,
+                      contact = contact,
+                      last_time = last_time)
+        db.session.add(mailr)
+        db.session.commit()
+        return mailr
+
+    def new_message(self, last_time, has_new=0):
+        self.has_new = has_new
+        self.has_delete = 0
+        self.last_time = last_time
+
+    def delete(self):
+        self.has_delete = 1
+        db.session.add(self)
+        db.session.commit()
+
+class Topic(db.Model):
+    __tablename__ = 'topic'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(45), nullable=False)
+    last_rid = db.Column(db.Integer, nullable=False, default=0)
+    reply_count = db.Column(db.Integer, nullable=False, default=0)
+
+    def __init__(self, title, **kwargs):
+        self.title = title
+        for k, v in kwargs.iteritems():
+            setattr(self, k, v)
+
+    @staticmethod
+    def create(title):
+        topic = Topic(title = title)
         db.session.add(topic)
         db.session.commit()
         return topic
@@ -41,31 +68,6 @@ class Topic(db.Model):
     def add_reply(self, reply):
         self.last_rid = reply.id
         self.reply_count = self.reply_count + 1
-        self.last_time = datetime.now()
-        db.session.add(self)
-        db.session.commit()
-
-    def from_delete(self):
-        self.from_show = 0
-        db.session.add(self)
-        db.session.commit()
-
-    def to_delete(self):
-        self.delete_show = 0
-        db.session.add(self)
-        db.session.commit()
-
-    def activate(self):
-        f = False
-        if self.from_show == 0:
-            self.from_show == 1
-            f = True
-        if self.to_show == 0:
-            self.to_show == 1
-            f = True
-        if f:
-            db.session.add(self)
-            db.session.commit()
 
 class Reply(db.Model):
     __tablename__ = 'reply'
@@ -74,8 +76,6 @@ class Reply(db.Model):
     content = db.Column(db.Text)
     time = db.Column(db.DateTime, nullable=False, default=datetime.now)
     who = db.Column(db.Integer, nullable=False)
-    from_show = db.Column(db.Integer, nullable=False, default=1)
-    to_show = db.Column(db.Integer, nullable=False, default=1)
 
     def __init__(self, tid, content, who):
         self.tid = tid
@@ -90,13 +90,42 @@ class Reply(db.Model):
         db.session.commit()
         return reply
 
-    def from_delete(self):
-        self.from_show = 0
-        db.session.add(self)
+def create_topic(uid, to_uid, title, content):
+    try:
+        topic = Topic(title=title)
+        db.session.add(topic)
+        db.session.flush()
+        reply = Reply(topic.id, content, uid)
+        db.session.add(reply)
+        db.session.flush()
+        topic.add_reply(reply)
+        db.session.add(topic)
+        db.session.flush()
+        sender = Mailr(uid, topic.id, \
+                      contact=to_uid, \
+                      last_time=reply.time)
+        receiver = Mailr(to_uid, topic.id, \
+                         contact=uid, \
+                         last_time=reply.time, \
+                         has_new=1)
+        db.session.add(sender)
+        db.session.add(receiver)
         db.session.commit()
+    except Exception:
+        db.session.rollback()
 
-    def to_delete(self):
-        self.to_show = 0
-        db.session.add(self)
+def create_reply(sender, receiver, topic, content):
+    try:
+        reply = Reply(topic.id, content, sender.uid)
+        db.session.add(reply)
+        db.session.flush()
+        topic.add_reply(reply)
+        sender.new_message(reply.time)
+        receiver.new_message(reply.time, has_new=1)
+        db.session.add(topic)
+        db.session.add(sender)
+        db.session.add(receiver)
         db.session.commit()
+    except Exception:
+        db.session.rollback()
 
