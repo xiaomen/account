@@ -1,5 +1,5 @@
 {% for topic in topics %}
-<a href="{{ url_for('topic.view', topic_id=topic.id) }}">{{ topic.title }}, {{ topic.user.name }}, {{ topic.last_reply.content }}</a>
+<a href="{{ url_for('topic.view', tid=topic.id) }}">{{ topic.title }}, {{ topic.user.name }}, {{ topic.last_reply.content }}</a>
     {% if topic.has_new %}
     <font color="red">new</font>
     {% endif %}<br />
