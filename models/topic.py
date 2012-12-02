@@ -41,7 +41,8 @@ class Mailr(db.Model):
         return mailr
 
     def new_message(self, last_time, has_new=0):
-        self.has_new = has_new
+        if self.has_new != has_new:
+            self.has_new = has_new
         self.has_delete = 0
         self.last_time = last_time
 
