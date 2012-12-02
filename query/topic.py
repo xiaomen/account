@@ -31,25 +31,33 @@ def make_topic(uid, to_uid, title, content):
     create_topic(uid, to_uid, title, content)
 
 def make_reply(uid, topic, content):
-    sender, receiver = get_mailrs(uid)
-    create_reply(sender, receiver, topic, content)
+    sender, receiver = get_mailrs(uid, topic.id)
+    if not sender or not receiver:
+        return False
+    return create_reply(sender, receiver, topic, content)
+
+def mark_read(uid, tid):
+    mailr = get_mailr_by(uid=uid, tid=tid)
+    if not mailr:
+        return
+    mailr.read()
 
 def delete_topic(uid, tid):
-    mailr = Mailr.query.filter(and_(Mailr.uid==uid, Mailr.tid==tid)).first()
+    mailr = get_mailr_by(uid=uid, tid=tid)
     if not mailr:
-        pass
+        return
     mailr.delete()
 
-def get_mailrs(uid):
-    sender = get_mailr_by_uid(uid)
-    receiver = get_mailr_by_uid(sender.contact)
+def get_mailrs(uid, tid):
+    sender = get_mailr_by(uid=uid, tid=tid)
+    receiver = get_mailr_by(uid=sender.contact, tid=tid)
     return sender, receiver
 
 def topic_notify(uid):
-    return Mailr.query.filter(and_(Mailr.uid==uid, Mailr.has_new==1)).first()
+    return get_mailr_by(uid=uid, has_new=1)
 
-def get_mailr_by_uid(uid):
-    return Mailr.query.filter(Mailr.uid==uid).first()
+def get_mailr_by(**kw):
+    return Mailr.query.filter_by(**kw).first()
 
 def get_topic(tid):
     return Topic.query.get(tid)

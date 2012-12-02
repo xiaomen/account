@@ -1,8 +1,12 @@
 #!/usr/local/bin/python2.7
 #coding:utf-8
 
+import logging
+
 from datetime import datetime
 from flask.ext.sqlalchemy import SQLAlchemy
+
+logger = logging.getLogger('__name__')
 
 db = SQLAlchemy()
 def init_topic_db(app):
@@ -43,6 +47,13 @@ class Mailr(db.Model):
 
     def delete(self):
         self.has_delete = 1
+        db.session.add(self)
+        db.session.commit()
+
+    def read(self):
+        if not self.has_new:
+            return
+        self.has_new = 0
         db.session.add(self)
         db.session.commit()
 
@@ -111,8 +122,11 @@ def create_topic(uid, to_uid, title, content):
         db.session.add(sender)
         db.session.add(receiver)
         db.session.commit()
+        return True
     except Exception:
+        logger.exception('create topic failed')
         db.session.rollback()
+    return False
 
 def create_reply(sender, receiver, topic, content):
     try:
@@ -126,6 +140,9 @@ def create_reply(sender, receiver, topic, content):
         db.session.add(sender)
         db.session.add(receiver)
         db.session.commit()
+        return True
     except Exception:
+        logger.exception('create reply failed')
         db.session.rollback()
+    return False
 
