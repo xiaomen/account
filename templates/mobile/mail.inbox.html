@@ -14,7 +14,7 @@
             <span class="r">未读</span>
             {% endif %}
             <div class="avatar">
-                <img src="{{ mail.user.avatar | u_files }}" width="60px" height="60px" />
+                <img src="{{ ('/' + mail.user.avatar) | u_files }}" width="60px" height="60px" />
             </div>
             <div class="mail-summary">
                <span class="mail-title">{{ mail.title }}</span>
