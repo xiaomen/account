@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 topic = Blueprint('topic', __name__)
 
 @topic.route('/')
-@topic.route('/<int:page>')
+@topic.route('/<int:page>/')
 @login_required(next='account.login')
 def index(page=1):
     msg = request.args.get('msg', None)

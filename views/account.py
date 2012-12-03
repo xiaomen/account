@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 account = Blueprint('account', __name__)
 
 @csrf_exempt
-@account.route('/forget', methods=['GET', 'POST'])
+@account.route('/forget/', methods=['GET', 'POST'])
 @check_ua
 @login_required(need=False)
 def forget():
@@ -54,7 +54,7 @@ def forget():
 
     return render_template('account.forget.html', send=1)
 
-@account.route('/reset/<stub>', methods=['GET', 'POST'])
+@account.route('/reset/<stub>/', methods=['GET', 'POST'])
 @check_ua
 def reset(stub=None):
     forget = get_forget_by_stub(stub=stub)
