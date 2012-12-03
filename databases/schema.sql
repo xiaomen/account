@@ -26,7 +26,22 @@ CREATE TABLE `mail` (
   KEY `ix_mail_is_read` (`is_read`),
   KEY `ix_mail_from_uid` (`from_uid`),
   KEY `ix_mail_to_uid` (`to_uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mailr` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `tid` int(11) NOT NULL,
+  `contact` int(11) NOT NULL,
+  `last_time` datetime NOT NULL,
+  `has_new` int(11) NOT NULL,
+  `has_delete` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ix_mailr_uid` (`uid`),
+  KEY `ix_mailr_tid` (`tid`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -42,6 +57,28 @@ CREATE TABLE `oauth` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `reply` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tid` int(11) NOT NULL,
+  `content` text,
+  `time` datetime NOT NULL,
+  `who` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ix_reply_tid` (`tid`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `topic` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(45) NOT NULL,
+  `last_rid` int(11) NOT NULL,
+  `reply_count` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` char(16) NOT NULL,
@@ -53,5 +90,5 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `domain` (`domain`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

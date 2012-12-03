@@ -16,6 +16,6 @@ def unread(uid):
 def people(uid):
     people = get_user(uid)
     if people:
-        return dict(name=people.name, uid=people.id, domain=people.domain)
+        return dict(name=people.name, uid=people.id, domain=people.domain, avatar=people.avatar)
     return
 
