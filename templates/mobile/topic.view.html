@@ -16,7 +16,7 @@
     <li class="mail{% if reply.user.id != g.current_user.id %} right{% endif %} reply">
         <div class="avatar">
             <a href="{{ url_for('people.show_people', username=reply.user.domain if reply.user.domain else reply.user.id) }}">
-                <img src="{{ ('/' + reply.user.avatar) | u_files }}" width="60px" height="60px" />
+                <img src="{{ reply.user.avatar | u_files }}" width="60px" height="60px" />
             </a>
         </div>
         <div class="mail-summary">

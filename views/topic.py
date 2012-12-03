@@ -8,7 +8,7 @@ send a reply, delete topic.reply_count cache, refresh topic list
 
 import logging
 from flask import Blueprint, g, request, \
-        url_for, redirect
+        url_for, redirect, abort
 from flaskext.csrf import csrf_exempt
 
 from utils.helper import Obj
@@ -39,29 +39,27 @@ def index(page=1):
 def view(tid, page=1):
     topic = get_topic(tid)
     if not topic:
-        return redirect(url_for('topic.index'))
+        raise abort(404)
     mark_read(g.current_user.id, tid)
     list_page = get_user_replies(tid, page)
     return render_template('topic.view.html', \
-            replies=format_reply_list(list_page.items), topic=topic)
+            replies=format_reply_list(list_page.items), \
+            topic=topic)
 
 @csrf_exempt
 @topic.route('/create/<int:uid>/', methods=['GET', 'POST'])
 @check_ua
 @login_required(next='account.login')
 def create_topic(uid):
+    who = get_user(uid)
     if request.method == 'GET':
-        who = get_user(uid)
-        
         if not who:
-            abort(404)
-
+            raise abort(404)
         return render_template('topic.create.html', uid=uid, who=who)
 
     to_uid = request.form.get('to_uid')
     title = request.form.get('title')
     content = request.form.get('content')
-    who = get_user(to_uid)
 
     if not who:
         #TODO return error code

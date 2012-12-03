@@ -5,10 +5,10 @@
     <div class="avatar">
         {% if g.current_user and g.current_user.id == visit_user.id %}
         <a href="{{ url_for('account.avatar') }}">
-            <img src="{{ ('/' + visit_user.avatar) | u_files }}" width="150px" height="150px" />
+            <img src="{{ visit_user.avatar | u_files }}" width="150px" height="150px" />
         </a>
         {% else %}
-        <img src="{{ ('/' + visit_user.avatar) | u_files }}" width="150px" height="150px" />
+        <img src="{{ visit_user.avatar | u_files }}" width="150px" height="150px" />
         {% endif %}
     </div>
     <div class="info">

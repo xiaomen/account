@@ -161,21 +161,16 @@ def logout():
 @login_required('account.login', redirect='/account/avatar')
 def avatar():
     user = g.current_user
-    path = '/'
-    if user.avatar:
-        path += user.avatar
-    else:
-        path += 'default.png'
     if request.method == 'GET':
         ok = request.args.get('ok', None)
-        return render_template('account.avatar.html', path=path, ok=ok)
+        return render_template('account.avatar.html', path = user.avatar, ok=ok)
     upload_avatar = request.files['file']
     if not upload_avatar:
-        return render_template('account.avatar.html', path = path, error = 'Please select avatar file')
+        return render_template('account.avatar.html', path = user.avatar, error = 'Please select avatar file')
     uploader = get_uploader()
     filename, stream, error = process_file(user, upload_avatar)
     if error:
-        return render_template('account.avatar.html', path = path, error = error)
+        return render_template('account.avatar.html', path = user.avatar, error = error)
     uploader.writeFile(filename, stream)
     _set_avatar(user, filename)
     clear_user_cache(user)
