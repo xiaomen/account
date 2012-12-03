@@ -31,7 +31,7 @@ def index(page=1):
     msg = request.args.get('msg', None)
     list_page = get_user_topics(g.current_user.id, page)
     return render_template('topic.index.html', msg=msg, \
-            topics=format_topic_list(list_page.items))
+            topics=format_topic_list(list_page.items), list_page=list_page)
 
 @topic.route('/view/<int:tid>/')
 @topic.route('/view/<int:tid>/<int:page>/')
@@ -51,7 +51,12 @@ def view(tid, page=1):
 @login_required(next='account.login')
 def create_topic(uid):
     if request.method == 'GET':
-        return render_template('topic.create.html', uid=uid)
+        who = get_user(uid)
+        
+        if not who:
+            abort(404)
+
+        return render_template('topic.create.html', uid=uid, who=who)
 
     to_uid = request.form.get('to_uid')
     title = request.form.get('title')

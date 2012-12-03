@@ -1,0 +1,9 @@
+{% extends "mobile/layout.html" %}
+
+{% block content %}
+<div class="title">
+    <h2>给{{ who.name }}写信</h2>
+</div>
+<form class="create-topic" method="POST" action="/topic/create/{{ uid }}/">
+</form>
+{% endblock %}

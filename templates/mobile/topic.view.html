@@ -1,0 +1,34 @@
+{% extends "mobile/layout.html" %}
+
+{% block content %}
+<form class="reply-topic" method="POST" action="{{ url_for('topic.create_reply', tid=topic.id) }}">
+    <input type="hidden" name="tid" value="{{ topic.id }}"/>
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+    <div class="r">
+        <button type="submit" name="submit" class="btn">回复</button>
+    </div>
+    <div class="l">
+        <textarea name="content"></textarea>
+    </div>
+</form>
+<ul class="maillist">
+    {% for reply in replies %}
+    <li class="mail{% if reply.user.id != g.current_user.id %} right{% endif %} reply">
+        <div class="avatar">
+            <a href="{{ url_for('people.show_people', username=reply.user.domain if reply.user.domain else reply.user.id) }}">
+                <img src="{{ ('/' + reply.user.avatar) | u_files }}" width="60px" height="60px" />
+            </a>
+        </div>
+        <div class="mail-summary">
+           <span class="mail-author"><a href="{{ url_for('people.show_people', username=reply.user.domain if reply.user.domain else reply.user.id) }}">{{ reply.user.name }}</a> @ {{ reply.time }}</span>
+           <span class="reply-content">{{ reply.content }}</span>
+       </div>
+       <div class="clearfix"></div>
+    </li>
+    {% endfor %}
+</ul>
+<div class="back-btn">
+    <a class="btn btn-gray" href="{{ url_for('topic.index') }}">返回</a>
+    <div class="clearfix"></div>
+</div>
+{% endblock %}
