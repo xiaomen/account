@@ -8,7 +8,6 @@ from models import init_db
 from query.account import get_current_user
 from utils.ua import check_ua, render_template
 
-from views.api import api
 from views.mail import mail
 from views.oauth import oauth
 from views.topic import topic
@@ -43,8 +42,6 @@ app.register_blueprint(account, url_prefix='/account')
 app.register_blueprint(people, url_prefix='/people')
 app.register_blueprint(topic, url_prefix='/topic')
 app.register_blueprint(mail, url_prefix='/mail')
-app.register_blueprint(api, url_prefix='/api')
-
 
 logger = logging.getLogger(__name__)
 
