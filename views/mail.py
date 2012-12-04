@@ -14,7 +14,8 @@ from utils.ua import render_template
 from utils.helper import Obj
 from utils.account import login_required
 from query.mail import get_inbox_mail, get_inbox_count, \
-        get_outbox_mail, get_outbox_count, get_mail
+        get_outbox_mail, get_outbox_count, get_mail, \
+        create_mail
 from query.account import get_user
 from models.mail import Mail
 from sheep.api.cache import backend, cross_cache
@@ -44,13 +45,10 @@ def gen_maillist(mails, key):
 def index():
     return inbox()
 
-@mail.route('/inbox')
+@mail.route('/inbox/')
+@mail.route('/inbox/<int:page>')
 @login_required(next='account.login')
-def inbox():
-    page = request.args.get('p', '1')
-    if not page.isdigit():
-        raise abort(404)
-
+def inbox(page=1):
     list_page = get_inbox_mail(g.current_user.id, page)
 
     #check modify
@@ -64,13 +62,10 @@ def inbox():
     return render_template('mail.inbox.html', mails = mails, \
             list_page = list_page)
 
-@mail.route('/outbox')
+@mail.route('/outbox/')
+@mail.route('/outbox/<int:page>')
 @login_required(next='account.login')
-def outbox():
-    page = request.args.get('p', '1')
-    if not page.isdigit():
-        raise abort(404)
-
+def outbox(page=1):
     list_page = get_outbox_mail(g.current_user.id, page)
 
     #check modify
@@ -84,9 +79,9 @@ def outbox():
     return render_template('mail.outbox.html', mails = mails, \
             list_page = list_page)
 
-@mail.route('/view/<mail_id>')
+@mail.route('/view/<int:mid>/')
 @login_required(next='account.login')
-def view(mail_id):
+def view(mid):
     box = request.headers.get('Referer', '')
     box = urlparse(box)
     query = parse_qs(box.query)
@@ -102,7 +97,7 @@ def view(mail_id):
     if not box:
         return redirect(url_for('mail.index'))
 
-    mail = get_mail(mail_id)
+    mail = get_mail(mid)
     #TODO ugly
     if not mail:
         raise abort(404)
@@ -116,13 +111,13 @@ def view(mail_id):
             page = 1
         else:
             page = int(page[0])
-        Mail.mark_as_read(mail)
+        mail.mark_as_read()
         backend.delete('mail:inbox:%d:%d' % (g.current_user.id, page))
         clean_unread_cache(g.current_user.id)
 
     mobj = Obj()
-    mobj.id = mail_id
-    mobj.delete = '%s/%s' %(box, str(mail_id))
+    mobj.id = mid
+    mobj.delete = '%s/%d' %(box, mid)
     from_user = get_user(mail.from_uid)
     mobj.from_uid = from_user.name
     mobj.from_uid_url = from_user.domain or from_user.id
@@ -134,26 +129,26 @@ def view(mail_id):
     else:
         return render_template('mail.view.html', mail = mobj)
 
-@mail.route('/delete/<box>/<int:mail_id>')
+@mail.route('/delete/<box>/<int:mid>/')
 @login_required(next='account.login')
-def delete(box, mail_id):
-    mail = get_mail(mail_id)
+def delete(box, mid):
+    mail = get_mail(mid)
     if not mail or box not in ['inbox', 'outbox'] or \
             not check_mail_access(g.current_user.id, mail):
         return redirect(url_for('mail.index'))
 
     if box == 'inbox':
-        Mail.delete_inbox(mail)
+        mail.delete_inbox()
         backend.delete('mail:inbox:%d:1' % g.current_user.id)
         backend.delete('mail:inbox:count:%d' % g.current_user.id)
     elif box == 'outbox':
-        Mail.delete_outbox(mail)
+        mail.delete_outbox()
         backend.delete('mail:outbox:%d:1' % g.current_user.id)
         backend.delete('mail:outbox:count:%d' % g.current_user.id)
 
     return redirect(url_for('mail.index'))
 
-@mail.route('/write', methods=['GET', 'POST'])
+@mail.route('/write/', methods=['GET', 'POST'])
 @login_required(next='account.login')
 def write():
     if request.method == 'GET':
@@ -167,7 +162,7 @@ def write():
                 return redirect(url_for('mail.index'))
             to_uid = mail.from_uid
             title = reply_mail_title(mail.title)
-            #content = '--------\n%s\n--------\n' % mail.content
+            content = '--------\n%s\n--------\n' % mail.content
         who = get_user(to_uid)
         if not to_uid or not who:
             return redirect(url_for('mail.index'))
@@ -184,7 +179,7 @@ def write():
         return render_template('mail.write.html', who=who, \
                 title=title, content=content, error=error)
 
-    Mail.create(from_uid = g.current_user.id,
+    create_mail(from_uid = g.current_user.id,
                 to_uid = who.id,
                 title = title,
                 content = content)

@@ -59,3 +59,4 @@ def get_mail(mid):
 def get_mail_by(**kw):
     return Mail.query.filter_by(**kw)
 
+create_mail = Mail.create

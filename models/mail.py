@@ -46,22 +46,19 @@ class Mail(db.Model):
         db.session.add(mail)
         db.session.commit()
 
-    @staticmethod
-    def mark_as_read(mail):
-        mail.is_read = True
-        db.session.add(mail)
+    def mark_as_read(self):
+        self.is_read = True
+        db.session.add(self)
         db.session.commit()
 
-    @staticmethod
-    def delete_inbox(mail):
-        mail.inbox = 0
-        db.session.add(mail)
+    def delete_inbox(self):
+        self.inbox = 0
+        db.session.add(self)
         db.session.commit()
 
-    @staticmethod
-    def delete_outbox(mail):
-        mail.outbox = 0
-        db.session.add(mail)
+    def delete_outbox(self):
+        self.outbox = 0
+        db.session.add(self)
         db.session.commit()
 
     @staticmethod
