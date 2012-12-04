@@ -44,3 +44,6 @@ def get_current_user():
         return None
     return user
 
+def create_forget(uid, stub):
+    Forget.create(uid, stub)
+

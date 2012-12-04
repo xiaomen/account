@@ -51,6 +51,12 @@ class User(db.Model):
         verify = hashlib.sha1(salt + raw).hexdigest()
         return verify == hsh
 
+    def change_password(self, password):
+        self.token = create_token(16)
+        self.passwd = User.create_password(password)
+        db.session.add(self)
+        db.session.commit()
+
 class OAuth(db.Model):
     __tablename__ = 'oauth'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -80,3 +86,12 @@ class Forget(db.Model):
         self.uid = uid
         self.stub = stub
 
+    @staticmethod
+    def create(uid, stub):
+        forget = Forget(uid, stub)
+        db.session.add(forget)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()

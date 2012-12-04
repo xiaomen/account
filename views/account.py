@@ -48,10 +48,7 @@ def forget():
                 origin_render('email.html', user=user, stub=stub))
         except:
             logger.exception("send mail failed")
-
-        db.session.add(Forget(user.id, stub))
-        db.session.commit()
-
+        create_forget(user.id, stub)
     return render_template('account.forget.html', send=1)
 
 @account.route('/reset/<stub>/', methods=['GET', 'POST'])
@@ -60,8 +57,7 @@ def reset(stub=None):
     forget = get_forget_by_stub(stub=stub)
     if g.current_user:
         if forget:
-            _delete_forget(forget)
-            db.session.commit()
+            forget.delete()
         return redirect(url_for('index'))
 
     if not forget:
@@ -69,8 +65,7 @@ def reset(stub=None):
 
     if request.method == 'GET':
         if (datetime.now()  - forget.created).seconds > config.FORGET_STUB_EXPIRE:
-            _delete_forget(forget)
-            db.session.commit()
+            forget.delete()
             return render_template('account.reset.html', hidden=1, \
                     error='stub expired')
         return render_template('account.reset.html', stub=stub)
@@ -81,11 +76,11 @@ def reset(stub=None):
         return render_template('account.reset.html', stub=stub, \
                 error=status[1])
     user = get_user(forget.uid)
-    _change_password(user, password)
-    backend.delete('account:%s' % forget.stub)
-    _delete_forget(forget)
-    db.session.commit()
+    user.change_password(password)
+    account_login(user)
+    forget.delete()
     clear_user_cache(user)
+    backend.delete('account:%s' % forget.stub)
     return render_template('account.reset.html', ok=1)
 
 @account.route('/bind', methods=['GET', 'POST'])
@@ -223,15 +218,6 @@ def _set_avatar(user, filename):
 
 def _set_domain(user, domain):
     user.domain = domain
-    db.session.add(user)
-
-def _delete_forget(forget):
-    db.session.delete(forget)
-
-def _change_password(user, password):
-    user.token = create_token(16)
-    user.passwd = User.create_password(password)
-    account_login(user)
     db.session.add(user)
 
 def _change_username(user, username):
