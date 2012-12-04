@@ -5,6 +5,7 @@ import config
 import logging
 
 from models import init_db
+from query.topic import topic_notify
 from query.account import get_current_user
 from utils.ua import check_ua, render_template
 
@@ -63,5 +64,5 @@ def before_request():
     g.current_user = get_current_user()
     #TODO remove
     if g.current_user:
-        g.unread_mail_count = lambda: 0
+        g.topic_notify = lambda: topic_notify(g.current_user.id)
 

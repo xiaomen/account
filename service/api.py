@@ -5,13 +5,13 @@
 import app
 import logging
 from query.account import get_user
-from query.mail import get_unread_mail_count
+from query.topic import topic_notify
 
 logger = logging.getLogger(__name__)
 
 def unread(uid):
-    num = get_unread_mail_count(int(uid))
-    return num
+    has = topic_notify(int(uid))
+    return has
 
 def people(uid):
     people = get_user(uid)
