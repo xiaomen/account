@@ -5,6 +5,7 @@ import config
 import logging
 from datetime import datetime
 
+from utils import code
 from utils.ua import check_ua, render_template
 from utils.account import login_required, process_file
 from utils.validators import check_email, check_password, \
@@ -19,7 +20,6 @@ from sheep.api.files import get_uploader
 from sheep.api.cache import backend, cross_cache
 from models.account import create_token
 
-import code
 from flask import Blueprint, g, session, \
         redirect, request, url_for, abort
 from flask import render_template as origin_render
@@ -203,6 +203,7 @@ def setting():
         user.change_password(password)
     #clear cache
     clear_user_cache(user)
+    account_login(user)
     g.current_user = get_current_user()
     return render_template('account.setting.html', error=code.ACCOUNT_SETTING_SUCCESS)
 

@@ -6,7 +6,7 @@ from sheep.api.cache import cache
 from utils.validators import check_domain
 from models.account import User, Forget, OAuth
 
-@cache('account:{username}', 300)
+@cache('account:{username}', 86400)
 def get_user(username):
     try:
         username = int(username)
@@ -18,15 +18,15 @@ def get_user(username):
             return None
         return get_user_by_domain(domain=username)
 
-@cache('account:{domain}', 300)
+@cache('account:{domain}', 86400)
 def get_user_by_domain(domain):
     return get_user_by(domain=domain).first()
 
-@cache('account:{email}', 300)
+@cache('account:{email}', 86400)
 def get_user_by_email(email):
     return get_user_by(email=email).first()
 
-@cache('account:{stub}', 100)
+@cache('account:{stub}', 300)
 def get_forget_by_stub(stub):
     return Forget.query.filter_by(stub=stub).first()
 
