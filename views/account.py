@@ -12,11 +12,14 @@ from utils.validators import check_email, check_password, \
         check_domain_exists, check_username
 from utils.mail import send_email
 from query.account import get_user_by_email, get_user, \
-        get_forget_by_stub, get_current_user
+        get_forget_by_stub, get_current_user, create_forget, \
+        create_user
 
 from sheep.api.files import get_uploader
 from sheep.api.cache import backend, cross_cache
-from models.account import db, User, Forget, create_token
+from models.account import create_token
+
+import code
 from flask import Blueprint, g, session, \
         redirect, request, url_for, abort
 from flask import render_template as origin_render
@@ -67,7 +70,7 @@ def reset(stub=None):
         if (datetime.now()  - forget.created).seconds > config.FORGET_STUB_EXPIRE:
             forget.delete()
             return render_template('account.reset.html', hidden=1, \
-                    error='stub expired')
+                    error=code.ACCOUNT_FORGET_STUB_EXPIRED)
         return render_template('account.reset.html', stub=stub)
 
     password = request.form.get('password', None)
@@ -91,11 +94,11 @@ def bind():
     oauth = session.pop('from_oauth', None)
     allow = 'allow' in request.form
     if g.current_user and oauth and allow:
-        _bind_oauth(oauth, g.session['user_id'])
+        oauth.bind(g.session['user_id'])
     return redirect(url_for('index'))
 
 @csrf_exempt
-@account.route('/register', methods=['POST','GET'])
+@account.route('/register/', methods=['POST','GET'])
 @check_ua
 @login_required(need=False)
 def register():
@@ -108,18 +111,16 @@ def register():
     if not check:
         return render_template('account.register.html', error=error)
     oauth = session.pop('from_oauth', None)
-    user = User(username, password, email)
-    db.session.add(user)
-    db.session.commit()
+    user = create_user(username, password, email)
     #clear cache
     clear_user_cache(user)
     account_login(user)
     if oauth:
-        _bind_oauth(oauth, user.id)
+        oauth.bind(user.id)
     return redirect(url_for('index'))
 
 @csrf_exempt
-@account.route('/login', methods=['POST', 'GET'])
+@account.route('/login/', methods=['POST', 'GET'])
 @check_ua
 @login_required(need=False)
 def login():
@@ -145,15 +146,15 @@ def login():
     return redirect(redirect_url or url_for('index'))
 
 @csrf_exempt
-@account.route('/logout')
+@account.route('/logout/')
 @check_ua
 def logout():
     account_logout()
     return redirect(request.referrer or url_for('index'))
 
-@account.route('/avatar', methods=['POST', 'GET'])
+@account.route('/avatar/', methods=['POST', 'GET'])
 @check_ua
-@login_required('account.login', redirect='/account/avatar')
+@login_required('account.login', redirect='/account/avatar/')
 def avatar():
     user = g.current_user
     if request.method == 'GET':
@@ -167,13 +168,13 @@ def avatar():
     if error:
         return render_template('account.avatar.html', path = user.avatar, error = error)
     uploader.writeFile(filename, stream)
-    _set_avatar(user, filename)
+    user.set_avatar(filename)
     clear_user_cache(user)
     return redirect(url_for('account.avatar', ok = 1))
 
-@account.route('/setting', methods=['POST', 'GET'])
+@account.route('/setting/', methods=['POST', 'GET'])
 @check_ua
-@login_required('account.login', redirect='/account/setting')
+@login_required('account.login', redirect='/account/setting/')
 def setting():
     user = g.current_user
     if request.method == 'GET':
@@ -187,47 +188,28 @@ def setting():
         status = check_username(username)
         if status:
             return render_template('account.setting.html', error=status[1])
-        _change_username(user, username)
+        user.change_username(username)
 
     if domain:
         for status in [check_domain(domain), check_domain_exists(domain)]:
             if status:
                 return render_template('account.setting.html', error=status[1])
-        _set_domain(user, domain)
+        user.set_domain(domain)
 
     if password:
         status = check_password(password)
         if status:
             return render_template('account.setting.html', error=status[1])
-        _change_password(user, password)
-    db.session.commit()
+        user.change_password(password)
     #clear cache
     clear_user_cache(user)
     g.current_user = get_current_user()
-    return render_template('account.setting.html', error='update ok')
+    return render_template('account.setting.html', error=code.ACCOUNT_SETTING_SUCCESS)
 
 def clear_user_cache(user):
     keys = ['account:%s' % key for key in [str(user.id), user.domain, user.email]]
     backend.delete_many(*keys)
     cross_cache.delete('open:account:info:{0}'.format(user.id))
-
-def _set_avatar(user, filename):
-    user.avatar = filename
-    db.session.add(user)
-    db.session.commit()
-
-def _set_domain(user, domain):
-    user.domain = domain
-    db.session.add(user)
-
-def _change_username(user, username):
-    user.name = username
-    db.session.add(user)
-
-def _bind_oauth(oauth, uid):
-    oauth.bind(uid)
-    db.session.add(oauth)
-    db.session.commit()
 
 def account_login(user):
     g.session['user_id'] = user.id
