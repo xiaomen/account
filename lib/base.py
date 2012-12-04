@@ -5,7 +5,7 @@ import os
 import json
 import base64
 import logging
-from flaskext.oauth import *
+from flask_oauth import *
 from flask import redirect, session, request
 
 logger = logging.getLogger(__name__)
