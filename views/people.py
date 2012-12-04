@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 people = Blueprint('people', __name__)
 
-@people.route('/<username>')
+@people.route('/<username>/')
 def show_people(username):
     visit_user = get_user(username)
     if not visit_user:
