@@ -17,7 +17,6 @@ from query.mail import get_inbox_mail, get_inbox_count, \
         get_outbox_mail, get_outbox_count, get_mail, \
         create_mail
 from query.account import get_user
-from models.mail import Mail
 from sheep.api.cache import backend, cross_cache
 from flask import redirect, \
     request, url_for, g, Blueprint, abort
