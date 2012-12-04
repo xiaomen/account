@@ -22,7 +22,7 @@ class BasicOAuth(OAuthRemoteApp):
                  access_token_url, authorize_url,
                  consumer_key, consumer_secret,
                  request_token_params,
-                 access_token_method)
+                 access_token_method=access_token_method)
 
     def authorize(self, callback=None, next_url=None):
         assert callback is not None, 'Callback is required OAuth2'
