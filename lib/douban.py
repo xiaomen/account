@@ -4,7 +4,7 @@
 __all__ = ['douban']
 
 import config
-from flaskext.oauth import add_query
+from flask_oauth import add_query
 from base import BasicOAuth, OAuthResponse, encode_request_data
 
 class DoubanOAuth(BasicOAuth):
