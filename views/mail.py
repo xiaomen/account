@@ -117,7 +117,7 @@ def view(mid):
 
     mobj = Obj()
     mobj.id = mid
-    mobj.delete = '%s/%d' %(box, mid)
+    mobj.box = box
     from_user = get_user(mail.from_uid)
     mobj.from_uid = from_user.name
     mobj.from_uid_url = from_user.domain or from_user.id
@@ -156,7 +156,7 @@ def write():
         reply_mid = request.args.get('reply')
         title = ''
         content = ''
-        if not to_uid:
+        if not to_uid and not reply_mid:
             return redirect(url_for('mail.index'))
         if reply_mid:
             mail = get_mail(reply_mid)
