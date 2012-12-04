@@ -156,6 +156,8 @@ def write():
         reply_mid = request.args.get('reply')
         title = ''
         content = ''
+        if not to_uid:
+            return redirect(url_for('mail.index'))
         if reply_mid:
             mail = get_mail(reply_mid)
             if g.current_user.id != mail.to_uid:
@@ -164,7 +166,7 @@ def write():
             title = reply_mail_title(mail.title)
             content = '--------\n%s\n--------\n' % mail.content
         who = get_user(to_uid)
-        if not to_uid or not who:
+        if not who:
             return redirect(url_for('mail.index'))
         return render_template('mail.write.html', who=who, \
                 title=title, content=content)
