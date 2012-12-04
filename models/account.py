@@ -74,8 +74,6 @@ class User(db.Model):
         db.session.add(self)
         db.session.commit()
 
-def _change_username(user, username):
-    db.session.add(user)
     def set_avatar(self, filename):
         self.avatar = filename
         db.session.add(self)
