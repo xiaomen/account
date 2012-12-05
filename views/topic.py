@@ -54,6 +54,7 @@ def view(tid):
     if mark_read(g.current_user.id, tid):
         backend.delete('topic:mailr:%d:%d' % (g.current_user.id, tid))
         backend.delete('topic:notify:%d' % g.current_user.id)
+        backend.delete('topic:list:%d:1' % g.current_user.id)
     list_page = get_user_replies(tid, page)
     if page > 1 and list_page.total != get_user_replies(tid, 1):
         backend.delete('topic:replies:%d:%d' % (tid, page))
@@ -152,6 +153,6 @@ def format_topic_list(items):
         topic.user = get_user(item.contact)
         topic.last_reply = get_reply(t.last_rid)
         topic.title = t.title
-        topic.has_new = get_mailr(g.current_user.id, t.id).has_new
+        topic.has_new = item.has_new
         yield topic
 
