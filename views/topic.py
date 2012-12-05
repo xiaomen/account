@@ -32,9 +32,10 @@ topic = Blueprint('topic', __name__)
 def index(page=1):
     msg = request.args.get('msg', None)
     list_page = get_user_topics(g.current_user.id, page)
-    if page >1 and list_page.total != get_user_topics(g.current_user.id, 1):
+    if page >1:
+        #TODO ugly if page more than 1, topic will not hit the cache
         backend.delete('topic:list:%d:%d' % (g.current_user.id, page))
-    #TODO check topic count!!!
+        list_page = get_user_topics(g.current_user.id, page)
     return render_template('topic.index.html', msg=msg, \
             topics=format_topic_list(list_page.items), list_page=list_page)
 
