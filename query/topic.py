@@ -22,7 +22,11 @@ def get_user_topics(uid, page):
     page_obj = Mailr.query.filter(and_(Mailr.uid==uid, Mailr.has_delete==0))
     page_obj = page_obj.order_by(desc(Mailr.last_time))
     page_obj = page_obj.paginate(page, per_page=PAGE_NUM)
-    return gen_list_page_obj(page_obj)
+    ret = gen_list_page_obj(page_obj)
+    last_time = Mailr.query.filter(and_(Mailr.uid==uid, Mailr.has_delete==0))
+    last_time = last_time.order_by(desc(Mailr.last_time)).limit(1).first()
+    ret.last_time = last_time.last_time
+    return ret
 
 @cache('topic:replies:{tid}:{page}', 86400)
 def get_user_replies(tid, page):
