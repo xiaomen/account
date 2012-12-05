@@ -36,7 +36,12 @@ class MailrMeta(db.Model):
         self.topic_count = self.topic_count + 1
         self.last_time = last_time
 
-    def delete_topic(self):
+    def create_reply(self, last_time, count=False):
+        self.last_time = last_time
+        if count:
+            self.topic_count = self.topic_count + 1
+
+    def delete(self):
         self.topic_count = self.topic_count - 1
         db.session.add(self)
         db.session.commit()
@@ -153,6 +158,8 @@ def create_topic(sender, receiver, title, content):
         db.session.add(mailr_receiver)
         sender.create_topic(reply.time)
         receiver.create_topic(reply.time)
+        db.session.add(sender)
+        db.session.add(receiver)
         db.session.commit()
         return topic
     except Exception:
@@ -160,17 +167,24 @@ def create_topic(sender, receiver, title, content):
         db.session.rollback()
     return None
 
-def create_reply(sender, receiver, topic, content):
+def create_reply(sender, receiver, sender_meta, receiver_meta, topic, content):
     try:
         reply = Reply(topic.id, content, sender.uid)
         db.session.add(reply)
         db.session.flush()
         topic.add_reply(reply)
+        sender_meta.create_reply(reply.time)
         sender.new_message(reply.time)
+        if receiver.has_delete == 1:
+            receiver_meta.create_reply(reply.time, count=True)
+        else:
+            receiver_meta.create_reply(reply.time)
         receiver.new_message(reply.time, has_new=1)
         db.session.add(topic)
         db.session.add(sender)
         db.session.add(receiver)
+        db.session.add(sender_meta)
+        db.session.add(receiver_meta)
         db.session.commit()
         return True
     except Exception:

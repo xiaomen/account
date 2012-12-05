@@ -109,6 +109,7 @@ def topic_delete(tid):
     mailr = get_mailr(g.current_user.id, tid=tid)
     if mailr:
         delete_topic(mailr)
+        backend.delete('topic:meta:%d' % g.current_user.id)
         backend.delete('topic:list:%d:1' % g.current_user.id)
         backend.delete('topic:mailr:%d:%d' % (g.current_user.id, tid))
     return redirect(url_for('topic.index'))
@@ -119,6 +120,8 @@ def clean_cache(uid, to_uid, tid):
     backend.delete('topic:list:%d:1' % uid)
     backend.delete('topic:list:%d:1' % to_uid)
     backend.delete('topic:notify:%d' % to_uid)
+    backend.delete('topic:meta:%d' % uid)
+    backend.delete('topic:meta:%d' % to_uid)
     cross_cache.delete('open:account:unread:{0}'.format(to_uid))
 
 def format_reply_list(items):

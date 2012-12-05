@@ -81,7 +81,9 @@ def make_topic(uid, to_uid, title, content):
     return create_topic(sender, receiver, title, content)
 
 def make_reply(sender, receiver, topic, content):
-    return create_reply(sender, receiver, topic, content)
+    sm = get_mailr_meta(sender.uid)
+    rm = get_mailr_meta(receiver.uid)
+    return create_reply(sender, receiver, sm, rm, topic, content)
 
 def mark_read(uid, tid):
     mailr = get_mailr(uid=uid, tid=tid)
@@ -90,5 +92,7 @@ def mark_read(uid, tid):
     return mailr.read()
 
 def delete_topic(mailr):
+    meta = get_mailr_meta(mailr.uid)
     mailr.delete()
+    meta.delete()
 
