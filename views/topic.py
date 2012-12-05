@@ -18,8 +18,10 @@ from utils.ua import check_ua, render_template
 from query.topic import get_user_topics, get_reply, \
         get_topic, get_user_replies, delete_topic, \
         make_topic, make_reply, mark_read, \
-        get_mailrs, get_mailr_by
+        get_mailrs, get_mailr
 from query.account import get_user
+
+from sheep.api.cache import backend, cross_cache
 
 logger = logging.getLogger(__name__)
 topic = Blueprint('topic', __name__)
@@ -30,6 +32,7 @@ topic = Blueprint('topic', __name__)
 def index(page=1):
     msg = request.args.get('msg', None)
     list_page = get_user_topics(g.current_user.id, page)
+    #TODO check topic count!!!
     return render_template('topic.index.html', msg=msg, \
             topics=format_topic_list(list_page.items), list_page=list_page)
 
@@ -42,6 +45,7 @@ def view(tid, page=1):
         raise abort(404)
     mark_read(g.current_user.id, tid)
     list_page = get_user_replies(tid, page)
+    #TODO check reply count!!!
     return render_template('topic.view.html', \
             replies=format_reply_list(list_page.items), \
             topic=topic)
@@ -65,7 +69,9 @@ def create_topic(uid):
         #TODO return error code
         # check other params
         return render_template('topic.create.html', uid=uid)
-    make_topic(g.current_user.id, to_uid, title, content)
+    topic = make_topic(g.current_user.id, to_uid, title, content)
+    #clean cache
+    clean_cache(g.current_user.id, uid, topic.id)
     return redirect(url_for('topic.index'))
 
 @csrf_exempt
@@ -83,17 +89,27 @@ def create_reply(tid):
     if not topic or not sender or not receiver:
         return redirect(url_for('topic.index'))
     make_reply(sender, receiver, topic, content)
+    #clean cache
+    clean_cache(g.current_user.id, receiver.uid, topic.id)
+    backend.delete('topic:mailr:%d:%d' % (g.current_user.id, topic.id))
+    backend.delete('topic:mailr:%d:%d' % (receiver.id, topic.id))
     return redirect(url_for('topic.view', tid=tid))
 
 @topic.route('/delete/<int:tid>/')
 @check_ua
 @login_required(next='account.login')
 def topic_delete(tid):
-    mailr = get_mailr_by(uid=g.current_user.id, \
-            tid=tid)
+    mailr = get_mailr(g.current_user.id, tid=tid)
     if mailr:
         delete_topic(mailr)
     return redirect(url_for('topic.index'))
+
+def clean_cache(uid, to_uid, tid):
+    backend.delete('topic:topic:%d' % tid)
+    backend.delete('topic:list:%d:1' % uid)
+    backend.delete('topic:list:%d:1' % to_uid)
+    backend.delete('topic:notify:%d' % to_uid)
+    cross_cache.delete('open:account:unread:{0}'.format(to_uid))
 
 def format_reply_list(items):
     for item in items:

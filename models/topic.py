@@ -122,11 +122,11 @@ def create_topic(uid, to_uid, title, content):
         db.session.add(sender)
         db.session.add(receiver)
         db.session.commit()
-        return True
+        return topic
     except Exception:
         logger.exception('create topic failed')
         db.session.rollback()
-    return False
+    return None
 
 def create_reply(sender, receiver, topic, content):
     try:
