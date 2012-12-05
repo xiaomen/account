@@ -13,7 +13,8 @@ from sqlalchemy.sql.expression import desc
 
 from config import PAGE_NUM
 from utils.helper import gen_list_page_obj
-from models.topic import Topic, Reply, Mailr, create_topic, create_reply
+from models.topic import Topic, Reply, Mailr, MailrMeta, \
+        create_topic, create_reply
 
 from sheep.api.cache import cache
 
@@ -52,6 +53,18 @@ def get_mailr(uid, tid):
 def topic_notify(uid):
     return bool(Mailr.query.filter_by(uid=uid, has_new=1).first())
 
+@cache('topic:meta:{uid}', 86400)
+def get_mailr_meta(uid):
+    meta = MailrMeta.query.get(uid)
+    if not meta:
+        #TODO TEST ONLY
+        base = Mailr.query.filter(and_(Mailr.uid==uid, Mailr.has_delete==0))
+        last_time = base.order_by(desc(Mailr.last_time)).limit(1).first()
+        last_time = last_time.last_time
+        count = base.count()
+        meta = MailrMeta.create(uid, count, last_time)
+    return meta
+
 def get_topic_reploy_count(tid):
     topic = get_topic(tid)
     count = topic.reply.count
@@ -63,8 +76,9 @@ def get_mailrs(uid, tid):
     return sender, receiver
 
 def make_topic(uid, to_uid, title, content):
-    #TODO clean cache!!!
-    return create_topic(uid, to_uid, title, content)
+    sender = get_mailr_meta(uid)
+    receiver = get_mailr_meta(to_uid)
+    return create_topic(sender, receiver, title, content)
 
 def make_reply(sender, receiver, topic, content):
     return create_reply(sender, receiver, topic, content)

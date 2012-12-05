@@ -14,6 +14,33 @@ def init_topic_db(app):
     db.app = app
     db.create_all()
 
+class MailrMeta(db.Model):
+    __tablename__ = 'mailr_meta'
+    uid = db.Column('id', db.Integer, primary_key=True)
+    topic_count = db.Column(db.Integer, nullable=False, default=0)
+    last_time = db.Column(db.DateTime, nullable=False, default=datetime.now)
+
+    def __init__(self, uid, topic_count, last_time):
+        self.uid = uid
+        self.topic_count = topic_count
+        self.last_time = last_time
+
+    @staticmethod
+    def create(uid, topic_count, last_time):
+        mailr_meta = MailrMeta(uid, topic_count, last_time)
+        db.session.add(mailr_meta)
+        db.session.commit()
+        return mailr_meta
+
+    def create_topic(self, last_time):
+        self.topic_count = self.topic_count + 1
+        self.last_time = last_time
+
+    def delete_topic(self):
+        self.topic_count = self.topic_count - 1
+        db.session.add(self)
+        db.session.commit()
+
 class Mailr(db.Model):
     __tablename__ = 'mailr'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -43,7 +70,8 @@ class Mailr(db.Model):
     def new_message(self, last_time, has_new=0):
         if self.has_new != has_new:
             self.has_new = has_new
-        self.has_delete = 0
+        if self.has_delete == 1:
+            self.has_delete = 0
         self.last_time = last_time
 
     def delete(self):
@@ -103,26 +131,28 @@ class Reply(db.Model):
         db.session.commit()
         return reply
 
-def create_topic(uid, to_uid, title, content):
+def create_topic(sender, receiver, title, content):
     try:
         topic = Topic(title=title)
         db.session.add(topic)
         db.session.flush()
-        reply = Reply(topic.id, content, uid)
+        reply = Reply(topic.id, content, sender.uid)
         db.session.add(reply)
         db.session.flush()
         topic.add_reply(reply)
         db.session.add(topic)
         db.session.flush()
-        sender = Mailr(uid, topic.id, \
-                      contact=to_uid, \
+        mailr_sender = Mailr(sender.uid, topic.id, \
+                      contact=receiver.uid, \
                       last_time=reply.time)
-        receiver = Mailr(to_uid, topic.id, \
-                         contact=uid, \
+        mailr_receiver = Mailr(receiver.uid, topic.id, \
+                         contact=sender.uid, \
                          last_time=reply.time, \
                          has_new=1)
-        db.session.add(sender)
-        db.session.add(receiver)
+        db.session.add(mailr_sender)
+        db.session.add(mailr_receiver)
+        sender.create_topic(reply.time)
+        receiver.create_topic(reply.time)
         db.session.commit()
         return topic
     except Exception:
