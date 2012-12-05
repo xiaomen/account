@@ -32,9 +32,11 @@ topic = Blueprint('topic', __name__)
 def index(page=1):
     msg = request.args.get('msg', None)
     list_page = get_user_topics(g.current_user.id, page)
-    if page >1 and list_page.last_time != get_user_topics(g.current_user.id, 1).last_time:
-        backend.delete('topic:list:%d:%d' % (g.current_user.id, page))
-        list_page = get_user_topics(g.current_user.id, page)
+    if page >1:
+        page_1 = get_user_topics(g.current_user.id, 1)
+        if list_page.total != page_1 or list_page.last_time != page_1.last_time:
+            backend.delete('topic:list:%d:%d' % (g.current_user.id, page))
+            list_page = get_user_topics(g.current_user.id, page)
     return render_template('topic.index.html', msg=msg, \
             topics=format_topic_list(list_page.items), list_page=list_page)
 

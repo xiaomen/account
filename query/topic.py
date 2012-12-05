@@ -9,6 +9,7 @@
 '''
 
 from sqlalchemy import and_
+from flask_sqlalchemy import Pagination
 from sqlalchemy.sql.expression import desc
 
 from config import PAGE_NUM
@@ -20,20 +21,22 @@ from sheep.api.cache import cache
 
 @cache('topic:list:{uid}:{page}', 86400)
 def get_user_topics(uid, page):
+    meta = get_mailr_meta(uid)
     page_obj = Mailr.query.filter(and_(Mailr.uid==uid, Mailr.has_delete==0))
     page_obj = page_obj.order_by(desc(Mailr.last_time))
-    page_obj = page_obj.paginate(page, per_page=PAGE_NUM)
+    items = page_obj.limit(PAGE_NUM).offset((page - 1) * PAGE_NUM).all()
+    page_obj = Pagination(page_obj, page, PAGE_NUM, meta.topic_count, items)
     ret = gen_list_page_obj(page_obj)
-    last_time = Mailr.query.filter(and_(Mailr.uid==uid, Mailr.has_delete==0))
-    last_time = last_time.order_by(desc(Mailr.last_time)).limit(1).first()
-    ret.last_time = last_time.last_time
+    ret.last_time = meta.last_time
     return ret
 
 @cache('topic:replies:{tid}:{page}', 86400)
 def get_user_replies(tid, page):
+    topic = get_topic(tid)
     page_obj = Reply.query.filter(Reply.tid==tid)
     page_obj = page_obj.order_by(desc(Reply.time))
-    page_obj = page_obj.paginate(page, per_page=PAGE_NUM)
+    items = page_obj.limit(PAGE_NUM).offset((page - 1) * PAGE_NUM).all()
+    page_obj = Pagination(page_obj, page, PAGE_NUM, topic.reply_count, items)
     return gen_list_page_obj(page_obj)
 
 @cache('topic:topic:{tid}', 86400)
