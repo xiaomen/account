@@ -12,6 +12,7 @@ from sqlalchemy import and_
 from sqlalchemy.sql.expression import desc
 
 from config import PAGE_NUM
+from utils.helper import gen_list_page_obj
 from models.topic import Topic, Reply, Mailr, create_topic, create_reply
 
 from sheep.api.cache import cache
@@ -21,14 +22,14 @@ def get_user_topics(uid, page):
     page_obj = Mailr.query.filter(and_(Mailr.uid==uid, Mailr.has_delete==0))
     page_obj = page_obj.order_by(desc(Mailr.last_time))
     page_obj = page_obj.paginate(page, per_page=PAGE_NUM)
-    return page_obj
+    return gen_list_page_obj(page_obj)
 
 @cache('topic:replies:{tid}:{page}', 86400)
 def get_user_replies(tid, page):
     page_obj = Reply.query.filter(Reply.tid==tid)
     page_obj = page_obj.order_by(desc(Reply.time))
     page_obj = page_obj.paginate(page, per_page=PAGE_NUM)
-    return page_obj
+    return gen_list_page_obj(page_obj)
 
 @cache('topic:topic:{tid}', 86400)
 def get_topic(tid):
@@ -68,8 +69,7 @@ def mark_read(uid, tid):
     mailr = get_mailr(uid=uid, tid=tid)
     if not mailr:
         return False
-    mailr.read()
-    return True
+    return mailr.read()
 
 def delete_topic(mailr):
     mailr.delete()

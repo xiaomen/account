@@ -43,7 +43,8 @@ def view(tid, page=1):
     topic = get_topic(tid)
     if not topic:
         raise abort(404)
-    mark_read(g.current_user.id, tid)
+    if mark_read(g.current_user.id, tid):
+        backend.delete('topic:topic:%d' % tid)
     list_page = get_user_replies(tid, page)
     #TODO check reply count!!!
     return render_template('topic.view.html', \
@@ -106,6 +107,7 @@ def topic_delete(tid):
 
 def clean_cache(uid, to_uid, tid):
     backend.delete('topic:topic:%d' % tid)
+    backend.delete('topic:replies:%d:1' % tid)
     backend.delete('topic:list:%d:1' % uid)
     backend.delete('topic:list:%d:1' % to_uid)
     backend.delete('topic:notify:%d' % to_uid)

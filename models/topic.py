@@ -56,6 +56,8 @@ class Mailr(db.Model):
             self.has_new = 0
             db.session.add(self)
             db.session.commit()
+            return True
+        return False
 
 class Topic(db.Model):
     __tablename__ = 'topic'
