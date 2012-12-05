@@ -32,6 +32,8 @@ topic = Blueprint('topic', __name__)
 def index(page=1):
     msg = request.args.get('msg', None)
     list_page = get_user_topics(g.current_user.id, page)
+    if page >1 and list_page.total != get_user_topics(g.current_user.id, 1):
+        backend.delete('topic:list:%d:%d' % (g.current_user.id, page))
     #TODO check topic count!!!
     return render_template('topic.index.html', msg=msg, \
             topics=format_topic_list(list_page.items), list_page=list_page)
@@ -44,8 +46,12 @@ def view(tid, page=1):
     if not topic:
         raise abort(404)
     if mark_read(g.current_user.id, tid):
-        backend.delete('topic:topic:%d' % tid)
+        backend.delete('topic:mailr:%d:%d' % (g.current_user.id, tid))
+        backend.delete('topic:notify:%d' % g.current_user.id)
     list_page = get_user_replies(tid, page)
+    if page > 1 and list_page.total != get_user_replies(tid, 1):
+        backend.delete('topic:replies:%d:%d' % (tid, page))
+        list_page = get_user_replies(tid, page)
     #TODO check reply count!!!
     return render_template('topic.view.html', \
             replies=format_reply_list(list_page.items), \
@@ -93,7 +99,7 @@ def create_reply(tid):
     #clean cache
     clean_cache(g.current_user.id, receiver.uid, topic.id)
     backend.delete('topic:mailr:%d:%d' % (g.current_user.id, topic.id))
-    backend.delete('topic:mailr:%d:%d' % (receiver.id, topic.id))
+    backend.delete('topic:mailr:%d:%d' % (receiver.uid, topic.id))
     return redirect(url_for('topic.view', tid=tid))
 
 @topic.route('/delete/<int:tid>/')
@@ -103,6 +109,8 @@ def topic_delete(tid):
     mailr = get_mailr(g.current_user.id, tid=tid)
     if mailr:
         delete_topic(mailr)
+        backend.delete('topic:list:%d:1' % g.current_user.id)
+        backend.delete('topic:mailr:%d:%d' % (g.current_user.id, tid))
     return redirect(url_for('topic.index'))
 
 def clean_cache(uid, to_uid, tid):
@@ -135,6 +143,6 @@ def format_topic_list(items):
         topic.user = get_user(item.contact)
         topic.last_reply = get_reply(t.last_rid)
         topic.title = t.title
-        topic.has_new = item.has_new
+        topic.has_new = get_mailr(g.current_user.id, t.id).has_new
         yield topic
 
