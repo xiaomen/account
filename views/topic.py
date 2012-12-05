@@ -27,9 +27,12 @@ logger = logging.getLogger(__name__)
 topic = Blueprint('topic', __name__)
 
 @topic.route('/')
-@topic.route('/<int:page>/')
 @login_required(next='account.login')
-def index(page=1):
+def index():
+    page = request.args.get('p', '1')
+    if not page.isdigit():
+        raise abort(404)
+    page = int(page)
     msg = request.args.get('msg', None)
     list_page = get_user_topics(g.current_user.id, page)
     if page >1:
@@ -41,12 +44,13 @@ def index(page=1):
             topics=format_topic_list(list_page.items), list_page=list_page)
 
 @topic.route('/view/<int:tid>/')
-@topic.route('/view/<int:tid>/<int:page>/')
 @login_required(next='account.login')
-def view(tid, page=1):
+def view(tid):
+    page = request.args.get('p', '1')
     topic = get_topic(tid)
-    if not topic:
+    if not topic or not page.isdigit():
         raise abort(404)
+    page = int(page)
     if mark_read(g.current_user.id, tid):
         backend.delete('topic:mailr:%d:%d' % (g.current_user.id, tid))
         backend.delete('topic:notify:%d' % g.current_user.id)
