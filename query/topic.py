@@ -59,7 +59,7 @@ def topic_notify(uid):
 @cache('topic:meta:{uid}', 86400)
 def get_mailr_meta(uid):
     meta = MailrMeta.query.get(uid)
-    if not meta:
+    if meta:
         #TODO TEST ONLY
         base = Mailr.query.filter(and_(Mailr.uid==uid, Mailr.has_delete==0))
         last_time = base.order_by(desc(Mailr.last_time)).limit(1).first()
