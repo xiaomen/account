@@ -62,7 +62,7 @@ def view(tid):
     #TODO check reply count!!!
     return render_template('topic.view.html', \
             replies=format_reply_list(list_page.items), \
-            topic=topic)
+            topic=topic, list_page=list_page)
 
 @csrf_exempt
 @topic.route('/create/<int:uid>/', methods=['GET', 'POST'])

@@ -5,6 +5,7 @@ import logging
 
 from datetime import datetime
 from flask.ext.sqlalchemy import SQLAlchemy
+from sqlalchemy.dialects.mysql import BIT
 
 logger = logging.getLogger('__name__')
 
@@ -53,8 +54,8 @@ class Mailr(db.Model):
     tid = db.Column(db.Integer, index=True, nullable=False)
     contact = db.Column(db.Integer, nullable=False)
     last_time = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    has_new = db.Column(db.BIT(1), nullable=False, default=0)
-    has_delete = db.Column(db.BIT(1), nullable=False, default=0)
+    has_new = db.Column(BIT(1), nullable=False, default=0)
+    has_delete = db.Column(BIT(1), nullable=False, default=0)
 
     def __init__(self, uid, tid, **kwargs):
         self.uid = uid

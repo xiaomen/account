@@ -1,4 +1,5 @@
 {% extends "mobile/layout.html" %}
+{% from "macros.html" import render_mobile_pagination %}
 
 {% block content %}
 <form class="reply-topic" method="POST" action="{{ url_for('topic.create_reply', tid=topic.id) }}">
@@ -27,6 +28,7 @@
     </li>
     {% endfor %}
 </ul>
+{{ render_mobile_pagination(list_page, url_for('topic.view', tid=topic.id)) }}
 <div class="back-btn">
     <a class="btn btn-gray" href="{{ url_for('topic.index') }}">返回</a>
     <div class="clearfix"></div>

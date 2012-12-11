@@ -27,6 +27,7 @@ def check_ua(method):
 
 def render_template(template_name, *args, **kwargs):
     ua_string = request.headers.get('User-Agent')
+    return flask.render_template("mobile/" + template_name, *args, **kwargs)
     if not ua_string:
         return flask.render_template("mobile/" + template_name, *args, **kwargs) 
     ua = UserAgent(ua_string)
