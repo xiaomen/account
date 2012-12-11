@@ -35,9 +35,6 @@ def index():
     page = int(page)
     msg = request.args.get('msg', None)
     list_page = get_user_topics(g.current_user.id, page)
-    if not list_page:
-        return render_template('topic.index.html', msg=u'您还木有邮件哟', \
-             topics=[], list_page=None)
     if page >1:
         page_1 = get_user_topics(g.current_user.id, 1)
         if list_page.total != page_1 or list_page.last_time != page_1.last_time:

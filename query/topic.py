@@ -8,6 +8,7 @@
 同理适用于reply，先从topic表中查到reply_count再分页。
 '''
 
+from datetime import datetime
 from sqlalchemy import and_
 from flask_sqlalchemy import Pagination
 from sqlalchemy.sql.expression import desc
@@ -61,13 +62,15 @@ def topic_notify(uid):
 @cache('topic:meta:{uid}', 86400)
 def get_mailr_meta(uid):
     meta = MailrMeta.query.get(uid)
-    if meta:
-        #TODO TEST ONLY
-        base = Mailr.query.filter(and_(Mailr.uid==uid, Mailr.has_delete==0))
-        last_time = base.order_by(desc(Mailr.last_time)).limit(1).first()
-        last_time = last_time.last_time
-        count = base.count()
-        meta = MailrMeta.create(uid, count, last_time)
+    #TODO TEST ONLY
+    #if not meta:
+    #    base = Mailr.query.filter(and_(Mailr.uid==uid, Mailr.has_delete==0))
+    #    last_time = base.order_by(desc(Mailr.last_time)).limit(1).first()
+    #    last_time = last_time.last_time
+    #    count = base.count()
+    #    meta = MailrMeta.create(uid, count, last_time)
+    if not meta:
+        meta = MailrMeta.create(uid, 0, datetime.now())
     return meta
 
 def get_topic_reploy_count(tid):

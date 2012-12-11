@@ -7,7 +7,7 @@ from datetime import datetime
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.mysql import BIT
 
-logger = logging.getLogger('__name__')
+logger = logging.getLogger(__name__)
 
 db = SQLAlchemy()
 def init_topic_db(app):
