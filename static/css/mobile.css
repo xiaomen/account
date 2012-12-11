@@ -278,15 +278,15 @@ input[readonly] {
 }
 
 .app-list .app.library .bgimg {
-    background-image: url('/static/img/library.jpg'); 
+    background-image: url('/account/static/img/library.jpg'); 
 }
 
 .app-list .app.selfstudy .bgimg {
-    background-image: url('/static/img/selfstudy.jpg'); 
+    background-image: url('/account/static/img/selfstudy.jpg'); 
 }
 
 .app-list .app.job .bgimg {
-    background-image: url('/static/img/job.jpg'); 
+    background-image: url('/account/static/img/job.jpg'); 
 }
 
 .avatar-title {
