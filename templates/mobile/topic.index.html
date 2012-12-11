@@ -3,6 +3,9 @@
 
 {% block content %}
 <ul class="maillist">
+    {% if msg %}
+    <span style="text-align:center">{{ msg }}</span>
+    {% endif %}
     {% for topic in topics %}
     <a href="{{ url_for('topic.view', tid = topic.id) }}">
         <li class="mail{% if topic.has_new %} unread{% endif %}">

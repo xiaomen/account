@@ -22,6 +22,8 @@ from sheep.api.cache import cache
 @cache('topic:list:{uid}:{page}', 86400)
 def get_user_topics(uid, page):
     meta = get_mailr_meta(uid)
+    if not meta:
+        return None
     page_obj = Mailr.query.filter(and_(Mailr.uid==uid, Mailr.has_delete==0))
     page_obj = page_obj.order_by(desc(Mailr.last_time))
     items = page_obj.limit(PAGE_NUM).offset((page - 1) * PAGE_NUM).all()
