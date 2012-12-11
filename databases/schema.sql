@@ -41,11 +41,35 @@ CREATE TABLE `mailr` (
   PRIMARY KEY (`id`),
   KEY `ix_mailr_uid` (`uid`),
   KEY `ix_mailr_tid` (`tid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mailr1` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `tid` int(11) NOT NULL,
+  `contact` int(11) NOT NULL,
+  `last_time` datetime NOT NULL,
+  `has_new` bit(1) NOT NULL,
+  `has_delete` bit(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ix_mailr_uid` (`uid`),
+  KEY `ix_mailr_tid` (`tid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mailr_meta` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `topic_count` int(11) NOT NULL,
+  `last_time` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mailr_meta1` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `topic_count` int(11) NOT NULL,
   `last_time` datetime NOT NULL,
@@ -74,6 +98,18 @@ CREATE TABLE `reply` (
   `who` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `ix_reply_tid` (`tid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `reply1` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tid` int(11) NOT NULL,
+  `content` text,
+  `time` datetime NOT NULL,
+  `who` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ix_reply_tid` (`tid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -84,7 +120,17 @@ CREATE TABLE `topic` (
   `last_rid` int(11) NOT NULL,
   `reply_count` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `topic1` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(45) NOT NULL,
+  `last_rid` int(11) NOT NULL,
+  `reply_count` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
