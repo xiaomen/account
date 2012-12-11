@@ -59,7 +59,6 @@ def get_mailr(uid, tid):
 def topic_notify(uid):
     return bool(Mailr.query.filter_by(uid=uid, has_new=1).first())
 
-@cache('topic:meta:{uid}', 86400)
 def get_mailr_meta(uid):
     meta = MailrMeta.query.get(uid)
     #TODO TEST ONLY

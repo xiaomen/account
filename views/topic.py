@@ -69,6 +69,8 @@ def view(tid):
 @check_ua
 @login_required(next='account.login')
 def create_topic(uid):
+    if uid == g.current_user.id:
+        return redirect(url_for('topic.index'))
     who = get_user(uid)
     if request.method == 'GET':
         if not who:

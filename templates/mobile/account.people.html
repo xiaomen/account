@@ -14,9 +14,11 @@
     <div class="info">
         <span class="username">{{ visit_user.name }}</span>
         <span class="email">{{ visit_user.email }}</span>
+        {% if g.current_user.id != visit_user.id %}
         <div class="action">
             <a href="{{ url_for('topic.create_topic', uid = visit_user.id) }}">发邮件</a>
         </div>
+        {% endif %}
     </div>
     <div class="clearfix"></div>
 </div>
