@@ -5,17 +5,17 @@
     <div class="avatar">
         {% if g.current_user and g.current_user.id == visit_user.id %}
         <a href="{{ url_for('account.avatar') }}">
-            <img src="{{ ('/' + visit_user.avatar) | u_files }}" width="150px" height="150px" />
+            <img src="{{ visit_user.avatar | u_files }}" width="150px" height="150px" />
         </a>
         {% else %}
-        <img src="{{ ('/' + visit_user.avatar) | u_files }}" width="150px" height="150px" />
+        <img src="{{ visit_user.avatar | u_files }}" width="150px" height="150px" />
         {% endif %}
     </div>
     <div class="info">
         <span class="username">{{ visit_user.name }}</span>
         <span class="email">{{ visit_user.email }}</span>
         <div class="action">
-            <a href="/mail/write?to={{ visit_user.id }}">发邮件</a>
+            <a href="{{ url_for('topic.create_topic', uid = visit_user.id) }}">发邮件</a>
         </div>
     </div>
     <div class="clearfix"></div>

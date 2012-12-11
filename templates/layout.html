@@ -28,7 +28,7 @@
             {% endif %}
         </span>
         <span class="sep"></span>
-        <span><a href="{{ url_for('mail.index') }}">邮件</a>{% if g.unread_mail_count() > 0 %}<span class="unread"><sup>[{{g.unread_mail_count()}}]</sup></span>{% endif %}</span>
+        <span><a href="{{ url_for('mail.index') }}">邮件</a>{% if g.topic_notify() %}<span class="unread"><sup>[*]</sup></span>{% endif %}</span>
         <span class="sep"></span>
         <span><a href="{{ url_for('account.logout') }}">登出</a></span>
         {% endif %}

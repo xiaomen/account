@@ -2,9 +2,9 @@
 
 {%block content %}
 <div class="mail-nav">
-    <span><a href="/mail">收件箱</a></span>
+    <span><a href="{{ url_for('mail.index') }}">收件箱</a></span>
     <span class="sep"></span>
-    <span><a href="/mail/outbox">发件箱</a></span>
+    <span><a href="{{ url_for('mail.outbox') }}">发件箱</a></span>
 </div>
 <form class="mail">
     <div class="control-group">
@@ -12,7 +12,7 @@
             <label>来自:</label>
         </div>
         <div class="control">
-            <span><a href="/people/{{ mail.from_uid_url }}">{{ mail.from_uid }}</a></span>
+            <span><a href="{{ url_for('people.show_people', username=mail.from_uid_url) }}">{{ mail.from_uid }}</a></span>
         </div>
     </div>
     <div class="control-group">
@@ -38,9 +38,9 @@
         </div>
         <div class="control submit-form">
             {% if reply %}
-            <a href="/mail/write?reply={{ mail.id }}" class="btn">回复</a>
+            <a href="{{ url_for('mail.write', reply=mail.id) }}" class="btn">回复</a>
             {% endif %}
-            <a href="/mail/delete/{{ mail.delete }}" class="btn">删除</a>
+            <a href="{{ url_for('mail.delete', box=mail.box, mid=mail.id) }}" class="btn">删除</a>
         </div>
     </div>
 </form>

@@ -39,6 +39,13 @@ class User(db.Model):
             setattr(self, k, v)
 
     @staticmethod
+    def create(username, password, email):
+        user = User(username, password, email)
+        db.session.add(user)
+        db.session.commit()
+        return user
+
+    @staticmethod
     def create_password(raw):
         salt = create_token(8)
         hsh = hashlib.sha1(salt + raw).hexdigest()
@@ -50,6 +57,27 @@ class User(db.Model):
         salt, hsh = self.passwd.split('$')
         verify = hashlib.sha1(salt + raw).hexdigest()
         return verify == hsh
+
+    def change_password(self, password):
+        self.token = create_token(16)
+        self.passwd = User.create_password(password)
+        db.session.add(self)
+        db.session.commit()
+
+    def change_username(self, name):
+        self.name = name
+        db.session.add(self)
+        db.session.commit()
+
+    def set_domain(self, domain):
+        self.domain = domain
+        db.session.add(self)
+        db.session.commit()
+
+    def set_avatar(self, filename):
+        self.avatar = filename
+        db.session.add(self)
+        db.session.commit()
 
 class OAuth(db.Model):
     __tablename__ = 'oauth'
@@ -68,6 +96,8 @@ class OAuth(db.Model):
 
     def bind(self, uid):
         self.uid = uid
+        db.session.add(self)
+        db.session.commit()
 
 class Forget(db.Model):
     __tablename__ = 'forget'
@@ -80,3 +110,13 @@ class Forget(db.Model):
         self.uid = uid
         self.stub = stub
 
+    @staticmethod
+    def create(uid, stub):
+        forget = Forget(uid, stub)
+        db.session.add(forget)
+        db.session.commit()
+        return forget
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()

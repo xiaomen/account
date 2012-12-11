@@ -318,3 +318,93 @@ input[readonly] {
     background: #BCD6AB;
     padding: 5px 10px; 
 }
+
+.mail.right .avatar {
+    float: right; 
+}
+
+.mail.reply .mail-author {
+    margin: 0; 
+}
+
+.mail.reply .mail-summary {
+    float: none; 
+    margin-left: 70px; 
+}
+
+.mail.reply.right .mail-summary {
+    margin-left: 0px; 
+    margin-right: 80px; 
+    float: none; 
+}
+
+.reply-topic .r {
+    float: right; 
+    width: 80px; 
+    padding-left: 5px; 
+}
+
+.reply-topic .l {
+    margin-right: 80px; 
+}
+
+.reply-topic .l textarea {
+    width: auto; 
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+    height: 50px; 
+}
+
+.btn {
+    display: block; 
+    padding: 15px 30px;
+    line-height: 17px; 
+    text-decoration: none; 
+    color: white; 
+    background-color: #3999CC; 
+    border: none;
+    outline: none; 
+}
+
+.btn:hover {
+    text-decoration: none; 
+    color: white; 
+}
+
+.btn.btn-small {
+    padding: 10px 20px; 
+}
+
+.btn.btn-gray {
+    background-color: #777; 
+}
+
+.btn:visited {
+    color: white; 
+}
+
+.reply-topic .r .btn {
+    padding: 0px; 
+    height: 70px; 
+    width: 100%;
+}
+
+.back-btn {
+    margin: 10px 0; 
+}
+
+.back-btn .btn {
+    float: right; 
+}
+
+.title {
+    margin: 10px; 
+    padding: 10px 5px; 
+    border-bottom: 1px solid #3999CC; 
+    color: #3999CC; 
+}
+
+.create-topic {
+    margin: 0 10px; 
+}

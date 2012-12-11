@@ -3,12 +3,23 @@
 
 import config
 import logging
-import tempfile
-from utils import *
 from datetime import datetime
+
+from utils import code
+from utils.ua import check_ua, render_template
+from utils.account import login_required, process_file
+from utils.validators import check_email, check_password, \
+        check_register_info, check_login_info, check_domain, \
+        check_domain_exists, check_username
+from utils.mail import send_email
+from query.account import get_user_by_email, get_user, \
+        get_forget_by_stub, get_current_user, create_forget, \
+        create_user
+
 from sheep.api.files import get_uploader
 from sheep.api.cache import backend, cross_cache
-from models.account import db, User, Forget, create_token
+from models.account import create_token
+
 from flask import Blueprint, g, session, \
         redirect, request, url_for, abort
 from flask import render_template as origin_render
@@ -19,7 +30,7 @@ logger = logging.getLogger(__name__)
 account = Blueprint('account', __name__)
 
 @csrf_exempt
-@account.route('/forget', methods=['GET', 'POST'])
+@account.route('/forget/', methods=['GET', 'POST'])
 @check_ua
 @login_required(need=False)
 def forget():
@@ -40,20 +51,16 @@ def forget():
                 origin_render('email.html', user=user, stub=stub))
         except:
             logger.exception("send mail failed")
-
-        db.session.add(Forget(user.id, stub))
-        db.session.commit()
-
+        create_forget(user.id, stub)
     return render_template('account.forget.html', send=1)
 
-@account.route('/reset/<stub>', methods=['GET', 'POST'])
+@account.route('/reset/<stub>/', methods=['GET', 'POST'])
 @check_ua
 def reset(stub=None):
     forget = get_forget_by_stub(stub=stub)
     if g.current_user:
         if forget:
-            _delete_forget(forget)
-            db.session.commit()
+            forget.delete()
         return redirect(url_for('index'))
 
     if not forget:
@@ -61,10 +68,9 @@ def reset(stub=None):
 
     if request.method == 'GET':
         if (datetime.now()  - forget.created).seconds > config.FORGET_STUB_EXPIRE:
-            _delete_forget(forget)
-            db.session.commit()
+            forget.delete()
             return render_template('account.reset.html', hidden=1, \
-                    error='stub expired')
+                    error=code.ACCOUNT_FORGET_STUB_EXPIRED)
         return render_template('account.reset.html', stub=stub)
 
     password = request.form.get('password', None)
@@ -73,11 +79,11 @@ def reset(stub=None):
         return render_template('account.reset.html', stub=stub, \
                 error=status[1])
     user = get_user(forget.uid)
-    _change_password(user, password)
-    backend.delete('account:%s' % forget.stub)
-    _delete_forget(forget)
-    db.session.commit()
+    user.change_password(password)
+    account_login(user)
+    forget.delete()
     clear_user_cache(user)
+    backend.delete('account:%s' % forget.stub)
     return render_template('account.reset.html', ok=1)
 
 @account.route('/bind', methods=['GET', 'POST'])
@@ -88,11 +94,11 @@ def bind():
     oauth = session.pop('from_oauth', None)
     allow = 'allow' in request.form
     if g.current_user and oauth and allow:
-        _bind_oauth(oauth, g.session['user_id'])
+        oauth.bind(g.session['user_id'])
     return redirect(url_for('index'))
 
 @csrf_exempt
-@account.route('/register', methods=['POST','GET'])
+@account.route('/register/', methods=['POST','GET'])
 @check_ua
 @login_required(need=False)
 def register():
@@ -105,18 +111,16 @@ def register():
     if not check:
         return render_template('account.register.html', error=error)
     oauth = session.pop('from_oauth', None)
-    user = User(username, password, email)
-    db.session.add(user)
-    db.session.commit()
+    user = create_user(username, password, email)
     #clear cache
     clear_user_cache(user)
     account_login(user)
     if oauth:
-        _bind_oauth(oauth, user.id)
+        oauth.bind(user.id)
     return redirect(url_for('index'))
 
 @csrf_exempt
-@account.route('/login', methods=['POST', 'GET'])
+@account.route('/login/', methods=['POST', 'GET'])
 @check_ua
 @login_required(need=False)
 def login():
@@ -142,40 +146,35 @@ def login():
     return redirect(redirect_url or url_for('index'))
 
 @csrf_exempt
-@account.route('/logout')
+@account.route('/logout/')
 @check_ua
 def logout():
     account_logout()
     return redirect(request.referrer or url_for('index'))
 
-@account.route('/avatar', methods=['POST', 'GET'])
+@account.route('/avatar/', methods=['POST', 'GET'])
 @check_ua
-@login_required('account.login', redirect='/account/avatar')
+@login_required('account.login', redirect='/account/avatar/')
 def avatar():
     user = g.current_user
-    path = '/'
-    if user.avatar:
-        path += user.avatar
-    else:
-        path += 'default.png'
     if request.method == 'GET':
         ok = request.args.get('ok', None)
-        return render_template('account.avatar.html', path=path, ok=ok)
+        return render_template('account.avatar.html', path = user.avatar, ok=ok)
     upload_avatar = request.files['file']
     if not upload_avatar:
-        return render_template('account.avatar.html', path = path, error = 'Please select avatar file')
+        return render_template('account.avatar.html', path = user.avatar, error = 'Please select avatar file')
     uploader = get_uploader()
     filename, stream, error = process_file(user, upload_avatar)
     if error:
-        return render_template('account.avatar.html', path = path, error = error)
+        return render_template('account.avatar.html', path = user.avatar, error = error)
     uploader.writeFile(filename, stream)
-    _set_avatar(user, filename)
+    user.set_avatar(filename)
     clear_user_cache(user)
     return redirect(url_for('account.avatar', ok = 1))
 
-@account.route('/setting', methods=['POST', 'GET'])
+@account.route('/setting/', methods=['POST', 'GET'])
 @check_ua
-@login_required('account.login', redirect='/account/setting')
+@login_required('account.login', redirect='/account/setting/')
 def setting():
     user = g.current_user
     if request.method == 'GET':
@@ -189,56 +188,29 @@ def setting():
         status = check_username(username)
         if status:
             return render_template('account.setting.html', error=status[1])
-        _change_username(user, username)
+        user.change_username(username)
 
     if domain:
         for status in [check_domain(domain), check_domain_exists(domain)]:
             if status:
                 return render_template('account.setting.html', error=status[1])
-        _set_domain(user, domain)
+        user.set_domain(domain)
 
     if password:
         status = check_password(password)
         if status:
             return render_template('account.setting.html', error=status[1])
-        _change_password(user, password)
-    db.session.commit()
+        user.change_password(password)
     #clear cache
     clear_user_cache(user)
+    account_login(user)
     g.current_user = get_current_user()
-    return render_template('account.setting.html', error='update ok')
+    return render_template('account.setting.html', error=code.ACCOUNT_SETTING_SUCCESS)
 
 def clear_user_cache(user):
     keys = ['account:%s' % key for key in [str(user.id), user.domain, user.email]]
     backend.delete_many(*keys)
     cross_cache.delete('open:account:info:{0}'.format(user.id))
-
-def _set_avatar(user, filename):
-    user.avatar = filename
-    db.session.add(user)
-    db.session.commit()
-
-def _set_domain(user, domain):
-    user.domain = domain
-    db.session.add(user)
-
-def _delete_forget(forget):
-    db.session.delete(forget)
-
-def _change_password(user, password):
-    user.token = create_token(16)
-    user.passwd = User.create_password(password)
-    account_login(user)
-    db.session.add(user)
-
-def _change_username(user, username):
-    user.name = username
-    db.session.add(user)
-
-def _bind_oauth(oauth, uid):
-    oauth.bind(uid)
-    db.session.add(oauth)
-    db.session.commit()
 
 def account_login(user):
     g.session['user_id'] = user.id

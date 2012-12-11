@@ -4,7 +4,7 @@
 {% if error %}
 <div class="forget-msg">{{ error }}</div>
 {% endif %}
-<form method="post" action="/mail/write" class="write">
+<form method="post" action="{{ url_for('mail.write') }}" class="write">
     <div class="control-group">
         <div class="control-label">
             <label for="to_uid">收件人</label>

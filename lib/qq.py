@@ -8,7 +8,7 @@ import config
 import urllib2
 import logging
 from base import BasicOAuth
-from flaskext.oauth import OAuthException
+from flask_oauth import OAuthException
 
 logger = logging.getLogger(__name__)
 

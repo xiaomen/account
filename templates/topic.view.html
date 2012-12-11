@@ -1,0 +1,15 @@
+<!doctype html>
+<title>{{ topic.title }}</title>
+{% for reply in replies %}
+    <p>
+    {{ reply.user.name }} {{ reply.time }} {{ reply.content }}
+    </p>
+{% endfor %}
+<form method="post" action="{{ url_for('topic.create_reply', tid=topic.id) }}">
+    <input type="hidden" name="tid" value="{{ topic.id }}"/>
+    <br />
+    <textarea name="content"></textarea>
+    <br />
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+    <input type=submit value=reply>
+</form>

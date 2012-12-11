@@ -15,7 +15,7 @@
     {% for mail in mails %}
     <tr>
         <td><a href="{{ url_for('people.show_people', username=mail.user.domain or mail.user.id) }}">{{ mail.user.name }}</a></td>
-        <td><a href="{{ url_for('mail.view', mail_id=mail.id) }}">{{ mail.title }}</a></td>
+        <td><a href="{{ url_for('mail.view', mid=mail.id) }}">{{ mail.title }}</a></td>
     </tr>
     {% endfor %}
 </table>

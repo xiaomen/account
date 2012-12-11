@@ -5,7 +5,7 @@ import os
 import json
 import base64
 import logging
-from flaskext.oauth import *
+from flask_oauth import *
 from flask import redirect, session, request
 
 logger = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ class BasicOAuth(OAuthRemoteApp):
                  access_token_url, authorize_url,
                  consumer_key, consumer_secret,
                  request_token_params,
-                 access_token_method)
+                 access_token_method=access_token_method)
 
     def authorize(self, callback=None, next_url=None):
         assert callback is not None, 'Callback is required OAuth2'
