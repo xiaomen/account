@@ -14,7 +14,7 @@ from utils.validators import check_email, check_password, \
 from utils.mail import send_email
 from query.account import get_user_by_email, get_user, \
         get_forget_by_stub, get_current_user, create_forget, \
-        create_user
+        create_user, get_user_by
 
 from sheep.api.files import get_uploader
 from sheep.api.cache import backend, cross_cache
@@ -133,7 +133,7 @@ def login():
     if not check:
         return render_template('account.login.html', login_info=error, login_url=login_url)
 
-    user = get_user_by_email(email=email)
+    user = get_user_by(email=email).limit(1).first()
     if not user:
         logger.info('no such user')
         return render_template('account.login.html', login_info='no such user', login_url=login_url)

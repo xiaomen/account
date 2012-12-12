@@ -20,11 +20,11 @@ def get_user(username):
 
 @cache('account:{domain}', 86400)
 def get_user_by_domain(domain):
-    return get_user_by(domain=domain).first()
+    return get_user_by(domain=domain).limit(1).first()
 
 @cache('account:{email}', 86400)
 def get_user_by_email(email):
-    return get_user_by(email=email).first()
+    return get_user_by(email=email).limit(1).first()
 
 @cache('account:{stub}', 300)
 def get_forget_by_stub(stub):
