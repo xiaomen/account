@@ -59,10 +59,15 @@ def get_user_topic(uid, tid):
 def topic_notify(uid):
     return bool(UserTopic.query.filter_by(uid=uid, has_new=1).first())
 
+@cache('topic:user_topic_meta:{uid}', 86400)
 def get_user_topic_meta(uid):
     meta = UserTopicMeta.query.get(uid)
     if not meta:
-        meta = UserTopicMeta.create(uid, 0, datetime.now())
+        meta = set_user_topic_meta(uid)
+    return meta
+
+def set_user_topic_meta(uid):
+    meta = UserTopicMeta.create(uid, 0, datetime.now())
     return meta
 
 def get_topic_reploy_count(tid):
@@ -70,7 +75,7 @@ def get_topic_reploy_count(tid):
     count = topic.reply.count
     return count
 
-def get_user_topics(uid, tid):
+def get_topic_users(uid, tid):
     sender = get_user_topic(uid, tid)
     receiver = get_user_topic(sender.contact, tid)
     return sender, receiver

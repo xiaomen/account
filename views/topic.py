@@ -18,7 +18,7 @@ from utils.ua import check_ua, render_template
 from query.topic import get_user_topics, get_reply, \
         get_topic, get_user_replies, delete_topic, \
         make_topic, make_reply, mark_read, \
-        get_user_topics, get_user_topic
+        get_topic_users, get_user_topic
 from query.account import get_user
 
 from sheep.api.cache import backend, cross_cache
@@ -101,7 +101,7 @@ def create_reply(tid):
     tid = request.form.get('tid')
     content = request.form.get('content')
     topic = get_topic(tid)
-    sender, receiver = get_user_topics(g.current_user.id, topic.id)
+    sender, receiver = get_topic_users(g.current_user.id, topic.id)
     if not topic or not sender or not receiver:
         return redirect(url_for('topic.index'))
     make_reply(sender, receiver, topic, content)
