@@ -15,18 +15,18 @@ from sqlalchemy.sql.expression import desc
 
 from config import PAGE_NUM
 from utils.helper import gen_list_page_obj
-from models.topic import Topic, Reply, Mailr, MailrMeta, \
+from models.topic import Topic, Reply, UserTopic, UserTopicMeta, \
         create_topic, create_reply
 
 from sheep.api.cache import cache
 
 @cache('topic:list:{uid}:{page}', 86400)
 def get_user_topics(uid, page):
-    meta = get_mailr_meta(uid)
+    meta = get_user_topic_meta(uid)
     if not meta:
         return None
-    page_obj = Mailr.query.filter(and_(Mailr.uid==uid, Mailr.has_delete==0))
-    page_obj = page_obj.order_by(desc(Mailr.last_time))
+    page_obj = UserTopic.query.filter(and_(UserTopic.uid==uid, UserTopic.has_delete==0))
+    page_obj = page_obj.order_by(desc(UserTopic.last_time))
     items = page_obj.limit(PAGE_NUM).offset((page - 1) * PAGE_NUM).all()
     page_obj = Pagination(page_obj, page, PAGE_NUM, meta.topic_count, items)
     ret = gen_list_page_obj(page_obj)
@@ -51,25 +51,18 @@ def get_topic(tid):
 def get_reply(rid):
     return Reply.query.get(rid)
 
-@cache('topic:mailr:{uid}:{tid}', 86400)
-def get_mailr(uid, tid):
-    return Mailr.query.filter_by(uid=uid, tid=tid).first()
+@cache('topic:user_topic:{uid}:{tid}', 86400)
+def get_user_topic(uid, tid):
+    return UserTopic.query.filter_by(uid=uid, tid=tid).limit(1).first()
 
 @cache('topic:notify:{uid}', 86400)
 def topic_notify(uid):
-    return bool(Mailr.query.filter_by(uid=uid, has_new=1).first())
+    return bool(UserTopic.query.filter_by(uid=uid, has_new=1).first())
 
-def get_mailr_meta(uid):
-    meta = MailrMeta.query.get(uid)
-    #TODO TEST ONLY
-    #if not meta:
-    #    base = Mailr.query.filter(and_(Mailr.uid==uid, Mailr.has_delete==0))
-    #    last_time = base.order_by(desc(Mailr.last_time)).limit(1).first()
-    #    last_time = last_time.last_time
-    #    count = base.count()
-    #    meta = MailrMeta.create(uid, count, last_time)
+def get_user_topic_meta(uid):
+    meta = UserTopicMeta.query.get(uid)
     if not meta:
-        meta = MailrMeta.create(uid, 0, datetime.now())
+        meta = UserTopicMeta.create(uid, 0, datetime.now())
     return meta
 
 def get_topic_reploy_count(tid):
@@ -77,29 +70,29 @@ def get_topic_reploy_count(tid):
     count = topic.reply.count
     return count
 
-def get_mailrs(uid, tid):
-    sender = get_mailr(uid, tid)
-    receiver = get_mailr(sender.contact, tid)
+def get_user_topics(uid, tid):
+    sender = get_user_topic(uid, tid)
+    receiver = get_user_topic(sender.contact, tid)
     return sender, receiver
 
 def make_topic(uid, to_uid, title, content):
-    sender = get_mailr_meta(uid)
-    receiver = get_mailr_meta(to_uid)
+    sender = get_user_topic_meta(uid)
+    receiver = get_user_topic_meta(to_uid)
     return create_topic(sender, receiver, title, content)
 
 def make_reply(sender, receiver, topic, content):
-    sm = get_mailr_meta(sender.uid)
-    rm = get_mailr_meta(receiver.uid)
+    sm = get_user_topic_meta(sender.uid)
+    rm = get_user_topic_meta(receiver.uid)
     return create_reply(sender, receiver, sm, rm, topic, content)
 
 def mark_read(uid, tid):
-    mailr = get_mailr(uid=uid, tid=tid)
-    if not mailr:
+    user_topic = get_user_topic(uid=uid, tid=tid)
+    if not user_topic:
         return False
-    return mailr.read()
+    return user_topic.read()
 
-def delete_topic(mailr):
-    meta = get_mailr_meta(mailr.uid)
-    mailr.delete()
-    meta.delete()
+def delete_topic(user_topic):
+    user_topic_meta = get_user_topic_meta(user_topic.uid)
+    user_topic.delete()
+    user_topic_meta.delete()
 

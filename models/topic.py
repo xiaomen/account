@@ -15,8 +15,8 @@ def init_topic_db(app):
     db.app = app
     db.create_all()
 
-class MailrMeta(db.Model):
-    __tablename__ = 'mailr_meta'
+class UserTopicMeta(db.Model):
+    __tablename__ = 'user_topic_meta'
     uid = db.Column('id', db.Integer, primary_key=True)
     topic_count = db.Column(db.Integer, nullable=False, default=0)
     last_time = db.Column(db.DateTime, nullable=False, default=datetime.now)
@@ -28,10 +28,10 @@ class MailrMeta(db.Model):
 
     @staticmethod
     def create(uid, topic_count, last_time):
-        mailr_meta = MailrMeta(uid, topic_count, last_time)
-        db.session.add(mailr_meta)
+        user_topic_meta = UserTopicMeta(uid, topic_count, last_time)
+        db.session.add(user_topic_meta)
         db.session.commit()
-        return mailr_meta
+        return user_topic_meta
 
     def create_topic(self, last_time):
         self.topic_count = self.topic_count + 1
@@ -47,8 +47,8 @@ class MailrMeta(db.Model):
         db.session.add(self)
         db.session.commit()
 
-class Mailr(db.Model):
-    __tablename__ = 'mailr'
+class UserTopic(db.Model):
+    __tablename__ = 'user_topic'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     uid = db.Column(db.Integer, index=True, nullable=False)
     tid = db.Column(db.Integer, index=True, nullable=False)
@@ -65,13 +65,13 @@ class Mailr(db.Model):
 
     @staticmethod
     def create(uid, tid, last_time, contact):
-        mailr = Mailr(uid = uid,
+        user_topic = UserTopic(uid = uid,
                       tid = tid,
                       contact = contact,
                       last_time = last_time)
-        db.session.add(mailr)
+        db.session.add(user_topic)
         db.session.commit()
-        return mailr
+        return user_topic
 
     def new_message(self, last_time, has_new=0):
         if self.has_new != has_new:
@@ -148,15 +148,15 @@ def create_topic(sender, receiver, title, content):
         topic.add_reply(reply)
         db.session.add(topic)
         db.session.flush()
-        mailr_sender = Mailr(sender.uid, topic.id, \
+        topic_sender = UserTopic(sender.uid, topic.id, \
                       contact=receiver.uid, \
                       last_time=reply.time)
-        mailr_receiver = Mailr(receiver.uid, topic.id, \
+        topic_receiver = UserTopic(receiver.uid, topic.id, \
                          contact=sender.uid, \
                          last_time=reply.time, \
                          has_new=1)
-        db.session.add(mailr_sender)
-        db.session.add(mailr_receiver)
+        db.session.add(topic_sender)
+        db.session.add(topic_receiver)
         sender.create_topic(reply.time)
         receiver.create_topic(reply.time)
         db.session.add(sender)

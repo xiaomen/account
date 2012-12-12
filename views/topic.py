@@ -18,7 +18,7 @@ from utils.ua import check_ua, render_template
 from query.topic import get_user_topics, get_reply, \
         get_topic, get_user_replies, delete_topic, \
         make_topic, make_reply, mark_read, \
-        get_mailrs, get_mailr
+        get_user_topics, get_user_topic
 from query.account import get_user
 
 from sheep.api.cache import backend, cross_cache
@@ -52,7 +52,7 @@ def view(tid):
         raise abort(404)
     page = int(page)
     if mark_read(g.current_user.id, tid):
-        backend.delete('topic:mailr:%d:%d' % (g.current_user.id, tid))
+        backend.delete('topic:user_topic:%d:%d' % (g.current_user.id, tid))
         backend.delete('topic:notify:%d' % g.current_user.id)
         backend.delete('topic:list:%d:1' % g.current_user.id)
     list_page = get_user_replies(tid, page)
@@ -101,26 +101,26 @@ def create_reply(tid):
     tid = request.form.get('tid')
     content = request.form.get('content')
     topic = get_topic(tid)
-    sender, receiver = get_mailrs(g.current_user.id, topic.id)
+    sender, receiver = get_user_topics(g.current_user.id, topic.id)
     if not topic or not sender or not receiver:
         return redirect(url_for('topic.index'))
     make_reply(sender, receiver, topic, content)
     #clean cache
     clean_cache(g.current_user.id, receiver.uid, topic.id)
-    backend.delete('topic:mailr:%d:%d' % (g.current_user.id, topic.id))
-    backend.delete('topic:mailr:%d:%d' % (receiver.uid, topic.id))
+    backend.delete('topic:user_topic:%d:%d' % (g.current_user.id, topic.id))
+    backend.delete('topic:user_topic:%d:%d' % (receiver.uid, topic.id))
     return redirect(url_for('topic.view', tid=tid))
 
 @topic.route('/delete/<int:tid>/')
 @check_ua
 @login_required(next='account.login')
 def topic_delete(tid):
-    mailr = get_mailr(g.current_user.id, tid=tid)
-    if mailr:
-        delete_topic(mailr)
+    user_topic = get_user_topic(g.current_user.id, tid=tid)
+    if user_topic:
+        delete_topic(user_topic)
         backend.delete('topic:meta:%d' % g.current_user.id)
         backend.delete('topic:list:%d:1' % g.current_user.id)
-        backend.delete('topic:mailr:%d:%d' % (g.current_user.id, tid))
+        backend.delete('topic:user_topic:%d:%d' % (g.current_user.id, tid))
     return redirect(url_for('topic.index'))
 
 def clean_cache(uid, to_uid, tid):
