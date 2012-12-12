@@ -18,13 +18,13 @@ from utils.helper import gen_list_page_obj
 from models.topic import Topic, Reply, UserTopic, UserTopicMeta, \
         create_topic, create_reply
 
-from sheep.api.cache import cache
+from sheep.api.cache import cache, backend
 
 @cache('topic:list:{uid}:{page}', 86400)
 def get_user_topics(uid, page):
     meta = get_user_topic_meta(uid)
     if not meta:
-        return None
+        meta = set_user_topic_meta(uid)
     page_obj = UserTopic.query.filter(and_(UserTopic.uid==uid, UserTopic.has_delete==0))
     page_obj = page_obj.order_by(desc(UserTopic.last_time))
     items = page_obj.limit(PAGE_NUM).offset((page - 1) * PAGE_NUM).all()
@@ -62,8 +62,6 @@ def topic_notify(uid):
 @cache('topic:user_topic_meta:{uid}', 86400)
 def get_user_topic_meta(uid):
     meta = UserTopicMeta.query.get(uid)
-    if not meta:
-        meta = set_user_topic_meta(uid)
     return meta
 
 def set_user_topic_meta(uid):
@@ -82,12 +80,19 @@ def get_topic_users(uid, tid):
 
 def make_topic(uid, to_uid, title, content):
     sender = get_user_topic_meta(uid)
+    if not sender:
+        sender = set_user_topic_meta(uid)
     receiver = get_user_topic_meta(to_uid)
+    if not receiver:
+        receiver = set_user_topic_meta(to_uid)
     return create_topic(sender, receiver, title, content)
 
 def make_reply(sender, receiver, topic, content):
     sm = get_user_topic_meta(sender.uid)
     rm = get_user_topic_meta(receiver.uid)
+    if not sm or not rm:
+        #TODO 理论上这里一定有user_topic_meta
+        raise Exception('what the hell!?')
     return create_reply(sender, receiver, sm, rm, topic, content)
 
 def mark_read(uid, tid):
@@ -98,6 +103,9 @@ def mark_read(uid, tid):
 
 def delete_topic(user_topic):
     user_topic_meta = get_user_topic_meta(user_topic.uid)
+    if not user_topic_meta:
+        #TODO 理论上这里一定有user_topic_meta
+        raise Exception('what the hell!?')
     user_topic.delete()
     user_topic_meta.delete()
 
