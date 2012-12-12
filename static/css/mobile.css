@@ -109,7 +109,7 @@ form input , form textarea {
 }
 
 .user-info .info .email {
-    background: url('/static/img/email.png') no-repeat 0 3px; 
+    background: url('/account/static/img/email.png') no-repeat 0 3px; 
     padding-left: 20px; 
 }
 
