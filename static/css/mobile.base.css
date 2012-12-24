@@ -1,0 +1,267 @@
+/* Base */
+
+body {
+    font: 13px/22px 'Helvetica Neue',Helvetica,Arial,Sans-serif;
+    font-size: 13px; 
+}
+
+a {
+    text-decoration: none;
+    color: #3999CC;
+}
+
+a:visited {
+    color: #3999CC; 
+}
+
+.r {
+    float: right;
+}
+
+.l {
+    float: left;
+}
+
+.clearfix {
+    clear: both;
+    *zoom: 1;
+}
+
+/* Form */
+
+form.form.form-fullsize .control-group .control {
+    margin-right: 20px; 
+}
+
+.form-action {
+    margin-top: 20px;
+}
+
+.control-group {
+}
+
+.control-group .control-label {
+    color: #3999CC;
+    font-size: 1.3em; 
+    margin-top: 20px; 
+    display: block; 
+}
+
+.control-group .control-label label {
+    display: block; 
+    margin: 5px 0; 
+}
+
+.control-group .control {
+}
+
+.control-group .control input {
+    outline: none;
+    background: none;
+    width: 100%;
+    border: 1px solid #3999CC;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1.5em;
+}
+
+.control-group .control textarea {
+    outline: none;
+    background: none;
+    width: 100%;
+    border: 1px solid #3999CC;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1.5em;
+}
+
+/* Button */
+
+.btn {
+    outline: none;
+    border: none;
+    background: transparent;
+    color: white;
+    padding: 10px 20px;
+    background-color: #3999CC;
+    font-size : 15px;
+    line-height: 20px;
+}
+
+a.btn {
+    display: block; 
+    color: white; 
+}
+
+a.btn:visited {
+    color: white; 
+}
+
+.btn.btn-small {
+    padding: 5px 15px;
+    font-size: 13px;
+}
+
+.btn.btn-bigger {
+    padding: 15px 30px;
+    font-size: 18px;
+    line-height: 24px;
+}
+
+.btn-gray {
+    background-color: #777;
+}
+
+.btn-green {
+    background-color: #74b34b;
+}
+
+/* Text */
+
+.gray {
+    color: #777;
+}
+
+.green {
+    color: #74b34d;
+}
+
+.title {
+    color: #3999CC;
+    border-bottom: 1px solid #3999CC;
+    margin: 10px 0;
+    padding: 10px 0;
+}
+
+.title.title-center {
+    text-align: center;
+}
+
+/* Message */
+
+.msg {
+    padding: 8px 35px 8px 14px;
+    margin: 10px 0; 
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    background-color: #FCF8E3;
+    border: 1px solid #FBEED5;
+    color: #C09853;
+}
+
+.msg.error-msg {
+    color: #B94A48;
+    background-color: #F2DEDE;
+    border-color: #EED3D7;
+}
+
+.msg.success-msg {
+    color: #468847;
+    background-color: #DFF0D8;
+    border-color: #D6E9C6;
+}
+
+.msg.info-msg {
+    color: #3A87AD;
+    background-color: #D9EDF7;
+    border-color: #BCE8F1;
+}
+
+/* List */
+
+ul {
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
+}
+
+ul.inline-list li {
+    float: left; 
+}
+
+/* Nav */
+
+.topbar {
+    height: 38px; 
+    line-height: 40px; 
+    background-color: #3999CC; 
+}
+
+.nav {
+    margin: 0 10px; 
+}
+
+.nav li a {
+    color: white; 
+    margin: 0 10px; 
+}
+
+.nav li:after {
+    content: "|"; 
+    color: white; 
+}
+
+.nav li:last-child:after {
+    content: ""; 
+}
+
+/* Header */
+
+.header {
+    width: 100%; 
+}
+
+.header-wrap {
+    margin: 0 20px; 
+    border-bottom: 3px solid #3999CC; 
+    padding: 20px 0; 
+}
+
+.subtitle {
+    margin: 20px 0; 
+    color: #3999CC; 
+}
+
+.subtitle h2 {
+    font-weight: normal; 
+    letter-spacing: 0.25em; 
+    margin: 0; 
+    padding: 0; 
+}
+
+.logo {
+    width: 208px; 
+}
+
+/* Footer */
+
+.footer-wrap {
+    text-align: center; 
+    border-top: 1px solid #3999CC; 
+    margin: 30px 20px; 
+    padding: 5px 0; 
+}
+
+.footer ul.nav {
+    display: inline-block; 
+}
+
+.footer ul.nav li a {
+    color: #777; 
+}
+
+.footer ul.nav li:after {
+    color: #777; 
+}
+
+.content-wrap {
+    margin: 0 20px; 
+}
+
+.clearfix {
+    clear: both; 
+    zoom: 0; 
+}
