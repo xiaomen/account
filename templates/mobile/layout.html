@@ -11,8 +11,8 @@
 </head>
 <body>
 <div class="topbar">
-    <div class="useraera">
-        <ul class="nav">
+    <div class="useraera r">
+        <ul class="nav inline-list">
             {% if g.current_user %}
             {% if g.current_user.domain %}
             <li><a href="{{ url_for('people.show_people', username=g.current_user.domain) }}">{{ g.current_user.name }}</a></li>
@@ -38,7 +38,7 @@
 </div>
 <div class="header">
     <div class="header-wrap">
-        <div class="subtitle">
+        <div class="subtitle r">
             <h2>{% block subtitle %}首页{% endblock %}</h2>
         </div>
         <div class="logo">
@@ -56,7 +56,7 @@
 <div class="footer">
     <div class="footer-wrap">
         <div class="footer-nav">
-            <ul class="nav">
+            <ul class="inline-list nav">
                 <li><a href="/report">反馈</a></li>
                 <li><a href="http://xiaomen.co/">xiaomen.co</a></li>
             </ul>

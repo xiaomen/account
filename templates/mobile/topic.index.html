@@ -12,10 +12,10 @@
             {% if topic.has_new %}
             <span class="r">未读</span>
             {% endif %}
-            <div class="avatar">
+            <div class="avatar l">
                 <img src="{{ topic.user.avatar | u_files }}" width="60px" height="60px" />
             </div>
-            <div class="mail-summary">
+            <div class="mail-summary l">
                <span class="mail-title">{{ topic.title }}</span>
                <span class="mail-author">来自: {{ topic.user.name }}</span>
            </div>

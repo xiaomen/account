@@ -1,31 +1,41 @@
 {% extends "mobile/layout.html" %}
 
 {% block content %}
-<form method="post" action="{{ url_for('account.setting') }}">
+<form method="post" action="{{ url_for('account.setting') }}" class="form form-fullsize">
     {% if error %}
-    <div class="error-msg">
-        <p>{{ error }}</p>
-    </div>
+    <div class="msg error-msg">{{ error }}</div>
     {% endif %}
-    <label for="name">昵称</label>
-    <div class="control">
-        <input type="text" tabindex="3" value="{{ g.current_user.name }}" id="name" name="name" />
+    <div class="control-group">
+        <div class="control-label">
+            <label for="name">昵称</label>
+        </div>
+        <div class="control">
+            <input type="text" tabindex="3" value="{{ g.current_user.name }}" id="name" name="name" />
+        </div>
     </div>
-    <label for="password">密码</label>
-    <div class="control">
-        <input type="password" tabindex="1" value="" id="password" name="password" />
+    <div class="control-group">
+        <div class="control-label">
+            <label for="password">密码</label>
+        </div>
+        <div class="control">
+            <input type="password" tabindex="1" value="" id="password" name="password" />
+        </div>
     </div>
-    <label for="domain">短域名</label>
-    <div class="control">
-        {% if not g.current_user.domain %}
-        <input type="text" tabindex="2" value="" id="domain" name="domain" />
-        {% else %}
-        <input type="text" tabindex="2" value="{{ g.current_user.domain }}" id="domain" name="domain" readonly disabled />
-        {% endif %}
+    <div class="control-group">
+        <div class="control-label">
+            <label for="domain">短域名</label>
+        </div>
+        <div class="control">
+            {% if not g.current_user.domain %}
+            <input type="text" tabindex="2" value="" id="domain" name="domain" />
+            {% else %}
+            <input type="text" tabindex="2" value="{{ g.current_user.domain }}" id="domain" name="domain" readonly class="input-readonly"/>
+            {% endif %}
+        </div>
     </div>
-    <div class="control-action">
-        <button class="submit-btn">更新</button>
-        <a href="{{ url_for('account.avatar') }}" class="btn register-btn">修改头像</a>
+    <div class="form-action">
+        <button class="btn btn-green">更新</button>
+        <a href="{{ url_for('account.avatar') }}" class="btn r">修改头像</a>
     </div>
     <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
 </form>

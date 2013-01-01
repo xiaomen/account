@@ -1,7 +1,7 @@
 {% extends "mobile/layout.html" %}
 
 {% block content %}
-<form action="{{ login_url }}" method="POST">
+<form action="{{ login_url }}" method="POST" class="form form-fullsize">
     {% if login_info %}
     <div class="error-msg">
         <p>{{ login_info }}</p>

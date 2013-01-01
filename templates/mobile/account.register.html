@@ -1,31 +1,43 @@
 {% extends "mobile/layout.html" %}
 
 {% block content %}
-<form action="{{ login_url }}" method="POST">
+<form action="{{ login_url }}" method="POST" class="form form-fullsize">
     {% if login_info %}
-    <div class="error-msg">
+    <div class="msg info-msg">
         <p>{{ login_info }}</p>
     </div>
     {% endif %}
     {% if error %}
-    <div class="error-msg">
+    <div class="msg error-msg">
         <p>{{ error }}</p>
     </div>
     {% endif %}
-    <label class="control-label">邮箱:</label>
-    <div class="control">
-        <input name="email" type="TEXT" />
+    <div class="control-group">
+        <div class="control-label">
+            <label for="email">邮箱:</label>
+        </div>
+        <div class="control">
+            <input name="email" type="TEXT" />
+        </div>
     </div>
-    <label class="control-label">密码:</label>
-    <div class="control">
-        <input name="password" type="PASSWORD" />
+    <div class="control-group">
+        <div class="control-label">
+            <label for="password">密码:</label>
+        </div>
+        <div class="control">
+            <input name="password" type="PASSWORD" />
+        </div>
     </div>
-    <label class="control-label">昵称:</label>
-    <div class="control">
-        <input name="name" type="TEXT" />
+    <div class="control-group">
+        <div class="control-label">
+            <label for="name">昵称:</label>
+        </div>
+        <div class="control">
+            <input name="name" type="TEXT" />
+        </div>
     </div>
-    <div class="control-action">
-        <button class="submit-btn">注册</button>
+    <div class="form-action">
+        <button class="btn btn-green">注册</button>
     </div>
 </form>
 {% endblock %}
