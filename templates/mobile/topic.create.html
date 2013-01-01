@@ -4,20 +4,28 @@
 <div class="title">
     <h2>给{{ who.name }}写信</h2>
 </div>
-<form class="create-topic" method="POST" action="{{ url_for('topic.create_topic', uid = uid) }}">
+<form class="form form-fullsize" method="POST" action="{{ url_for('topic.create_topic', uid = uid) }}">
     <input type="hidden" name="to_uid" value="{{ uid }}"/>
     <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-    <label class="control-label">标题</label>
-    <div class="control">
-        <input type="TEXT" name="title" value="">
+    <div class="control-group">
+        <div class="control-label">
+            <label for="title">标题</label>
+        </div>
+        <div class="control">
+            <input type="TEXT" name="title" value="">
+        </div>
     </div>
-    <label class="control-label">正文</label>
-    <div class="control">
-        <textarea name="content"></textarea>
+    <div class="control-group">
+        <div class="control-label">
+            <label for="content">正文</label>
+        </div>
+        <div class="control">
+            <textarea name="content"></textarea>
+        </div>
     </div>
-    <div class="control-action">
-        <button class="submit-btn">发送</button>
-        <a href="{{ url_for('people.show_people', username=who.domain if who.domain else who.id) }}" class="btn register-btn">返回</a>
+    <div class="form-action">
+        <button class="btn btn-green">发送</button>
+        <a href="{{ url_for('people.show_people', username=who.domain if who.domain else who.id) }}" class="btn r">返回</a>
     </div>
 </form>
 {% endblock %}

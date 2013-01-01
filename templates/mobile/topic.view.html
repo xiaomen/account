@@ -8,19 +8,20 @@
     <div class="r">
         <button type="submit" name="submit" class="btn">回复</button>
     </div>
-    <div class="l">
+    <div class="control">
         <textarea name="content"></textarea>
     </div>
+    <div class="clearfix"></div>
 </form>
 <ul class="maillist">
     {% for reply in replies %}
     <li class="mail{% if reply.user.id != g.current_user.id %} right{% endif %} reply">
-        <div class="avatar">
+        <div class="avatar l">
             <a href="{{ url_for('people.show_people', username=reply.user.domain if reply.user.domain else reply.user.id) }}">
                 <img src="{{ reply.user.avatar | u_files }}" width="60px" height="60px" />
             </a>
         </div>
-        <div class="mail-summary">
+        <div class="mail-summary l">
            <span class="mail-author"><a href="{{ url_for('people.show_people', username=reply.user.domain if reply.user.domain else reply.user.id) }}">{{ reply.user.name }}</a> @ {{ reply.time }}</span>
            <span class="reply-content">{{ reply.content }}</span>
        </div>
@@ -29,8 +30,6 @@
     {% endfor %}
 </ul>
 {{ render_mobile_pagination(list_page, url_for('topic.view', tid=topic.id)) }}
-<div class="back-btn">
-    <a class="btn btn-gray" href="{{ url_for('topic.index') }}">返回</a>
-    <div class="clearfix"></div>
-</div>
+<a class="btn btn-gray r" href="{{ url_for('topic.index') }}">返回</a>
+<div class="clearfix"></div>
 {% endblock %}

@@ -28,3 +28,57 @@
 .info .action {
     margin-top: 20px; 
 }
+
+/* topic */
+
+/* => index */
+
+.maillist {
+}
+
+.maillist a:hover {
+    color: #3999CC; 
+}
+
+.maillist .mail {
+    padding: 10px 5px; 
+    border-bottom: 1px solid #3999CC; 
+}
+
+.mail .mail-summary {
+    margin-left: 15px; 
+}
+
+.mail .mail-title {
+    display: block; 
+    font-size: 18px; 
+}
+
+.mail .mail-author {
+    color: #777; 
+    display: block; 
+}
+
+.unread {
+    background-color: #EAF7FF;
+}
+
+.unread .mail-title {
+    font-weight: bold; 
+}
+
+.reply-topic {
+    margin: 20px 0; 
+}
+
+.reply-topic .control {
+    margin-right: 100px; 
+}
+
+.reply-topic textarea {
+    width: 100%; 
+}
+
+.reply-topic .btn {
+    height: 68px; 
+}

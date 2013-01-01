@@ -55,7 +55,7 @@ form.form.form-fullsize .control-group .control {
 .control-group .control {
 }
 
-.control-group .control input {
+.control input {
     outline: none;
     background: none;
     width: 100%;
@@ -67,7 +67,7 @@ form.form.form-fullsize .control-group .control {
     font-size: 1.5em;
 }
 
-.control-group .control textarea {
+.control textarea {
     outline: none;
     background: none;
     width: 100%;
@@ -77,6 +77,10 @@ form.form.form-fullsize .control-group .control {
     border-radius: 5px;
     padding: 10px;
     font-size: 1.5em;
+}
+
+.control-group .control .input-readonly {
+    background-color: #EEE; 
 }
 
 /* Button */
@@ -135,6 +139,10 @@ a.btn:visited {
     border-bottom: 1px solid #3999CC;
     margin: 10px 0;
     padding: 10px 0;
+}
+
+.title h2 {
+    margin: 0; 
 }
 
 .title.title-center {
