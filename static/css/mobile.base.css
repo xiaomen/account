@@ -124,6 +124,16 @@ a.btn:visited {
     background-color: #74b34b;
 }
 
+.btn-back {
+    margin-top: 20px; 
+}
+
+/* pagination */
+
+.pagination {
+    margin-top: 20px; 
+}
+
 /* Text */
 
 .gray {

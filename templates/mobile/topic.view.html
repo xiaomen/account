@@ -16,12 +16,12 @@
 <ul class="maillist">
     {% for reply in replies %}
     <li class="mail{% if reply.user.id != g.current_user.id %} right{% endif %} reply">
-        <div class="avatar l">
+        <div class="avatar {% if reply.user.id != g.current_user.id %}r{% else %}l{% endif %}">
             <a href="{{ url_for('people.show_people', username=reply.user.domain if reply.user.domain else reply.user.id) }}">
                 <img src="{{ reply.user.avatar | u_files }}" width="60px" height="60px" />
             </a>
         </div>
-        <div class="mail-summary l">
+        <div class="mail-content">
            <span class="mail-author"><a href="{{ url_for('people.show_people', username=reply.user.domain if reply.user.domain else reply.user.id) }}">{{ reply.user.name }}</a> @ {{ reply.time }}</span>
            <span class="reply-content">{{ reply.content }}</span>
        </div>
@@ -30,6 +30,6 @@
     {% endfor %}
 </ul>
 {{ render_mobile_pagination(list_page, url_for('topic.view', tid=topic.id)) }}
-<a class="btn btn-gray r" href="{{ url_for('topic.index') }}">返回</a>
+<a class="btn btn-back btn-gray r" href="{{ url_for('topic.index') }}">返回</a>
 <div class="clearfix"></div>
 {% endblock %}
