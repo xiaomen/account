@@ -150,3 +150,7 @@
 .app-list .app.job .bgimg {
     background-image: url('/account/static/img/job.jpg'); 
 }
+
+.title-nounderline {
+    border-bottom: none; 
+}
