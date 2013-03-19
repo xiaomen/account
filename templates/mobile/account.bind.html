@@ -1,0 +1,20 @@
+{% extends "mobile/layout.html" %}
+
+{% block content %}
+<form action="/account/bind" method="POST">
+    {% if error %}
+    <div class="error-msg">
+        <p>{{ error }}</p>
+    </div>
+    {% endif %}
+
+    <div class="title-center title title-nounderline">是否绑定？</div>
+
+    <input type="hidden" value="{{ csrf_token() }}" name="_csrf_token">
+
+    <div class="control-action">
+        <button class="submit-btn btn btn-green" type="submit" name="submit">绑定</button>
+        <button class="btn btn-gray r" type="submit" name="cancel">取消</button>
+    </div>
+</form>
+{% endblock %}

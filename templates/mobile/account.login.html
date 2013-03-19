@@ -22,8 +22,11 @@
         </div>
     </div>
     <div class="form-action">
-        <button class="btn btn-green btn-bigger">登录</button>
+        <button class="btn btn-green btn-bigger" type="submit">登录</button>
         <a href="/account/register" class="btn btn-bigger btn-gray r">注册</a>
+        <a href="/weibo/login"class="btn btn-bigger btn-fullsize btn-sns" id="btn-sns-sina">通过新浪微博登录</a> 
+        <a href="/qq/login" class="btn btn-bigger btn-fullsize btn-sns" id="btn-sns-tencent">通过QQ登录</a>
+        <a href="/douban/login" class="btn btn-bigger btn-fullsize btn-sns" id="btn-sns-douban">通过豆瓣登录</a>
     </div>
 </form>
 {% endblock %}
