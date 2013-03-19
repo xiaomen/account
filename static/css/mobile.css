@@ -154,3 +154,25 @@
 .title-nounderline {
     border-bottom: none; 
 }
+
+.btn-sns {
+    text-align: center; 
+}
+
+#btn-sns-sina {
+    background: url('/static/img/weibo_logo.svg') #e8202f no-repeat;
+    background-size: 40px;
+    background-position: 15px 7px; 
+}
+
+#btn-sns-tencent {
+    background: url('/static/img/QQ_logo.png') #007fcc no-repeat; 
+    background-size: 40px;
+    background-position: 15px 7px; 
+}
+
+#btn-sns-douban {
+    background: url('/static/img/douban_logo.png') #007711 no-repeat; 
+    background-size: 40px; 
+    background-position: 15px 7px; 
+}
