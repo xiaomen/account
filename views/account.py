@@ -1,6 +1,7 @@
 #!/usr/local/bin/python2.7
 #coding:utf-8
 
+import time
 import config
 import logging
 from datetime import datetime
@@ -159,7 +160,8 @@ def avatar():
     user = g.current_user
     if request.method == 'GET':
         ok = request.args.get('ok', None)
-        return render_template('account.avatar.html', path = user.avatar, ok=ok)
+        return render_template('account.avatar.html', path = user.avatar, ok = ok, \
+                salt = time.time())
     upload_avatar = request.files['file']
     if not upload_avatar:
         return render_template('account.avatar.html', path = user.avatar, error = 'Please select avatar file')
