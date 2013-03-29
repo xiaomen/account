@@ -192,7 +192,7 @@ def setting():
             return render_template('account.setting.html', error=status[1])
         user.change_username(username)
 
-    if domain and domain != user.domain:
+    if domain and not user.domain:
         for status in [check_domain(domain), check_domain_exists(domain)]:
             if status:
                 return render_template('account.setting.html', error=status[1])
