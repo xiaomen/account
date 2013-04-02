@@ -31,6 +31,11 @@ FORGET_STUB_EXPIRE = 30*60
 
 PAGE_NUM = 5
 
+TOKEN_TOKEN = 'account:token:token:%s'
+TOKEN_UID = 'account:token:uid:%d'
+TOKEN_LENGTH = 6
+TOKEN_EXPIRE = 3600
+
 FORGET_EMAIL_TITLE = '[校门口]取回密码'
 
 MAX_CONTENT_LENGTH = 512 * 1024
