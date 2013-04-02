@@ -17,7 +17,7 @@ from query.account import get_user_by_email, get_user, \
         get_forget_by_stub, get_current_user, create_forget, \
         create_user, get_user_by
 
-from sheep.api.files import get_uploader
+from sheep.api.files import get_uploader, purge
 from sheep.api.cache import backend, cross_cache
 from models.account import create_token
 
@@ -170,6 +170,7 @@ def avatar():
     if error:
         return render_template('account.avatar.html', path = user.avatar, error = error)
     uploader.writeFile(filename, stream)
+    purge(filename)
     user.set_avatar(filename)
     clear_user_cache(user)
     return redirect(url_for('account.avatar', ok = 1))
