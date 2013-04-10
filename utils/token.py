@@ -48,6 +48,7 @@ def get_uid(token):
     value = redistore.get(key)
     if not value:
         return -1
+    value = int(value)
     pipe = redistore.pipeline()
     pipe.delete(key)
     pipe.delete(TOKEN_UID % value)
