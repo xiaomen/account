@@ -49,5 +49,5 @@ def check_code(code, message):
     u = get_user(user) 
     if not u:
         return "绑定失败，请检查验证码或者返回绑定页面刷新获取新的验证码。"
-    u.set_weixin(message.fromUser)
+    u.set_weixin(message.From)
     return "绑定成功，已绑定至帐号： %s" % u.name
