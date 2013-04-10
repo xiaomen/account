@@ -9,11 +9,9 @@ from flask import abort
 
 from config import WEIXIN_TOKEN
 
-from views.account import clear_user_cache
-
 from utils.token import get_uid
 
-from query.account import get_user
+from query.account import get_user, clear_user_cache
 
 class Message(object):
     def __init__(self, data):
