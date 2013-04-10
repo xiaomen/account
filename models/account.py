@@ -86,7 +86,7 @@ class User(db.Model):
         db.session.commit()
 
     def remove_weixin(self):
-        self.weixin = ""
+        self.weixin = None
         db.session.add(self)
         db.session.commit()
 
