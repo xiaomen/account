@@ -24,6 +24,7 @@ from sheep.api.sessions import SessionMiddleware, \
     FilesystemSessionStore
 
 from flaskext.csrf import csrf
+from flaskext.csrf import csrf_exempt
 from flask import Flask, request, g, abort
 
 app = Flask(__name__)
