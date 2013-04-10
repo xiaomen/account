@@ -79,7 +79,7 @@ def receive_msg():
     msg_splited = msg.Body.split(" ")
     if msg_splited[0] == "-code":
         if len(msg_splited) == 2:
-            return return_message(msg.To, msg.From, check_code(msg_splited[1]))
+            return return_message(msg.To, msg.From, check_code(msg_splited[1], msg))
         else:
             return return_message(msg.To, msg.From, "绑定失败，请检查验证码格式。")
     return ""
