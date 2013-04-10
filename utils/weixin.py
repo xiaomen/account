@@ -11,7 +11,7 @@ from config import WEIXIN_TOKEN
 
 from utils.token import get_uid
 
-from query.account import get_user_by
+from query.account import get_user
 
 class Message(object):
     def __init__(self, data):
@@ -46,7 +46,7 @@ def check_code(code, message):
     user = get_uid(code)
     if not user:
         return "绑定失败，请检查验证码或者返回绑定页面刷新获取新的验证码。"
-    u = get_user_by(id = user) 
+    u = get_user(user)
     if not u:
         return "绑定失败，请检查验证码或者返回绑定页面刷新获取新的验证码。"
     user.set_weixin(message.fromUser)
