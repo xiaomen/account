@@ -5,6 +5,7 @@ from flask import g
 from sheep.api.cache import cache
 from utils.validators import check_domain
 from models.account import User, Forget, OAuth
+from sheep.api.cache import backend, cross_cache
 
 @cache('account:{username}', 86400)
 def get_user(username):
@@ -43,6 +44,11 @@ def get_current_user():
     if g.session['user_token'] != user.token:
         return None
     return user
+
+def clear_user_cache(user):
+    keys = ['account:%s' % key for key in [str(user.id), user.domain, user.email]]
+    backend.delete_many(*keys)
+    cross_cache.delete('open:account:info:{0}'.format(user.id))
 
 create_forget = Forget.create
 create_user = User.create

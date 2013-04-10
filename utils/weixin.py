@@ -11,7 +11,7 @@ from config import WEIXIN_TOKEN
 
 from utils.token import get_uid
 
-from query.account import get_user
+from query.account import get_user, clear_user_cache
 
 class Message(object):
     def __init__(self, data):
@@ -50,4 +50,5 @@ def check_code(code, message):
     if not u:
         return "绑定失败，请检查验证码或者返回绑定页面刷新获取新的验证码。"
     u.set_weixin(message.From)
+    clear_user_cache(u)
     return "绑定成功！"

@@ -14,9 +14,7 @@ from views.oauth import oauth
 from views.topic import topic
 from views.people import people
 from views.account import account
-
-from utils.weixin import Message, compute_signature, \
-        return_message, check_code, check_keys
+from views.weixin import weixin
 
 from sheep.api.statics import static_files, \
         upload_files
@@ -24,7 +22,6 @@ from sheep.api.sessions import SessionMiddleware, \
     FilesystemSessionStore
 
 from flaskext.csrf import csrf
-from flaskext.csrf import csrf_exempt
 from flask import Flask, request, g, abort
 
 app = Flask(__name__)
@@ -46,6 +43,7 @@ oauth.register_blueprints(app)
 app.register_blueprint(account, url_prefix='/account')
 app.register_blueprint(people, url_prefix='/people')
 app.register_blueprint(topic, url_prefix='/mail')
+app.register_blueprint(weixin, url_prefix='/wx')
 #app.register_blueprint(mail, url_prefix='/mail')
 
 logger = logging.getLogger(__name__)
@@ -61,28 +59,6 @@ app.wsgi_app = SessionMiddleware(app.wsgi_app, \
 @check_ua
 def index():
     return render_template('index.html')
-
-@app.route('/wx/', methods=["GET"])
-def check_valid():
-    args = dict(request.args.items())
-    check_keys(args, ["signature", "timestamp", "nonce", "echostr"])
-    signature = compute_signature(args.copy())
-    if signature != args['signature']:
-        logging.warning("Sigature error. %s", signature)
-        raise abort(400)
-    return args['echostr']
-
-@csrf_exempt
-@app.route('/wx/', methods=["POST"])
-def receive_msg():
-    msg = Message(request.data)
-    msg_splited = msg.Body.split(" ")
-    if msg_splited[0] == "-code":
-        if len(msg_splited) == 2:
-            return return_message(msg.To, msg.From, check_code(msg_splited[1], msg))
-        else:
-            return return_message(msg.To, msg.From, "绑定失败，请检查验证码格式。")
-    return ""
 
 @app.before_request
 def before_request():

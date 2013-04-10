@@ -16,7 +16,7 @@ from utils.mail import send_email
 from utils.token import make_token
 from query.account import get_user_by_email, get_user, \
         get_forget_by_stub, get_current_user, create_forget, \
-        create_user, get_user_by
+        create_user, get_user_by, clear_user_cache
 
 from sheep.api.files import get_uploader, purge
 from sheep.api.cache import backend, cross_cache
@@ -223,11 +223,6 @@ def weixin_bind():
         return render_template('account.weixin.html', key = key)
     user.remove_weixin()
     return redirect(url_for("account.weixin_bind"))
-
-def clear_user_cache(user):
-    keys = ['account:%s' % key for key in [str(user.id), user.domain, user.email]]
-    backend.delete_many(*keys)
-    cross_cache.delete('open:account:info:{0}'.format(user.id))
 
 def account_login(user):
     g.session['user_id'] = user.id
