@@ -16,7 +16,7 @@ from views.people import people
 from views.account import account
 
 from utils.weixin import Message, compute_signature, \
-        return_message, check_code
+        return_message, check_code, check_keys
 
 from sheep.api.statics import static_files, \
         upload_files
