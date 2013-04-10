@@ -176,3 +176,25 @@
     background-size: 40px; 
     background-position: 15px 7px; 
 }
+
+.well {
+    border: 1px solid #E2E2E2; 
+    background-color: #F3F3F3; 
+    padding: 10px 20px; 
+}
+
+.weixin-code {
+    text-align: center; 
+    font-weight: bold; 
+    font-size: 18px; 
+    color: #444; 
+}
+
+.text-btn {
+    border: none; 
+    outline: none; 
+    padding: 0; 
+    display: inline; 
+    background: transparent; 
+    color: #3999CC; 
+}

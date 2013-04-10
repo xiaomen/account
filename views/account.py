@@ -13,6 +13,7 @@ from utils.validators import check_email, check_password, \
         check_register_info, check_login_info, check_domain, \
         check_domain_exists, check_username
 from utils.mail import send_email
+from utils.token import make_token
 from query.account import get_user_by_email, get_user, \
         get_forget_by_stub, get_current_user, create_forget, \
         create_user, get_user_by
@@ -209,6 +210,19 @@ def setting():
     account_login(user)
     g.current_user = get_current_user()
     return render_template('account.setting.html', error=code.ACCOUNT_SETTING_SUCCESS)
+
+@account.route('/setting/weixin', methods = ['POST', 'GET'])
+@check_ua
+@login_required('account.login', redirect='/account/setting')
+def weixin_bind():
+    user = g.current_user
+    if request.method == 'GET':
+        key = None
+        if not user.weixin:
+            key = make_token(user.id)
+        return render_template('account.weixin.html', key = key)
+    user.remove_weixin()
+    return redirect(url_for("account.weixin_bind"))
 
 def clear_user_cache(user):
     keys = ['account:%s' % key for key in [str(user.id), user.domain, user.email]]

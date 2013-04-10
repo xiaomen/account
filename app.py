@@ -15,13 +15,16 @@ from views.topic import topic
 from views.people import people
 from views.account import account
 
+from utils.weixin import Message, compute_signature, \
+        return_message, check_code
+
 from sheep.api.statics import static_files, \
         upload_files
 from sheep.api.sessions import SessionMiddleware, \
     FilesystemSessionStore
 
 from flaskext.csrf import csrf
-from flask import Flask, request, g
+from flask import Flask, request, g, abort
 
 app = Flask(__name__)
 app.debug = config.DEBUG
@@ -57,6 +60,27 @@ app.wsgi_app = SessionMiddleware(app.wsgi_app, \
 @check_ua
 def index():
     return render_template('index.html')
+
+@app.route('/wx/', methods=["GET"])
+def check_valid():
+    args = dict(request.args.items())
+    check_keys(args, ["signature", "timestamp", "nonce", "echostr"])
+    signature = compute_signature(args.copy())
+    if signature != args['signature']:
+        logging.warning("Sigature error. %s", signature)
+        raise abort(400)
+    return args['echostr']
+
+@app.route('/', methods=["POST"])
+def receive_msg():
+    msg = Message(request.data)
+    msg_splited = msg.Body.split(" ")
+    if msg_splited[0] == "-code":
+        if len(msg_splited) == 2:
+            return return_message(msg.To, msg.From, check_code(msg_splited[1]))
+        else:
+            return return_message(msg.To, msg.From, "绑定失败，请检查验证码格式。")
+    return ""
 
 @app.before_request
 def before_request():
