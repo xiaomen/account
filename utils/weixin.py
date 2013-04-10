@@ -7,6 +7,8 @@ from lxml import etree
 from pyquery import PyQuery as pq
 from flask import abort
 
+from config import WEIXIN_TOKEN
+
 from utils.token import get_uid
 
 from query.account import get_user_by
@@ -30,7 +32,7 @@ def return_message(fromUser, toUser, content):
 </xml>""" % (toUser, fromUser, int(time.time()), content)
 
 def compute_signature(args):
-    sign_args = [args['timestamp'], args['nonce'], TOKEN]
+    sign_args = [args['timestamp'], args['nonce'], WEIXIN_TOKEN]
     sign_args.sort()
     return hashlib.sha1("".join(sign_args)).hexdigest()
 

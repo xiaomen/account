@@ -41,6 +41,8 @@ FORGET_EMAIL_TITLE = '[校门口]取回密码'
 MAX_CONTENT_LENGTH = 512 * 1024
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
+WEIXIN_TOKEN = "xiaomenco"
+
 try:
     from local_config import *
 except:
