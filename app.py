@@ -71,7 +71,7 @@ def check_valid():
         raise abort(400)
     return args['echostr']
 
-@app.route('/', methods=["POST"])
+@app.route('/wx/', methods=["POST"])
 def receive_msg():
     msg = Message(request.data)
     msg_splited = msg.Body.split(" ")
