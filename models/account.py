@@ -29,6 +29,7 @@ class User(db.Model):
     avatar = db.Column(db.String(255), nullable=False, default='default.png')
     token = db.Column(db.CHAR(16))
     domain = db.Column(db.String(10), unique=True)
+    weixin = db.Column(db.String(30), unique=True)
 
     def __init__(self, username, password, email, *args, **kwargs):
         self.name = username
@@ -76,6 +77,16 @@ class User(db.Model):
 
     def set_avatar(self, filename):
         self.avatar = filename
+        db.session.add(self)
+        db.session.commit()
+
+    def set_weixin(self, weixin):
+        self.weixin = weixin
+        db.session.add(self)
+        db.session.commit()
+
+    def remove_weixin(self):
+        self.weixin = ""
         db.session.add(self)
         db.session.commit()
 

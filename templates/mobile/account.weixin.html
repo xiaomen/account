@@ -1,0 +1,23 @@
+{% extends "mobile/layout.html" %}
+
+{% block content %}
+<div class="title">
+    <h2>绑定微信</h2>
+</div>
+{% if not key %}
+<div class="info gray">
+    <form method="POST" action="">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">        
+        <p>您已成功绑定微信，点击<button type="submit" class="text-btn">此处</button>取消绑定。</p>
+    </form>
+</div>
+{% else %}
+<div class="well weixin-code" id="weixin">
+    <span id="weixin-code">-code {{ key }}</span>
+</div>
+<div class="info gray">
+    <p>请点击<a href="weixin://qr/KHXJxgvEujXFhxqlnyAM">这里</a>关注我们的微信公共账户，然后发送上方框内的内容即可完成绑定。</p>
+    <p>iPhone 用户请搜索 ID: xiaomenco 或者点击<a href="{{ '/static/img/weixin-qrcode.jpg' | s_files }}">此处</a>扫描二维码。</p>
+</div>
+{% endif %}
+{% endblock %}
