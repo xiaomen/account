@@ -222,6 +222,7 @@ def weixin_bind():
             key = make_token(user.id)
         return render_template('account.weixin.html', key = key)
     user.remove_weixin()
+    clear_user_cache(user)
     return redirect(url_for("account.weixin_bind"))
 
 def account_login(user):
