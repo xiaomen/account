@@ -43,6 +43,17 @@ def validate_token(uid, token):
     logger.info(pipe.execute())
     return True
 
+def get_uid(token):
+    key = TOKEN_TOKEN % token
+    value = redistore.get(key)
+    if not value:
+        return -1
+    pipe = redistore.pipeline()
+    pipe.delete(key)
+    pipe.delete(TOKEN_UID % value)
+    logger.info(pipe.execute())
+    return value
+
 if __name__ == '__main__':
     token1 = make_token(1, 60)
     print token1
