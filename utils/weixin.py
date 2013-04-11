@@ -40,7 +40,7 @@ def check_keys(src, keys):
             logging.warning("missing %s", key)
             raise abort(400)
 
-class robot(object):
+class Robot(object):
     def __init__(self):
         self._commands = []
         commands = dir(self)
