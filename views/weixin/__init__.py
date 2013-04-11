@@ -6,8 +6,10 @@ from flask.views import MethodView
 from flask import abort, request, Blueprint
 from flaskext.csrf import csrf_exempt
 
-from utils.weixin import Message, compute_signature, \
-        return_message, check_keys, Robot
+from views.weixin.robot import Robot
+from views.weixin.message import Message
+from views.weixin.tools import compute_signature, \
+        return_message, check_keys
 
 logger = logging.getLogger(__name__)
 weixin = Blueprint('weixin', __name__)
