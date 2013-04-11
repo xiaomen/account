@@ -32,13 +32,20 @@ class WeiXin(MethodView):
         if len(msg_splited) < 2:
             msg_splited.append(' ')
         command, body = msg_splited
-        command = command.lower()
-        if command == "-code":
-            command == "bind"
-        robot = getattr(self.robot, command, None)
-        if not robot:
+        command = self.process_command(command)
+        if not command in self.robot._commands:
             return return_message(msg.To, msg.From, '命令无法识别')
+        robot = getattr(self.robot, command)
         return return_message(msg.To, msg.From, robot(body, msg))
+
+    def process_command(self, command):
+        ret = command.lower()
+        if ret == "-code":
+            ret == "bind"
+        if isinstance(ret, unicode):
+            ret = ret.encode('utf8')
+        logger.info('command %s ' % ret)
+        return ret
 
 weixin_view = WeiXin.as_view('weixin')
 weixin.add_url_rule('/', view_func=weixin_view, methods=['GET'])
