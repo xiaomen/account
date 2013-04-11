@@ -22,7 +22,7 @@ from sheep.api.sessions import SessionMiddleware, \
     FilesystemSessionStore
 
 from flaskext.csrf import csrf
-from flask import Flask, request, g, abort
+from flask import Flask, request, g
 
 app = Flask(__name__)
 app.debug = config.DEBUG

@@ -52,3 +52,4 @@ def check_code(code, message):
     u.set_weixin(message.From)
     clear_user_cache(u)
     return "绑定成功！"
+
