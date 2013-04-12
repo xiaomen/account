@@ -8,7 +8,8 @@ from datetime import datetime
 
 from utils import code
 from utils.ua import check_ua, render_template
-from utils.account import login_required, process_file
+from utils.account import login_required, process_file, \
+        account_login, account_logout
 from utils.validators import check_email, check_password, \
         check_register_info, check_login_info, check_domain, \
         check_domain_exists, check_username
@@ -19,7 +20,7 @@ from query.account import get_user_by_email, get_user, \
         create_user, get_user_by, clear_user_cache
 
 from sheep.api.files import get_uploader, purge
-from sheep.api.cache import backend, cross_cache
+from sheep.api.cache import backend
 from models.account import create_token
 
 from flask import Blueprint, g, session, \
@@ -224,11 +225,4 @@ def weixin_bind():
     user.remove_weixin()
     clear_user_cache(user)
     return redirect(url_for("account.weixin_bind"))
-
-def account_login(user):
-    g.session['user_id'] = user.id
-    g.session['user_token'] = user.token
-
-def account_logout():
-    g.session.clear()
 

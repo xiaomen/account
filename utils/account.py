@@ -52,3 +52,10 @@ def login_required(next=None, need=True, *args, **kwargs):
         return _
     return _login_required
 
+def account_login(user):
+    g.session['user_id'] = user.id
+    g.session['user_token'] = user.token
+
+def account_logout():
+    g.session.clear()
+
