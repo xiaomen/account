@@ -2,11 +2,11 @@
 # encoding: UTF-8
 
 __all__ = ['db', 'OAuth', 'User', 'Forget', \
-        'init_account_db', 'create_token']
+        'init_account_db']
 
 import hashlib
-from random import choice
 from datetime import datetime
+from utils.token import create_token
 from flask.ext.sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -14,11 +14,6 @@ def init_account_db(app):
     db.init_app(app)
     db.app = app
     db.create_all()
-
-def create_token(length=16):
-    chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    salt = ''.join([choice(chars) for i in range(length)])
-    return salt
 
 class User(db.Model):
     __tablename__ = 'users'
