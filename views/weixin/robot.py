@@ -44,5 +44,8 @@ class Robot(object):
         if command not in self._commands:
             return '没有这个命令哦'
         else:
-            return getattr(self, command).__doc__
+            ret = getattr(self, command).__doc__
+            if not ret:
+                return '其实我也不知道这是作甚的'
+            return ret
 
