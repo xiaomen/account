@@ -2,6 +2,7 @@
 #coding:utf-8
 
 from flask import Blueprint
+
 from views.people.people import People
 
 people = Blueprint('people', __name__)
