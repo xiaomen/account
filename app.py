@@ -9,6 +9,7 @@ from query.topic import topic_notify
 from query.account import get_current_user
 from utils.ua import check_ua, render_template
 
+#from views.mail import mail
 from views.oauth import oauth
 from views.topic import topic
 from views.people import people
@@ -43,6 +44,7 @@ app.register_blueprint(account, url_prefix='/account')
 app.register_blueprint(people, url_prefix='/people')
 app.register_blueprint(topic, url_prefix='/mail')
 app.register_blueprint(weixin, url_prefix='/wx')
+#app.register_blueprint(mail, url_prefix='/mail')
 
 logger = logging.getLogger(__name__)
 
