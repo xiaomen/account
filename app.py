@@ -13,8 +13,8 @@ from utils.ua import check_ua, render_template
 from views.oauth import oauth
 from views.topic import topic
 from views.people import people
-from views.account import account
 from views.weixin import weixin
+from views.account import account
 
 from sheep.api.statics import static_files, \
         upload_files
