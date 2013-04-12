@@ -5,16 +5,10 @@ import config
 import logging
 
 from models import init_db
+from views import init_views
 from query.topic import topic_notify
 from query.account import get_current_user
 from utils.ua import check_ua, render_template
-
-#from views.mail import mail
-from views.oauth import oauth
-from views.topic import topic
-from views.people import people
-from views.weixin import weixin
-from views.account import account
 
 from sheep.api.statics import static_files, \
         upload_files
@@ -32,23 +26,18 @@ app.jinja_env.filters['u_files'] = upload_files
 
 app.config.update(
     SQLALCHEMY_DATABASE_URI = config.DATABASE_URI,
-    SQLALCHEMY_POOL_SIZE = 100,
+    SQLALCHEMY_POOL_SIZE = 1000,
     SQLALCHEMY_POOL_TIMEOUT = 10,
     SQLALCHEMY_POOL_RECYCLE = 3600,
     SESSION_COOKIE_DOMAIN = config.SESSION_COOKIE_DOMAIN,
     MAX_CONTENT_LENGTH = config.MAX_CONTENT_LENGTH,
 )
 
-oauth.register_blueprints(app)
-app.register_blueprint(account, url_prefix='/account')
-app.register_blueprint(people, url_prefix='/people')
-app.register_blueprint(topic, url_prefix='/mail')
-app.register_blueprint(weixin, url_prefix='/wx')
-#app.register_blueprint(mail, url_prefix='/mail')
 
 logger = logging.getLogger(__name__)
 
 init_db(app)
+init_views(app)
 csrf(app)
 app.wsgi_app = SessionMiddleware(app.wsgi_app, \
         FilesystemSessionStore(), \
