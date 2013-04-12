@@ -12,6 +12,10 @@ letters = string.letters + string.digits
 
 logger = logging.getLogger(__name__)
 
+def create_token(length=TOKEN_LENGTH):
+    token = ''.join(random.sample(letters, length))
+    return token
+
 def make_token(uid, expire=TOKEN_EXPIRE):
     #check if user got a token
     uid_key = TOKEN_UID % uid
@@ -19,11 +23,10 @@ def make_token(uid, expire=TOKEN_EXPIRE):
     if key:
         return key
 
-    token = ''.join(random.sample(letters, TOKEN_LENGTH))
-    key = TOKEN_TOKEN % token
+    token = create_token(TOKEN_TOKEN)
     while redistore.get(key):
-        token = ''.join(random.sample(letters, TOKEN_LENGTH))
-        key = TOKEN_TOKEN % token
+        token = create_token(TOKEN_TOKEN)
+    key = TOKEN_TOKEN % token
     pipe = redistore.pipeline()
     pipe.setex(key, uid, expire)
     pipe.setex(uid_key, token, expire)
