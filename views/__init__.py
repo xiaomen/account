@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # encoding: UTF-8
 
-#from views.mail import mail
 from views.oauth import oauth
 from views.topic import topic
 from views.people import people
@@ -14,4 +13,3 @@ def init_views(app):
     app.register_blueprint(people, url_prefix='/people')
     app.register_blueprint(topic, url_prefix='/mail')
     app.register_blueprint(weixin, url_prefix='/wx')
-    #app.register_blueprint(mail, url_prefix='/mail')
