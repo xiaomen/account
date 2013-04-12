@@ -35,7 +35,7 @@ class WeiXin(MethodView):
         command, body = msg_splited
         command = self.process_command(command)
         if not command in self.robot._commands:
-            return return_message(msg.To, msg.From, '命令无法识别')
+            return ''
         robot = getattr(self.robot, command)
         return return_message(msg.To, msg.From, robot(body, msg))
 
