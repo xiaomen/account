@@ -3,7 +3,8 @@
 
 import time
 
-from flask import g, request
+from flask import g, request, \
+        redirect, url_for
 from flask.views import MethodView
 
 from sheep.api.files import get_uploader, purge
