@@ -8,12 +8,12 @@ from utils.redistore import redistore
 from config import TOKEN_LENGTH, TOKEN_EXPIRE, \
         TOKEN_UID, TOKEN_TOKEN
 
-letters = string.letters + string.digits
+LETTERS = string.letters + string.digits
 
 logger = logging.getLogger(__name__)
 
 def create_token(length=TOKEN_LENGTH):
-    token = ''.join(random.sample(letters, length))
+    token = ''.join(random.sample(LETTERS, length))
     return token
 
 def make_token(uid, expire=TOKEN_EXPIRE):
@@ -23,9 +23,9 @@ def make_token(uid, expire=TOKEN_EXPIRE):
     if key:
         return key
 
-    token = create_token(TOKEN_TOKEN)
+    token = create_token(TOKEN_LENGTH)
     while redistore.get(key):
-        token = create_token(TOKEN_TOKEN)
+        token = create_token(TOKEN_LENGTH)
     key = TOKEN_TOKEN % token
     pipe = redistore.pipeline()
     pipe.setex(key, uid, expire)
