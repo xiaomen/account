@@ -2,6 +2,7 @@
 #coding:utf-8
 
 from flask import Blueprint
+from flaskext.csrf import csrf_exempt
 
 from views.topic.view import View
 from views.topic.index import Index
@@ -14,8 +15,8 @@ topic = Blueprint('topic', __name__)
 view = View.as_view('view')
 index = Index.as_view('index')
 delete = Delete.as_view('topic_delete')
-create_reply = CreateReply.as_view('create_reply')
-create_topic = CreateTopic.as_view('create_topic')
+create_reply = csrf_exempt(CreateReply.as_view('create_reply'))
+create_topic = csrf_exempt(CreateTopic.as_view('create_topic'))
 
 topic.add_url_rule('/', view_func=index, methods=['GET'])
 topic.add_url_rule('/view/<int:tid>/', view_func=view, methods=['GET'])

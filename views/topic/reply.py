@@ -2,7 +2,6 @@
 #coding:utf-8
 
 from flask.views import MethodView
-from flaskext.csrf import csrf_exempt
 from flask import g, redirect, url_for, request
 
 from sheep.api.cache import backend
@@ -14,7 +13,7 @@ from query.topic import get_topic, get_topic_users, \
         make_reply
 
 class CreateReply(MethodView):
-    decorators = [csrf_exempt, check_ua, login_required(next='account.login')]
+    decorators = [check_ua, login_required(next='account.login')]
     def get(self, tid):
         return redirect(url_for('topic.view', tid=tid))
 

@@ -2,7 +2,6 @@
 #coding:utf-8
 
 from flask.views import MethodView
-from flaskext.csrf import csrf_exempt
 from flask import g, redirect, url_for, request, \
         abort
 
@@ -14,7 +13,7 @@ from utils.account import login_required
 from utils.ua import check_ua, render_template
 
 class CreateTopic(MethodView):
-    decorators = [csrf_exempt, check_ua, login_required(next='account.login')]
+    decorators = [check_ua, login_required(next='account.login')]
     def get(self, uid):
         if uid == g.current_user.id:
             return redirect(url_for('topic.index'))
