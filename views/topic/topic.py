@@ -20,7 +20,8 @@ class CreateTopic(MethodView):
         who = get_user(uid)
         if not who:
             raise abort(404)
-        return render_template('topic.create.html', uid=uid, who=who)
+        title = request.args.get('title', '')
+        return render_template('topic.create.html', uid=uid, who=who, title=title)
 
     def post(self, uid):
         if uid == g.current_user.id:
