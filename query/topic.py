@@ -18,7 +18,7 @@ from utils.helper import gen_list_page_obj
 from models.topic import Topic, Reply, UserTopic, UserTopicMeta, \
         create_topic, create_reply
 
-from sheep.api.cache import cache, backend
+from sheep.api.cache import cache
 
 @cache('topic:list:{uid}:{page}', 86400)
 def get_user_topics(uid, page):

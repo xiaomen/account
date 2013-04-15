@@ -100,10 +100,17 @@ class OAuth(db.Model):
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
 
-    def bind(self, uid):
-        self.uid = uid
+    @staticmethod
+    def create(uid, ouid, otype):
+        return OAuth(uid, ouid, otype)
+
+    def store(self):
         db.session.add(self)
         db.session.commit()
+
+    def bind(self, uid):
+        self.uid = uid
+        self.store()
 
 class Forget(db.Model):
     __tablename__ = 'forget'

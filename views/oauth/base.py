@@ -6,10 +6,11 @@ import logging
 
 import config
 from utils.account import account_login
-from query.account import get_user, get_oauth_by
-from models.account import db, OAuth
 from flask import g, session, request, \
         redirect, url_for
+
+from query.account import get_user, get_oauth_by
+from query.oauth import create_oauth
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +56,7 @@ class Base_OAuth_Login(object):
 
         oauth = get_oauth_by(oauth_uid=resp[self.uid_str])
         if oauth is None:
-            oauth = OAuth(None, resp[self.uid_str], self.name)
+            oauth = create_oauth(None, resp[self.uid_str], self.name)
 
         old_token = oauth.oauth_token
         oauth.oauth_token = token
@@ -68,14 +69,11 @@ class Base_OAuth_Login(object):
                 if old_token != oauth.oauth_token:
                     logger.info(old_token)
                     logger.info(oauth.oauth_token)
+                    oauth.store()
                     self.update_token(oauth)
 
                 return redirect(url_for('index'))
 
         session['from_oauth'] = oauth
         return redirect(next_url)
-
-    def update_token(self, oauth):
-        db.session.add(oauth)
-        db.session.commit()
 
