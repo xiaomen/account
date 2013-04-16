@@ -181,6 +181,7 @@
     border: 1px solid #E2E2E2; 
     background-color: #F3F3F3; 
     padding: 10px 20px; 
+    text-align: center; 
 }
 
 .weixin-code {
@@ -197,4 +198,13 @@
     display: inline; 
     background: transparent; 
     color: #3999CC; 
+}
+
+.delete-topic {
+    margin-right: 20px; 
+}
+
+.no-topic {
+    margin-top: 20px; 
+    color: #666; 
 }

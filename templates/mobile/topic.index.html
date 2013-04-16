@@ -2,6 +2,7 @@
 {% from "macros.html" import render_mobile_pagination %}
 
 {% block content %}
+{% if list_page.items %}
 <ul class="maillist">
     {% if msg %}
     <span style="text-align:center">{{ msg }}</span>
@@ -26,4 +27,9 @@
 </ul>
 
 {{ render_mobile_pagination(list_page, url_for('topic.index')) }}
+{% else %}
+<div class="well no-topic">
+    <p>收件箱是空的...</p>
+</div>
+{% endif %}
 {% endblock %}
