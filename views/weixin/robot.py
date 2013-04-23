@@ -68,8 +68,9 @@ class Robot(BaseRobot):
     def job(self, body, message):
         sub_command, sub_body = parse_body(body)
         if not sub_command in self.jobrobot._commands:
-            return ''
-        return str(sub_command) + ' ' + str(sub_body)
+            return '机器人不知道你想干嘛哦~'
+        handle = getattr(self.jobrobot, sub_command)
+        return handle(sub_body, message)
 
     def repeat(self, body, message):
         '''Repeat what u say'''
