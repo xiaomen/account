@@ -28,7 +28,12 @@ class Robot(object):
 
     def unbind(self, body, message):
         '''解除校门口账号绑定'''
-        pass
+        user = get_user_by_weixin(message.From)
+        if not user:
+            return '似乎你之前并未绑定过哦'
+        user.remove_weixin()
+        clear_user_cache(user)
+        return '解除绑定成功'
 
     def who(self, body, message):
         '''我是谁'''
