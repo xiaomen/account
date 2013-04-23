@@ -9,7 +9,7 @@ from flask.views import MethodView
 from views.weixin.robot import Robot
 from views.weixin.message import Message
 from views.weixin.tools import compute_signature, \
-        return_message, check_keys
+        return_message, check_keys, parse_body
 
 logger = logging.getLogger(__name__)
 
@@ -29,10 +29,7 @@ class WeiXin(MethodView):
 
     def post(self):
         msg = Message(request.data)
-        msg_splited = msg.Body.split(' ', 1)
-        if len(msg_splited) < 2:
-            msg_splited.append(' ')
-        command, body = msg_splited
+        command, body = parse_body(msg.Body)
         command = self.process_command(command)
         if not command in self.robot._commands:
             return ''

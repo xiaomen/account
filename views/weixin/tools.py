@@ -28,3 +28,9 @@ def check_keys(src, keys):
             logging.warning("missing %s", key)
             raise abort(400)
 
+def parse_body(body):
+    msg_splited = body.split(' ', 1)
+    if len(msg_splited) < 2:
+        msg_splited.append(' ')
+    return msg_splited
+

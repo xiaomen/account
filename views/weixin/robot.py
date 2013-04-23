@@ -1,9 +1,15 @@
 #!/usr/local/bin/python2.7
 #coding:utf-8
 
+from sheep.api.service import get_service
+from views.weixin.tools import parse_body
 from utils.token import get_uid
 from query.account import get_user, get_user_by_weixin, \
         clear_user_cache
+
+JOB_SVC_NAME = 'service.api'
+#TODO use tcp proxy
+JOB_SVC_PATH = '/data/run/sheep-job.sock'
 
 class BaseRobot(object):
     def __init__(self):
@@ -27,6 +33,10 @@ class BaseRobot(object):
             return ret
 
 class Robot(BaseRobot):
+    def __init__(self):
+        super(Robot, self).__init__()
+        self.jobrobot = JobRobot()
+
     def bind(self, body, message):
         '''绑定校门口账号, 格式为「-code TOKEN」或者是「bind TOKEN」'''
         user = get_uid(body)
@@ -56,10 +66,32 @@ class Robot(BaseRobot):
         return 'email: %s' % user.email
 
     def job(self, body, message):
-        pass
+        sub_command, sub_body = parse_body(body)
+        if not sub_command in self.jobrobot._commands:
+            return ''
+        return str(sub_command) + ' ' + str(sub_body)
 
     def repeat(self, body, message):
         '''Repeat what u say'''
         return body
 
+class JobRobot(BaseRobot):
+    def __init__(self):
+        super(JobRobot, self).__init__()
+        self.job = get_service('service.api', unix=JOB_SVC_PATH)
+
+    def list(self, body, message):
+        pass
+
+    def interns(self, body, message):
+        pass
+
+    def collect(self, body, message):
+        pass
+
+    def favorite(self, body, message):
+        pass
+
+    def detail(self, body, message):
+        pass
 
