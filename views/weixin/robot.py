@@ -2,7 +2,8 @@
 #coding:utf-8
 
 from utils.token import get_uid
-from query.account import get_user, clear_user_cache
+from query.account import get_user, get_user_by_weixin, \
+        clear_user_cache
 
 class Robot(object):
     def __init__(self):
@@ -26,12 +27,15 @@ class Robot(object):
         return "绑定成功！"
 
     def unbind(self, body, message):
-        '''undefine'''
+        '''解除校门口账号绑定'''
         pass
 
     def who(self, body, message):
-        '''undefine'''
-        pass
+        '''我是谁'''
+        user = get_user_by_weixin(message.From)
+        if not user:
+            return '你存在么'
+        return 'email: %s' % user.email
 
     def repeat(self, body, message):
         '''Repeat what u say'''

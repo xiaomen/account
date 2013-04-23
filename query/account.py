@@ -27,6 +27,10 @@ def get_user_by_domain(domain):
 def get_user_by_email(email):
     return get_user_by(email=email).limit(1).first()
 
+@cache('account:{weixin}', 86400)
+def get_user_by_weixin(weixin):
+    return get_user_by(weixin=weixin).limit(1).first()
+
 @cache('account:{stub}', 300)
 def get_forget_by_stub(stub):
     return Forget.query.filter_by(stub=stub).first()
