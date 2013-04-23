@@ -133,5 +133,5 @@ class JobRobot(BaseRobot):
         ret = self.job.detail(user.id, aid)
         if not ret:
             return '找不到这个工作的详细信息哦'
-        return '学校: %s\n时间：%s\n地点：%s\nlink: %s' % (ret['feed'], ret['date'], ret['place'], ret['link'])
+        return '学校: %s\n时间：%s\n地点：%s\n详细: %s' % (ret['feed'], ret['date'], ret['place'], ret['url'])
 
