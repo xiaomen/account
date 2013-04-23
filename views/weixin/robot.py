@@ -42,6 +42,9 @@ class Robot(object):
             return '你存在么'
         return 'email: %s' % user.email
 
+    def job(self, body, message):
+        pass
+
     def repeat(self, body, message):
         '''Repeat what u say'''
         return body
