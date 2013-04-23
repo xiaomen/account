@@ -109,8 +109,8 @@ class JobRobot(BaseRobot):
             return '没有了哦'
         items = ['把-id之后的数字组合成命令「job detail 1234」则可以看到详细信息\n']
         for item in ret['rs']:
-            items.append('-id %d\n%s\n在 %s\n%s\n' % (item['aid'], item['title'], \
-                    item['place'], item['date']))
+            items.append('-id %d\n%s\n%s\n在 %s\n' % (item['aid'], item['title'], \
+                    item['date'], item['place']))
         return '-----------------------\n'.join(items)
 
     def interns(self, body, message):
