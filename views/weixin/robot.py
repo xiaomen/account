@@ -95,6 +95,8 @@ class JobRobot(BaseRobot):
                 fid = s
         elif sp and len(sp) >= 2:
             fid, page = sp[:2]
+        else:
+            return '命令不正确哦~请用job help list查看如何使用'
         try:
             page = int(page)
             if fid:
