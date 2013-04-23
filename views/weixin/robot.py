@@ -85,10 +85,12 @@ class JobRobot(BaseRobot):
         '''列出最新工作，通过「job list 2」来翻页或者「job list 中南 2」来筛选学校并翻页哦'''
         user = get_user_by_weixin(message.From)
         sp = body.split(' ', 1)
-        if len(sp) < 2:
+        page = 1
+        fid = None
+        if sp and len(sp) < 2:
             page = sp[0]
             fid = None
-        else:
+        elif sp and len(sp) >= 2:
             fid, page = sp[:2]
         try:
             page = int(page)
@@ -98,7 +100,7 @@ class JobRobot(BaseRobot):
             page = 1
             fid = None
         ret = self.job.list_jobs(user.id, page, fid)
-        return str(ret)
+        return 'test ok'
 
     def interns(self, body, message):
         pass
