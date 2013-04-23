@@ -107,7 +107,7 @@ class JobRobot(BaseRobot):
         ret = self.job.list_jobs(user.id, page, fid)
         if not ret:
             return '没有了哦'
-        items = []
+        items = ['把-id之后的数字组合成命令「job detail 1234」则可以看到详细信息']
         for item in ret['rs']:
             items.append('-id %d, %s, 在 %s, %s' % (item['aid'], item['title'], \
                     item['place'], item['date']))
@@ -123,5 +123,14 @@ class JobRobot(BaseRobot):
         pass
 
     def detail(self, body, message):
-        pass
+        '''显示工作详细信息，通过「job detail 1234」来查看'''
+        sp = body.split(' ', 1)
+        if sp and len(sp) == 1 and sp[0].isdigit():
+            aid = int(sp[0])
+        else:
+            return '这不是合法的工作id哦'
+        ret = self.job.detail(aid)
+        if not ret:
+            return '找不到这个工作的详细信息哦'
+        return '''学校: %s\n时间：%s\n地点：\n内容：%s\n''' % (ret['feed'], ret['date'], ret['place'], ret['text'])
 
