@@ -100,7 +100,13 @@ class JobRobot(BaseRobot):
             page = 1
             fid = None
         ret = self.job.list_jobs(user.id, page, fid)
-        return 'test ok'
+        if not ret:
+            return '没有了哦'
+        items = []
+        for item in ret['rs']:
+            items.append('id: %d, %s, 在 %s, %s' % (item['aid'], item['title'], \
+                    item['place'], item['date']))
+        return '\n'.join(items)
 
     def interns(self, body, message):
         pass
