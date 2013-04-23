@@ -87,9 +87,12 @@ class JobRobot(BaseRobot):
         sp = body.split(' ', 1)
         page = 1
         fid = None
-        if sp and len(sp) < 2:
-            page = sp[0]
-            fid = None
+        if sp and len(sp) == 1:
+            s = sp[0]
+            if s.isdigit():
+                page = int(s)
+            else:
+                fid = s
         elif sp and len(sp) >= 2:
             fid, page = sp[:2]
         try:
