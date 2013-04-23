@@ -109,7 +109,7 @@ class JobRobot(BaseRobot):
             return '没有了哦'
         items = []
         for item in ret['rs']:
-            items.append('id: %d, %s, 在 %s, %s' % (item['aid'], item['title'], \
+            items.append('-id %d, %s, 在 %s, %s' % (item['aid'], item['title'], \
                     item['place'], item['date']))
         return '\n'.join(items)
 
