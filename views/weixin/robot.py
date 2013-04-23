@@ -125,11 +125,12 @@ class JobRobot(BaseRobot):
     def detail(self, body, message):
         '''显示工作详细信息，通过「job detail 1234」来查看'''
         sp = body.split(' ', 1)
+        user = get_user_by_weixin(message.From)
         if sp and len(sp) == 1 and sp[0].isdigit():
             aid = int(sp[0])
         else:
             return '这不是合法的工作id哦'
-        ret = self.job.detail(aid)
+        ret = self.job.detail(user.id, aid)
         if not ret:
             return '找不到这个工作的详细信息哦'
         return '''学校: %s\n时间：%s\n地点：\n内容：%s\n''' % (ret['feed'], ret['date'], ret['place'], ret['text'])
