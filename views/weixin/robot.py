@@ -107,11 +107,11 @@ class JobRobot(BaseRobot):
         ret = self.job.list_jobs(user.id, page, fid)
         if not ret:
             return '没有了哦'
-        items = ['把-id之后的数字组合成命令「job detail 1234」则可以看到详细信息']
+        items = ['把-id之后的数字组合成命令「job detail 1234」则可以看到详细信息\n']
         for item in ret['rs']:
-            items.append('-id %d, %s, 在 %s, %s' % (item['aid'], item['title'], \
+            items.append('-id %d\n%s\n在 %s\n%s' % (item['aid'], item['title'], \
                     item['place'], item['date']))
-        return '\n'.join(items)
+        return '-----------------------\n'.join(items)
 
     def interns(self, body, message):
         pass
@@ -133,5 +133,5 @@ class JobRobot(BaseRobot):
         ret = self.job.detail(user.id, aid)
         if not ret:
             return '找不到这个工作的详细信息哦'
-        return '学校: %s\n时间：%s\n地点：%s\n详细: %s' % (ret['feed'], ret['date'], ret['place'], ret['url'])
+        return '学校: %s\n时间: %s\n地点: %s\n详细: %s' % (ret['feed'], ret['date'], ret['place'], ret['url'])
 
