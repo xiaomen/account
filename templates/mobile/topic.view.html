@@ -30,6 +30,9 @@
     {% endfor %}
 </ul>
 {{ render_mobile_pagination(list_page, url_for('topic.view', tid=topic.id)) }}
-<a class="btn btn-back btn-gray r" href="{{ url_for('topic.index') }}">返回</a>
+<div class="back-btn">
+    <a class="btn btn-back btn-gray r" href="{{ url_for('topic.index') }}">返回</a>
+    <a class="btn btn-back r delete-topic" href="{{ url_for('topic.topic_delete', tid = topic.id) }}">删除</a>
+</div>
 <div class="clearfix"></div>
 {% endblock %}
