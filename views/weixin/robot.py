@@ -5,7 +5,7 @@ from utils.token import get_uid
 from query.account import get_user, get_user_by_weixin, \
         clear_user_cache
 
-class Robot(object):
+class BaseRobot(object):
     def __init__(self):
         self._commands = []
         commands = dir(self)
@@ -14,6 +14,19 @@ class Robot(object):
                 continue
             self._commands.append(command)
 
+    def help(self, command, message):
+        '''显示可用命令，例如「help」，或者是「help bind」'''
+        if not command.strip():
+            return ' '.join(self._commands)
+        if command not in self._commands:
+            return '没有这个命令哦'
+        else:
+            ret = getattr(self, command).__doc__
+            if not ret:
+                return '其实我也不知道这是作甚的'
+            return ret
+
+class Robot(BaseRobot):
     def bind(self, body, message):
         '''绑定校门口账号, 格式为「-code TOKEN」或者是「bind TOKEN」'''
         user = get_uid(body)
@@ -49,15 +62,4 @@ class Robot(object):
         '''Repeat what u say'''
         return body
 
-    def help(self, command, message):
-        '''显示可用命令，例如「help」，或者是「help bind」'''
-        if not command.strip():
-            return ' '.join(self._commands)
-        if command not in self._commands:
-            return '没有这个命令哦'
-        else:
-            ret = getattr(self, command).__doc__
-            if not ret:
-                return '其实我也不知道这是作甚的'
-            return ret
 

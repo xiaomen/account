@@ -36,8 +36,8 @@ class WeiXin(MethodView):
         command = self.process_command(command)
         if not command in self.robot._commands:
             return ''
-        robot = getattr(self.robot, command)
-        return return_message(msg.To, msg.From, robot(body, msg))
+        handle = getattr(self.robot, command)
+        return return_message(msg.To, msg.From, handle(body, msg))
 
     def process_command(self, command):
         ret = command.lower()
