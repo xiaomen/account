@@ -1,7 +1,7 @@
 #!/usr/local/bin/python2.7
 #coding:utf-8
 
-DEBUG = True
+DEBUG = False
 SECRET_KEY = 'sheep!@$user!#$%^'
 
 QQ_APP_KEY = '100241976'
